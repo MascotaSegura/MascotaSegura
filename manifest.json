@@ -1,0 +1,17 @@
+{
+  "name": "MascotaSegura",
+  "short_name": "MascotaSegura",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#09090B",
+  "description": "La identidad digital de tu mejor amigo.",
+  "icons": [
+    {
+      "src": "paw-print-fill.svg",
+      "sizes": "192x192 512x512 any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

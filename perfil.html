@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil - MascotaSegura</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        fontFamily: {
+          sans: ['Poppins', 'sans-serif'],
+        },
+        extend: {
+          colors: {
+            brand: '#09090B',
+            brandHover: '#27272A',
+            surface: '#F4F4F5',
+            surfaceHover: '#E4E4E7'
+          },
+          spacing: {
+            'safe': 'env(safe-area-inset-bottom)'
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="icon" type="image/svg+xml" href="paw-print-fill.svg">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#F4F4F5">
+</head>
+<body class="bg-surface text-brand antialiased min-h-screen flex flex-col selection:bg-brand selection:text-white">
+  <main class="w-full max-w-md mx-auto flex-1 flex flex-col relative px-4 py-8">
+    
+    <div id="loading-state" class="absolute inset-0 flex flex-col items-center justify-center bg-surface z-10">
+      <i class="ph-bold ph-spinner animate-spin text-5xl text-brand mb-4"></i>
+      <span class="text-zinc-500 font-medium">Buscando perfil...</span>
+    </div>
+
+    <div id="not-found-state" class="hidden absolute inset-0 flex flex-col items-center justify-center bg-surface z-10 px-6 text-center">
+      <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center mb-6 shadow-none">
+        <i class="ph-fill ph-warning-circle text-4xl text-red-500"></i>
+      </div>
+      <h2 class="text-2xl font-bold text-brand mb-2">Perfil no encontrado</h2>
+      <p class="text-zinc-500 text-sm mb-8">Esta placa no existe o ha sido desactivada.</p>
+      <button onclick="window.location.href='index.html'" class="bg-brand text-white px-8 py-3.5 rounded-full text-sm font-medium hover:bg-brandHover transition-colors shadow-none border-0 appearance-none">
+        Ir al inicio
+      </button>
+    </div>
+
+    <div id="profile-content" class="hidden flex-col gap-6 w-full">
+      <div class="flex items-center justify-center gap-2 mb-2 cursor-pointer" onclick="window.location.href='index.html'">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 fill-current text-brand" viewBox="0 0 256 256"><path d="M240,108a28,28,0,1,1-28-28A28,28,0,0,1,240,108ZM72,108a28,28,0,1,0-28,28A28,28,0,0,0,72,108ZM92,88A28,28,0,1,0,64,60,28,28,0,0,0,92,88Zm72,0a28,28,0,1,0-28-28A28,28,0,0,0,164,88Zm23.12,60.86a35.3,35.3,0,0,1-16.87-21.14,44,44,0,0,0-84.5,0A35.25,35.25,0,0,1,69,148.82,40,40,0,0,0,88,224a39.48,39.48,0,0,0,15.52-3.13,64.09,64.09,0,0,1,48.87,0,40,40,0,0,0,34.73-72Z"></path></svg>
+        <span class="text-sm font-semibold tracking-tight text-brand">MascotaSegura</span>
+      </div>
+
+      <div class="w-full bg-white rounded-[2.5rem] p-8 flex flex-col gap-8 shadow-none border-0">
+        <div class="flex flex-col items-center mt-2 relative">
+          <div id="pet-photo-container" class="w-32 h-32 rounded-full overflow-hidden mb-4 border-4 border-surface shadow-none flex items-center justify-center bg-surface">
+             <i id="pet-photo-placeholder" class="ph-fill ph-dog text-5xl text-zinc-400 hidden"></i>
+             <img id="pet-photo" src="" class="w-full h-full object-cover hidden">
+          </div>
+          <h1 id="pet-name" class="text-3xl font-bold mb-2 text-brand">Nombre</h1>
+          <span id="pet-tags" class="bg-surface text-brand px-5 py-2 rounded-full text-xs font-semibold tracking-wide uppercase">Sexo &bull; Especie</span>
+        </div>
+
+        <div class="flex gap-4">
+          <a id="btn-call" href="#" class="flex-1 bg-surface rounded-3xl py-5 flex flex-col items-center gap-2 cursor-pointer hover:bg-surfaceHover transition-colors shadow-none border-0 appearance-none">
+            <i class="ph-fill ph-phone text-2xl text-brand"></i>
+            <span class="text-xs font-semibold text-brand uppercase tracking-wider">Llamar</span>
+          </a>
+          <a id="btn-whatsapp" href="#" class="flex-1 bg-surface rounded-3xl py-5 flex flex-col items-center gap-2 cursor-pointer hover:bg-surfaceHover transition-colors shadow-none border-0 appearance-none">
+            <i class="ph-fill ph-whatsapp-logo text-2xl text-brand"></i>
+            <span class="text-xs font-semibold text-brand uppercase tracking-wider">Mensaje</span>
+          </a>
+        </div>
+
+        <div class="w-full space-y-4">
+            <div class="flex flex-col gap-1 bg-surface px-6 py-4 rounded-3xl shadow-none border-0">
+                <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Raza y color</span>
+                <span id="pet-breed" class="text-base font-medium text-brand">Raza</span>
+            </div>
+            <div class="flex flex-col gap-1 bg-surface px-6 py-4 rounded-3xl shadow-none border-0">
+                <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Esterilizado</span>
+                <span id="pet-sterilized" class="text-base font-medium text-brand">No</span>
+            </div>
+            <div class="flex flex-col gap-2 bg-[#FEF2F2] px-6 py-5 rounded-3xl shadow-none border-0">
+                <div class="flex items-center gap-2">
+                    <i class="ph-fill ph-first-aid text-red-500 text-lg"></i>
+                    <span class="text-[10px] font-bold text-red-500 uppercase tracking-wider">Información Médica</span>
+                </div>
+                <span id="pet-medical" class="text-sm font-medium text-red-900 leading-relaxed">Ninguna conocida</span>
+            </div>
+        </div>
+      </div>
+
+      <div class="bg-brand text-white p-6 rounded-[2rem] flex flex-col gap-4 shadow-none border-0">
+        <h3 class="font-semibold text-lg flex items-center gap-2">
+          <i class="ph-fill ph-map-pin text-xl"></i> Compartir ubicación
+        </h3>
+        <p class="text-sm text-zinc-400 leading-relaxed">Envía tu ubicación actual al dueño para ayudar a que esta mascota vuelva a casa rápido.</p>
+        <button id="btn-location" class="w-full bg-white text-brand text-base font-medium py-4 rounded-full hover:bg-surface transition-colors shadow-none border-0 appearance-none">
+          Enviar ubicación GPS
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-database-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAtT1yOk3Gmq_IiVlAhlPBQ0lJvFX7uNuQ",
+      authDomain: "mascotaseguraapp.firebaseapp.com",
+      databaseURL: "https://mascotaseguraapp-default-rtdb.firebaseio.com",
+      projectId: "mascotaseguraapp",
+      storageBucket: "mascotaseguraapp.firebasestorage.app",
+      messagingSenderId: "1059886332390",
+      appId: "1:1059886332390:web:720e972f74a1972351be27",
+      measurementId: "G-2TS2XWGFB9"
+    };
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const database = firebase.database();
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const petId = urlParams.get('id');
+
+        if (!petId) {
+            document.getElementById('loading-state').classList.add('hidden');
+            document.getElementById('not-found-state').classList.remove('hidden');
+            return;
+        }
+
+        database.ref('pets/' + petId).once('value').then((snapshot) => {
+            const pet = snapshot.val();
+            document.getElementById('loading-state').classList.add('hidden');
+
+            if (!pet) {
+                document.getElementById('not-found-state').classList.remove('hidden');
+                return;
+            }
+
+            document.getElementById('profile-content').classList.remove('hidden');
+            document.getElementById('profile-content').classList.add('flex');
+
+            document.getElementById('pet-name').textContent = pet.name || 'Sin nombre';
+            document.getElementById('pet-tags').innerHTML = `${pet.sex || 'N/A'} &bull; ${pet.type || 'N/A'}`;
+            
+            if (pet.photo) {
+                document.getElementById('pet-photo').src = pet.photo;
+                document.getElementById('pet-photo').classList.remove('hidden');
+            } else {
+                document.getElementById('pet-photo-placeholder').classList.remove('hidden');
+            }
+
+            document.getElementById('pet-breed').textContent = pet.breed || 'Mestizo';
+            document.getElementById('pet-sterilized').textContent = pet.sterilized || 'N/A';
+            document.getElementById('pet-medical').textContent = pet.medical || 'Ninguna conocida';
+
+            const phone = pet.ownerPhone ? pet.ownerPhone.replace(/\D/g, '') : '';
+            if (phone) {
+                document.getElementById('btn-call').href = `tel:${phone}`;
+                document.getElementById('btn-whatsapp').href = `https://wa.me/${phone}?text=Hola,%20encontré%20a%20${encodeURIComponent(pet.name)}.%20Escaneé%20su%20placa.`;
+            } else {
+                document.getElementById('btn-call').style.display = 'none';
+                document.getElementById('btn-whatsapp').style.display = 'none';
+            }
+
+            // Record scan timestamp immediately
+            database.ref('pets/' + petId + '/lastScan').set({
+                timestamp: new Date().toISOString()
+            });
+
+            document.getElementById('btn-location').addEventListener('click', () => {
+                const btn = document.getElementById('btn-location');
+                btn.innerHTML = '<i class="ph-bold ph-spinner animate-spin text-xl"></i> Obteniendo...';
+                btn.disabled = true;
+
+                if ("geolocation" in navigator) {
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        
+                        database.ref('pets/' + petId + '/lastScan').set({
+                            timestamp: new Date().toISOString(),
+                            lat: lat,
+                            lng: lng
+                        }).then(() => {
+                            btn.innerHTML = '<i class="ph-bold ph-check text-xl"></i> Ubicación enviada';
+                            btn.classList.add('bg-green-500', 'text-white');
+                            btn.classList.remove('bg-white', 'text-brand');
+                            
+                            if (phone) {
+                                setTimeout(() => {
+                                    const mapUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+                                    const msg = `Hola, tengo a ${pet.name}. Aquí está mi ubicación exacta: ${mapUrl}`;
+                                    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+                                }, 1000);
+                            }
+                        });
+                    }, (error) => {
+                        btn.innerHTML = 'Error al obtener ubicación';
+                        btn.classList.add('bg-red-500', 'text-white');
+                        btn.classList.remove('bg-white', 'text-brand');
+                        setTimeout(() => {
+                            btn.innerHTML = 'Enviar ubicación GPS';
+                            btn.classList.remove('bg-red-500', 'text-white');
+                            btn.classList.add('bg-white', 'text-brand');
+                            btn.disabled = false;
+                        }, 3000);
+                    }, { enableHighAccuracy: true });
+                } else {
+                    btn.innerHTML = 'GPS no soportado';
+                }
+            });
+        }).catch((error) => {
+            document.getElementById('loading-state').classList.add('hidden');
+            document.getElementById('not-found-state').classList.remove('hidden');
+        });
+    });
+  </script>
+</body>
+</html>
+
