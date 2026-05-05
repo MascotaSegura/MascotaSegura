@@ -1,6 +1,6 @@
 const SUPABASE_URL = "https://vaztacfioinkkkxmimaw.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_WHwWYUn52u_73tvPN-PC4A_fDUTRNVD";
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 document.addEventListener('DOMContentLoaded', () => {
     const uploadArea = document.getElementById('upload-area');
     const fileInput = document.getElementById('pet-photo');
@@ -144,16 +144,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         return isValid;
     }
-    supabase.auth.onAuthStateChange(async (event, session) => {
+    sbClient.auth.onAuthStateChange(async (event, session) => {
         const user = session?.user;
         const path = window.location.pathname;
         if (user) {
             if (sessionStorage.getItem('pendingPet')) {
                 try {
                     const pendingPet = JSON.parse(sessionStorage.getItem('pendingPet'));
-                    pendingPet.userId = user.uid;
+                    pendingPet.userId = user.id;
                     pendingPet.createdAt = new Date().toISOString();
-                    supabase.from('pets').insert([pendingPet]).then(() => {
+                    sbClient.from('pets').insert([pendingPet]).then(() => {
                         sessionStorage.removeItem('pendingPet');
                         showModal({
                             icon: 'ph-qr-code',
@@ -187,10 +187,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const protectedContent = document.getElementById('protected-content');
             if (protectedContent) protectedContent.classList.remove('hidden');
             if (path.includes('mis-mascotas')) {
-                cargarMisMascotas(user.uid);
+                cargarMisMascotas(user.id);
             }
             if (path.includes('notificaciones')) {
-                cargarNotificaciones(user.uid);
+                cargarNotificaciones(user.id);
             }
         } else {
             if (navEntrar) navEntrar.classList.remove('!hidden');
@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if(!container) return;
         
         async function fetchPets() {
-            const { data: pets, error } = await supabase.from('pets').select('*').eq('userId', uid);
+            const { data: pets, error } = await sbClient.from('pets').select('*').eq('userId', uid);
             if (error) {
                 if (loading) {
                     loading.innerHTML = '<span class="text-red-500 text-sm font-medium text-center">Error de sincronización con la base de datos. Verifica tu internet.</span>';
@@ -295,7 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
         await fetchPets();
-        supabase.channel('public:pets:mis').on('postgres_changes', { event: '*', schema: 'public', table: 'pets', filter: `userId=eq.${uid}` }, () => fetchPets()).subscribe();
+        sbClient.channel('public:pets:mis').on('postgres_changes', { event: '*', schema: 'public', table: 'pets', filter: `userId=eq.${uid}` }, () => fetchPets()).subscribe();
     }
     window.mostrarQR = function(petId, petName) {
         const urlPerfil = window.location.origin + '/perfil.html?id=' + petId;
@@ -325,12 +325,10 @@ document.addEventListener('DOMContentLoaded', () => {
             text: `¿Estás seguro de que deseas eliminar la placa de ${petName || 'esta mascota'}? Esta acción es irreversible y el código QR dejará de funcionar.`,
             primaryBtnText: 'Sí, eliminar',
             primaryBtnAction: async () => {
-                await supabase.from('pets').delete().eq('id', petId);
-                (() => {
-                    if(window.location.pathname.includes('crear-placa')) {
-                        window.location.href = 'mis-mascotas.html';
-                    }
-                });
+                await sbClient.from('pets').delete().eq('id', petId);
+                if(window.location.pathname.includes('crear-placa')) {
+                    window.location.href = 'mis-mascotas.html';
+                }
             },
             secondaryBtnText: 'Cancelar'
         });
@@ -388,7 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const handleLogout = async () => {
         try {
-            await supabase.auth.signOut();
+            await sbClient.auth.signOut();
             window.location.href = 'index.html';
         } catch (error) {
             console.error('Logout error', error);
@@ -435,7 +433,7 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 btnRegistro.innerText = "Cargando...";
                 btnRegistro.disabled = true;
-                const { data, error } = await supabase.auth.signUp({ 
+                const { data, error } = await sbClient.auth.signUp({ 
                     email, 
                     password,
                     options: { data: { full_name: fullname } }
@@ -481,7 +479,7 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 btnEntrar.innerText = "Cargando...";
                 btnEntrar.disabled = true;
-                const { error } = await supabase.auth.signInWithPassword({ email, password });
+                const { error } = await sbClient.auth.signInWithPassword({ email, password });
                 if (error) throw error;
                 showModal({
                     icon: 'ph-hand-waving',
@@ -518,7 +516,7 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 btnRecuperar.innerText = "Enviando...";
                 btnRecuperar.disabled = true;
-                const { error } = await supabase.auth.resetPasswordForEmail(email);
+                const { error } = await sbClient.auth.resetPasswordForEmail(email);
                 if (error) throw error;
                 showModal({
                     icon: 'ph-paper-plane-tilt',
@@ -553,7 +551,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (heading) heading.innerText = "Editar Placa";
             if (subhead) subhead.innerText = "Actualiza los datos del perfil inteligente de tu mascota.";
             
-            supabase.from('pets').select('*').eq('id', editPetId).single().then(({ data: pet }) => {
+            sbClient.from('pets').select('*').eq('id', editPetId).single().then(({ data: pet }) => {
                 if (pet) {
                     const setValue = (id, val) => { if(document.getElementById(id)) document.getElementById(id).value = val || ''; };
                     setValue('pet-name', pet.name);
@@ -622,7 +620,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 return;
             }
-            const { data: { user: currentUser } } = await supabase.auth.getUser();
+            const { data: { user: currentUser } } = await sbClient.auth.getUser();
             if (!currentUser) {
                 const petData = { name, type, sex, sterilized, breed, medical, ownerName, ownerPhone, ownerAltPhone, photo: base64Photo };
                 sessionStorage.setItem('pendingPet', JSON.stringify(petData));
@@ -643,7 +641,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const userId = currentUser.id;
                 
                 if (editPetId) {
-                    await supabase.from('pets').update({
+                    await sbClient.from('pets').update({
                         name, type, sex, sterilized, breed, medical, ownerName, ownerPhone, ownerAltPhone, photo: base64Photo
                     }).eq('id', editPetId);
                     showModal({
@@ -654,7 +652,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         primaryBtnAction: () => window.location.href = "mis-mascotas.html"
                     });
                 } else {
-                    await supabase.from('pets').insert([{
+                    await sbClient.from('pets').insert([{
                         userId, name, type, sex, sterilized, breed, medical, ownerName, ownerPhone, ownerAltPhone, photo: base64Photo,
                         createdAt: new Date().toISOString()
                     }]);
@@ -702,7 +700,7 @@ async function cargarNotificaciones(uid) {
     if(!container) return;
 
     async function fetchNotifs() {
-        const { data: pets, error } = await supabase.from('pets').select('*').eq('userId', uid);
+        const { data: pets, error } = await sbClient.from('pets').select('*').eq('userId', uid);
         if (error) {
             console.error("Supabase Database Error: ", error);
             if(loading) loading.innerHTML = '<span class="text-red-500 text-sm font-medium text-center">Error de conexión con la base de datos. Verifica tu internet.</span>';
@@ -791,5 +789,5 @@ async function cargarNotificaciones(uid) {
         });
     }
     await fetchNotifs();
-    supabase.channel('public:pets:notifs').on('postgres_changes', { event: '*', schema: 'public', table: 'pets', filter: `userId=eq.${uid}` }, () => fetchNotifs()).subscribe();
+    sbClient.channel('public:pets:notifs').on('postgres_changes', { event: '*', schema: 'public', table: 'pets', filter: `userId=eq.${uid}` }, () => fetchNotifs()).subscribe();
 }
