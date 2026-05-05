@@ -110,24 +110,10 @@
 
     </div>
   </main>
-
-  <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-database-compat.js"></script>
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyAtT1yOk3Gmq_IiVlAhlPBQ0lJvFX7uNuQ",
-      authDomain: "mascotaseguraapp.firebaseapp.com",
-      databaseURL: "https://mascotaseguraapp-default-rtdb.firebaseio.com",
-      projectId: "mascotaseguraapp",
-      storageBucket: "mascotaseguraapp.firebasestorage.app",
-      messagingSenderId: "1059886332390",
-      appId: "1:1059886332390:web:720e972f74a1972351be27",
-      measurementId: "G-2TS2XWGFB9"
-    };
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-    const database = firebase.database();
+    const SUPABASE_URL = "https://vaztacfioinkkkxmimaw.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_WHwWYUn52u_73tvPN-PC4A_fDUTRNVD";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     document.addEventListener('DOMContentLoaded', () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -139,11 +125,10 @@
             return;
         }
 
-        database.ref('pets/' + petId).once('value').then((snapshot) => {
-            const pet = snapshot.val();
+        supabase.from('pets').select('*').eq('id', petId).single().then(({ data: pet, error }) => {
             document.getElementById('loading-state').classList.add('hidden');
 
-            if (!pet) {
+            if (error || !pet) {
                 document.getElementById('not-found-state').classList.remove('hidden');
                 return;
             }
@@ -175,9 +160,9 @@
             }
 
             // Record scan timestamp immediately
-            database.ref('pets/' + petId + '/lastScan').set({
-                timestamp: new Date().toISOString()
-            });
+            supabase.from('pets').update({
+                lastScan: { timestamp: new Date().toISOString() }
+            }).eq('id', petId);
 
             document.getElementById('btn-location').addEventListener('click', () => {
                 const btn = document.getElementById('btn-location');
@@ -189,11 +174,13 @@
                         const lat = position.coords.latitude;
                         const lng = position.coords.longitude;
                         
-                        database.ref('pets/' + petId + '/lastScan').set({
-                            timestamp: new Date().toISOString(),
-                            lat: lat,
-                            lng: lng
-                        }).then(() => {
+                        supabase.from('pets').update({
+                            lastScan: {
+                                timestamp: new Date().toISOString(),
+                                lat: lat,
+                                lng: lng
+                            }
+                        }).eq('id', petId).then(() => {
                             btn.innerHTML = '<i class="ph-bold ph-check text-xl"></i> Ubicación enviada';
                             btn.classList.add('bg-green-500', 'text-white');
                             btn.classList.remove('bg-white', 'text-brand');
@@ -227,6 +214,7 @@
         });
     });
   </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </body>
 </html>
 

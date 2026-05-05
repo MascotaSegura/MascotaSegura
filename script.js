@@ -1,16 +1,6 @@
-const firebaseConfig = {
-  apiKey: "AIzaSyAtT1yOk3Gmq_IiVlAhlPBQ0lJvFX7uNuQ",
-  authDomain: "mascotaseguraapp.firebaseapp.com",
-  databaseURL: "https://mascotaseguraapp-default-rtdb.firebaseio.com",
-  projectId: "mascotaseguraapp",
-  storageBucket: "mascotaseguraapp.firebasestorage.app",
-  messagingSenderId: "1059886332390",
-  appId: "1:1059886332390:web:720e972f74a1972351be27",
-  measurementId: "G-2TS2XWGFB9"
-};
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const database = firebase.database();
+const SUPABASE_URL = "https://vaztacfioinkkkxmimaw.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_WHwWYUn52u_73tvPN-PC4A_fDUTRNVD";
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 document.addEventListener('DOMContentLoaded', () => {
     const uploadArea = document.getElementById('upload-area');
     const fileInput = document.getElementById('pet-photo');
@@ -154,7 +144,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         return isValid;
     }
-    auth.onAuthStateChanged((user) => {
+    supabase.auth.onAuthStateChange(async (event, session) => {
+        const user = session?.user;
         const path = window.location.pathname;
         if (user) {
             if (sessionStorage.getItem('pendingPet')) {
@@ -162,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const pendingPet = JSON.parse(sessionStorage.getItem('pendingPet'));
                     pendingPet.userId = user.uid;
                     pendingPet.createdAt = new Date().toISOString();
-                    database.ref('pets').push(pendingPet).then(() => {
+                    supabase.from('pets').insert([pendingPet]).then(() => {
                         sessionStorage.removeItem('pendingPet');
                         showModal({
                             icon: 'ph-qr-code',
@@ -213,14 +204,22 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
-    function cargarMisMascotas(uid) {
+    async function cargarMisMascotas(uid) {
         const loading = document.getElementById('pets-loading');
         const empty = document.getElementById('pets-empty');
         const container = document.getElementById('pets-container');
         if(!container) return;
-        database.ref('pets').orderByChild('userId').equalTo(uid).on('value', (snapshot) => {
+        
+        async function fetchPets() {
+            const { data: pets, error } = await supabase.from('pets').select('*').eq('userId', uid);
+            if (error) {
+                if (loading) {
+                    loading.innerHTML = '<span class="text-red-500 text-sm font-medium text-center">Error de sincronización con la base de datos. Verifica tu internet.</span>';
+                }
+                return;
+            }
             if (loading) loading.classList.add('hidden');
-            if (!snapshot.exists()) {
+            if (!pets || pets.length === 0) {
                 if (empty) empty.classList.remove('hidden');
                 if (container) {
                     container.classList.add('hidden');
@@ -235,10 +234,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             container.innerHTML = '';
             if (!window.notifiedScans) window.notifiedScans = new Set();
-            snapshot.forEach((childSnapshot) => {
-                const pet = childSnapshot.val();
+            pets.forEach((pet) => {
                 if (pet.lastScan && pet.lastScan.timestamp) {
-                    const scanId = childSnapshot.key + '_' + pet.lastScan.timestamp;
+                    const scanId = pet.id + '_' + pet.lastScan.timestamp;
                     if (!window.notifiedScans.has(scanId)) {
                         window.notifiedScans.add(scanId);
                         const scanTime = new Date(pet.lastScan.timestamp).getTime();
@@ -291,15 +289,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const petNameStr = pet.name || 'Sin nombre';
                 card.querySelector('.pet-name-display').textContent = petNameStr;
-                card.querySelector('.btn-edit').addEventListener('click', () => window.editarMascota(childSnapshot.key));
-                card.querySelector('.btn-qr').addEventListener('click', () => window.mostrarQR(childSnapshot.key, petNameStr));
+                card.querySelector('.btn-edit').addEventListener('click', () => window.editarMascota(pet.id));
+                card.querySelector('.btn-qr').addEventListener('click', () => window.mostrarQR(pet.id, petNameStr));
                 container.appendChild(card);
             });
-        }, () => {
-            if (loading) {
-                loading.innerHTML = '<span class="text-red-500 text-sm font-medium text-center">Error de sincronización con la base de datos. Verifica tu internet.</span>';
-            }
-        });
+        }
+        await fetchPets();
+        supabase.channel('public:pets:mis').on('postgres_changes', { event: '*', schema: 'public', table: 'pets', filter: `userId=eq.${uid}` }, () => fetchPets()).subscribe();
     }
     window.mostrarQR = function(petId, petName) {
         const urlPerfil = window.location.origin + '/perfil.html?id=' + petId;
@@ -328,8 +324,9 @@ document.addEventListener('DOMContentLoaded', () => {
             title: '¿Eliminar Placa?',
             text: `¿Estás seguro de que deseas eliminar la placa de ${petName || 'esta mascota'}? Esta acción es irreversible y el código QR dejará de funcionar.`,
             primaryBtnText: 'Sí, eliminar',
-            primaryBtnAction: () => {
-                database.ref('pets/' + petId).remove().then(() => {
+            primaryBtnAction: async () => {
+                await supabase.from('pets').delete().eq('id', petId);
+                (() => {
                     if(window.location.pathname.includes('crear-placa')) {
                         window.location.href = 'mis-mascotas.html';
                     }
@@ -391,7 +388,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const handleLogout = async () => {
         try {
-            await auth.signOut();
+            await supabase.auth.signOut();
             window.location.href = 'index.html';
         } catch (error) {
             console.error('Logout error', error);
@@ -438,12 +435,12 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 btnRegistro.innerText = "Cargando...";
                 btnRegistro.disabled = true;
-                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                if (userCredential.user) {
-                    await userCredential.user.updateProfile({
-                        displayName: fullname
-                    });
-                }
+                const { data, error } = await supabase.auth.signUp({ 
+                    email, 
+                    password,
+                    options: { data: { full_name: fullname } }
+                });
+                if (error) throw error;
                 showModal({
                     icon: 'ph-party-confetti',
                     title: '¡Bienvenido!',
@@ -453,8 +450,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             } catch (error) {
                 let msg = 'Hubo un error al crear la cuenta. Inténtalo de nuevo.';
-                if(error.code === 'auth/email-already-in-use') msg = 'Este correo ya está registrado.';
-                if(error.code === 'auth/weak-password') msg = 'La contraseña debe tener al menos 6 caracteres.';
+                if(error.message.includes('already registered')) msg = 'Este correo ya está registrado.';
+                if(error.message.includes('Password should be at least 6 characters')) msg = 'La contraseña debe tener al menos 6 caracteres.';
                 showModal({
                     isError: true,
                     icon: 'ph-warning-octagon',
@@ -484,7 +481,8 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 btnEntrar.innerText = "Cargando...";
                 btnEntrar.disabled = true;
-                await auth.signInWithEmailAndPassword(email, password);
+                const { error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) throw error;
                 showModal({
                     icon: 'ph-hand-waving',
                     title: '¡Hola de nuevo!',
@@ -520,7 +518,8 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 btnRecuperar.innerText = "Enviando...";
                 btnRecuperar.disabled = true;
-                await auth.sendPasswordResetEmail(email);
+                const { error } = await supabase.auth.resetPasswordForEmail(email);
+                if (error) throw error;
                 showModal({
                     icon: 'ph-paper-plane-tilt',
                     title: 'Enlace Enviado',
@@ -554,9 +553,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (heading) heading.innerText = "Editar Placa";
             if (subhead) subhead.innerText = "Actualiza los datos del perfil inteligente de tu mascota.";
             
-            database.ref('pets/' + editPetId).once('value').then(snapshot => {
-                if (snapshot.exists()) {
-                    const pet = snapshot.val();
+            supabase.from('pets').select('*').eq('id', editPetId).single().then(({ data: pet }) => {
+                if (pet) {
                     const setValue = (id, val) => { if(document.getElementById(id)) document.getElementById(id).value = val || ''; };
                     setValue('pet-name', pet.name);
                     setValue('pet-type', pet.type || 'perro');
@@ -624,7 +622,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 return;
             }
-            const currentUser = auth.currentUser;
+            const { data: { user: currentUser } } = await supabase.auth.getUser();
             if (!currentUser) {
                 const petData = { name, type, sex, sterilized, breed, medical, ownerName, ownerPhone, ownerAltPhone, photo: base64Photo };
                 sessionStorage.setItem('pendingPet', JSON.stringify(petData));
@@ -642,12 +640,12 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 btnGenerarPlaca.innerText = "Guardando...";
                 btnGenerarPlaca.disabled = true;
-                const userId = currentUser.uid;
+                const userId = currentUser.id;
                 
                 if (editPetId) {
-                    await database.ref('pets/' + editPetId).update({
+                    await supabase.from('pets').update({
                         name, type, sex, sterilized, breed, medical, ownerName, ownerPhone, ownerAltPhone, photo: base64Photo
-                    });
+                    }).eq('id', editPetId);
                     showModal({
                         icon: 'ph-check-circle',
                         title: '¡Cambios Guardados!',
@@ -656,10 +654,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         primaryBtnAction: () => window.location.href = "mis-mascotas.html"
                     });
                 } else {
-                    await database.ref('pets').push({
+                    await supabase.from('pets').insert([{
                         userId, name, type, sex, sterilized, breed, medical, ownerName, ownerPhone, ownerAltPhone, photo: base64Photo,
                         createdAt: new Date().toISOString()
-                    });
+                    }]);
                     document.getElementById('pet-form').reset();
                     btnGenerarPlaca.innerText = "Generar Placa";
                     btnGenerarPlaca.disabled = false;
@@ -697,28 +695,33 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-function cargarNotificaciones(uid) {
+async function cargarNotificaciones(uid) {
     const loading = document.getElementById('notifications-loading');
     const empty = document.getElementById('notifications-empty');
     const container = document.getElementById('notifications-container');
     if(!container) return;
 
-    database.ref('pets').orderByChild('userId').equalTo(uid).on('value', (snapshot) => {
+    async function fetchNotifs() {
+        const { data: pets, error } = await supabase.from('pets').select('*').eq('userId', uid);
+        if (error) {
+            console.error("Supabase Database Error: ", error);
+            if(loading) loading.innerHTML = '<span class="text-red-500 text-sm font-medium text-center">Error de conexión con la base de datos. Verifica tu internet.</span>';
+            return;
+        }
         if(loading) loading.classList.add('hidden');
         
-        if (!snapshot.exists()) {
+        if (!pets || pets.length === 0) {
             if(empty) empty.classList.remove('hidden');
             if(container) container.classList.add('hidden');
             return;
         }
 
         const notifs = [];
-        snapshot.forEach((child) => {
-            const pet = child.val();
+        pets.forEach((pet) => {
             if (pet.lastScan && pet.lastScan.timestamp) {
                 notifs.push({
                     petName: pet.name || 'Tu mascota',
-                    petId: child.key,
+                    petId: pet.id,
                     photo: pet.photo || '',
                     time: new Date(pet.lastScan.timestamp),
                     lat: pet.lastScan.lat,
@@ -786,8 +789,7 @@ function cargarNotificaciones(uid) {
 
             if(container) container.appendChild(card);
         });
-    }, (error) => {
-        console.error("Firebase Database Error: ", error);
-        if(loading) loading.innerHTML = '<span class="text-red-500 text-sm font-medium text-center">Error de conexión con la base de datos. Verifica tu internet.</span>';
-    });
+    }
+    await fetchNotifs();
+    supabase.channel('public:pets:notifs').on('postgres_changes', { event: '*', schema: 'public', table: 'pets', filter: `userId=eq.${uid}` }, () => fetchNotifs()).subscribe();
 }
