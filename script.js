@@ -464,7 +464,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 let msg = error.message || 'Hubo un error al crear la cuenta. Inténtalo de nuevo.';
                 if(msg.includes('already registered')) msg = 'Este correo ya está registrado.';
                 if(msg.includes('Password should be at least')) msg = 'La contraseña debe tener al menos 6 caracteres.';
-                if(msg.includes('rate limit')) msg = 'Has excedido el límite de intentos. Por favor, inténtalo más tarde.';
+                if(msg.includes('rate limit')) msg = 'Límite de correos excedido en Supabase (3 por hora). Para solucionarlo, ve a tu panel de Supabase -> Authentication -> Providers -> Email -> Desactiva "Confirm email" y guarda los cambios.';
                 
                 showModal({
                     isError: true,
