@@ -76,22 +76,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showModal(config) {
         const backdrop = document.createElement('div');
-        backdrop.className = 'fixed inset-0 bg-brand/80 z-[200] flex items-center justify-center p-4 sm:p-6 opacity-0 transition-opacity duration-200 backdrop-blur-sm';
+        backdrop.className = 'fixed inset-0 bg-brand/80 z-[200] flex items-center justify-center p-4 sm:p-6 opacity-0 transition-opacity duration-200';
         const modal = document.createElement('div');
-        modal.className = 'bg-white w-full max-w-sm sm:max-w-md rounded-[2rem] p-6 sm:p-8 flex flex-col items-center scale-95 transition-transform duration-200 border-0 shadow-2xl max-h-[90vh] overflow-y-auto relative';
+        modal.className = 'bg-white w-full max-w-sm sm:max-w-md rounded-[2rem] p-6 sm:p-8 flex flex-col items-center scale-95 transition-transform duration-200 max-h-[90vh] overflow-y-auto relative';
         modal.innerHTML = `
-            <div class="w-16 h-16 bg-surface rounded-full flex shrink-0 items-center justify-center mb-4 shadow-none">
+            <div class="w-16 h-16 bg-surface rounded-full flex shrink-0 items-center justify-center mb-4">
                 <i class="ph-fill ${config.icon || 'ph-check-circle'} text-3xl ${config.isError ? 'text-red-500' : 'text-brand'}"></i>
             </div>
             <h3 class="text-xl sm:text-2xl font-semibold text-brand text-center mb-2">${config.title}</h3>
             <p class="text-sm text-zinc-500 text-center mb-6 leading-relaxed px-2">${config.text}</p>
             ${config.customHtml ? `<div class="w-full mb-6 flex justify-center">${config.customHtml}</div>` : ''}
             <div class="w-full flex flex-col gap-2.5">
-                <button id="modal-primary-btn" class="w-full ${config.isError ? 'bg-red-500 hover:bg-red-600' : 'bg-brand hover:bg-brandHover'} text-white font-medium text-sm sm:text-base py-3.5 rounded-full transition-colors shadow-none border-0 appearance-none">
+                <button id="modal-primary-btn" class="w-full ${config.isError ? 'bg-red-500 hover:bg-red-600' : 'bg-brand hover:bg-brandHover'} text-white font-medium text-sm sm:text-base py-3.5 rounded-full transition-colors">
                     ${config.primaryBtnText || 'Entendido'}
                 </button>
                 ${config.secondaryBtnText ? `
-                <button id="modal-secondary-btn" class="w-full bg-transparent text-zinc-500 font-medium text-sm sm:text-base py-3 rounded-full hover:text-brand hover:bg-surface transition-colors shadow-none border-0 appearance-none">
+                <button id="modal-secondary-btn" class="w-full bg-transparent text-zinc-500 font-medium text-sm sm:text-base py-3 rounded-full hover:text-brand hover:bg-surface transition-colors">
                     ${config.secondaryBtnText}
                 </button>
                 ` : ''}
@@ -262,20 +262,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
                 const card = document.createElement('div');
-                card.className = 'w-full bg-white rounded-[2.5rem] p-6 sm:p-8 flex flex-col items-center gap-6 shadow-none border-0 relative';
+                card.className = 'w-full bg-white rounded-[2.5rem] p-6 sm:p-8 flex flex-col items-center gap-6 relative';
                 card.innerHTML = `
-                    <button class="btn-edit absolute top-6 right-6 w-12 h-12 bg-surface rounded-full flex items-center justify-center text-zinc-400 hover:text-brand hover:bg-surfaceHover transition-colors shadow-none border-0 appearance-none" aria-label="Editar mascota">
+                    <button class="btn-edit absolute top-6 right-6 w-12 h-12 bg-surface rounded-full flex items-center justify-center text-zinc-400 hover:text-brand hover:bg-surfaceHover transition-colors" aria-label="Editar mascota">
                         <i class="ph-bold ph-pencil-simple text-xl pointer-events-none" aria-hidden="true"></i>
                     </button>
                     
-                    <div class="pet-photo-container w-24 h-24 bg-surface rounded-full flex items-center justify-center shadow-none overflow-hidden mt-2">
+                    <div class="pet-photo-container w-24 h-24 bg-surface rounded-full flex items-center justify-center overflow-hidden mt-2">
                     </div>
                     
                     <div class="flex flex-col items-center mt-2">
                         <h3 class="pet-name-display text-2xl font-semibold text-brand"></h3>
                     </div>
 
-                    <button class="btn-qr w-full bg-brand text-white font-medium text-base py-4 rounded-full hover:bg-brandHover transition-colors shadow-none border-0 flex items-center justify-center gap-2 appearance-none mt-4">
+                    <button class="btn-qr w-full bg-brand text-white font-medium text-base py-4 rounded-full hover:bg-brandHover transition-colors flex items-center justify-center gap-2 mt-4">
                         <i class="ph-bold ph-qr-code text-xl" aria-hidden="true"></i> Ver Placa QR
                     </button>
                 `;
@@ -349,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
             icon: 'ph-scan',
             title: 'Escanear Placa',
             text: 'Apunta la cámara al código QR de la mascota.',
-            customHtml: '<div id="qr-reader" class="w-full h-64 rounded-2xl overflow-hidden bg-black flex items-center justify-center border-0 shadow-none"></div>',
+            customHtml: '<div id="qr-reader" class="w-full h-64 rounded-2xl overflow-hidden bg-black flex items-center justify-center"></div>',
             primaryBtnText: 'Cancelar Escaneo',
             primaryBtnAction: () => {
                 if (window.html5QrCode) {
@@ -629,7 +629,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const deleteBtnContainer = document.createElement('div');
                 deleteBtnContainer.className = 'mt-6 w-full flex justify-center';
                 deleteBtnContainer.innerHTML = `
-                    <button type="button" id="btn-eliminar-placa" class="text-red-500 font-medium text-sm hover:underline flex items-center gap-2 bg-transparent border-0 shadow-none appearance-none cursor-pointer">
+                    <button type="button" id="btn-eliminar-placa" class="text-red-500 font-medium text-sm hover:underline flex items-center gap-2 bg-transparent cursor-pointer">
                         <i class="ph-bold ph-trash text-lg"></i> Eliminar placa permanentemente
                     </button>
                 `;
@@ -789,12 +789,12 @@ async function cargarNotificaciones(uid) {
 
         notifs.forEach(n => {
             const card = document.createElement('div');
-            card.className = 'w-full bg-white p-5 rounded-3xl flex items-center gap-4 shadow-none border-0';
+            card.className = 'w-full bg-white p-5 rounded-3xl flex items-center gap-4';
 
             const timeStr = n.time.toLocaleString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
 
             card.innerHTML = `
-                <div class="pet-photo-container w-14 h-14 bg-surface rounded-full flex-shrink-0 flex items-center justify-center overflow-hidden border-0"></div>
+                <div class="pet-photo-container w-14 h-14 bg-surface rounded-full flex-shrink-0 flex items-center justify-center overflow-hidden"></div>
                 <div class="flex-1">
                     <h4 class="text-brand font-semibold text-base mb-0.5">¡Placa escaneada!</h4>
                     <p class="text-sm text-zinc-500 leading-tight">Alguien escaneó la placa de <span class="pet-name-display font-semibold text-brand"></span> el ${timeStr}.</p>
@@ -818,7 +818,7 @@ async function cargarNotificaciones(uid) {
             const mapContainer = card.querySelector('.map-btn-container');
             if (n.lat && n.lng) {
                 const btn = document.createElement('button');
-                btn.className = 'mt-2 text-sm font-medium text-brand bg-surface hover:bg-surfaceHover px-4 py-2 rounded-full transition-colors inline-flex items-center gap-2 border-0 shadow-none';
+                btn.className = 'mt-2 text-sm font-medium text-brand bg-surface hover:bg-surfaceHover px-4 py-2 rounded-full transition-colors inline-flex items-center gap-2';
                 btn.innerHTML = '<i class="ph-bold ph-map-pin" aria-hidden="true"></i> Ver Ubicación GPS';
                 btn.addEventListener('click', () => window.open(`https://www.google.com/maps?q=${n.lat},${n.lng}`, '_blank'));
                 mapContainer.appendChild(btn);
