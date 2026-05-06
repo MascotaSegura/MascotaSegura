@@ -153,7 +153,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     const pendingPet = JSON.parse(sessionStorage.getItem('pendingPet'));
                     pendingPet.userId = user.id;
                     pendingPet.createdAt = new Date().toISOString();
-                    sbClient.from('pets').insert([pendingPet]).then(() => {
+                    sbClient.from('pets').insert([pendingPet]).then(({ error }) => {
+                        if (error) {
+                            console.error("Error al guardar pendingPet:", error);
+                            return;
+                        }
                         sessionStorage.removeItem('pendingPet');
                         showModal({
                             icon: 'ph-qr-code',
@@ -325,7 +329,12 @@ document.addEventListener('DOMContentLoaded', () => {
             text: `¿Estás seguro de que deseas eliminar la placa de ${petName || 'esta mascota'}? Esta acción es irreversible y el código QR dejará de funcionar.`,
             primaryBtnText: 'Sí, eliminar',
             primaryBtnAction: async () => {
-                await sbClient.from('pets').delete().eq('id', petId);
+                const { error } = await sbClient.from('pets').delete().eq('id', petId);
+                if (error) {
+                    console.error("Error eliminando mascota:", error);
+                    alert("Error al eliminar: " + error.message);
+                    return;
+                }
                 if(window.location.pathname.includes('crear-placa')) {
                     window.location.href = 'mis-mascotas.html';
                 }
@@ -386,7 +395,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const handleLogout = async () => {
         try {
-            await sbClient.auth.signOut();
+            const { error } = await sbClient.auth.signOut();
+            if (error) throw error;
             window.location.href = 'index.html';
         } catch (error) {
             console.error('Logout error', error);
@@ -414,9 +424,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-    const btnRegistro = document.getElementById('btn-registro');
-    if (btnRegistro) {
-        btnRegistro.addEventListener('click', async () => {
+    const formRegistro = document.querySelector('#btn-registro')?.closest('form');
+    if (formRegistro) {
+        formRegistro.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btnRegistro = document.getElementById('btn-registro');
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const fullname = document.getElementById('fullname').value;
@@ -431,8 +443,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             try {
-                btnRegistro.innerText = "Cargando...";
-                btnRegistro.disabled = true;
+                if (btnRegistro) {
+                    btnRegistro.innerText = "Cargando...";
+                    btnRegistro.disabled = true;
+                }
                 const { data, error } = await sbClient.auth.signUp({ 
                     email, 
                     password,
@@ -442,28 +456,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 showModal({
                     icon: 'ph-party-confetti',
                     title: '¡Bienvenido!',
-                    text: 'Tu cuenta ha sido creada exitosamente.',
+                    text: 'Tu cuenta ha sido creada exitosamente. Si se requiere confirmación, revisa tu correo electrónico.',
                     primaryBtnText: 'Empezar ahora',
                     primaryBtnAction: () => window.location.href = "mis-mascotas.html"
                 });
             } catch (error) {
-                let msg = 'Hubo un error al crear la cuenta. Inténtalo de nuevo.';
-                if(error.message.includes('already registered')) msg = 'Este correo ya está registrado.';
-                if(error.message.includes('Password should be at least 6 characters')) msg = 'La contraseña debe tener al menos 6 caracteres.';
+                let msg = error.message || 'Hubo un error al crear la cuenta. Inténtalo de nuevo.';
+                if(msg.includes('already registered')) msg = 'Este correo ya está registrado.';
+                if(msg.includes('Password should be at least')) msg = 'La contraseña debe tener al menos 6 caracteres.';
+                if(msg.includes('rate limit')) msg = 'Has excedido el límite de intentos. Por favor, inténtalo más tarde.';
+                
                 showModal({
                     isError: true,
                     icon: 'ph-warning-octagon',
                     title: 'Hubo un problema',
                     text: msg
                 });
-                btnRegistro.innerText = "Crear mi cuenta";
-                btnRegistro.disabled = false;
+                if (btnRegistro) {
+                    btnRegistro.innerText = "Crear mi cuenta";
+                    btnRegistro.disabled = false;
+                }
             }
         });
     }
-    const btnEntrar = document.getElementById('btn-entrar');
-    if (btnEntrar) {
-        btnEntrar.addEventListener('click', async () => {
+    const formEntrar = document.querySelector('#btn-entrar')?.closest('form');
+    if (formEntrar) {
+        formEntrar.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btnEntrar = document.getElementById('btn-entrar');
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const requiredFields = ['email', 'password'];
@@ -477,8 +497,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             try {
-                btnEntrar.innerText = "Cargando...";
-                btnEntrar.disabled = true;
+                if (btnEntrar) {
+                    btnEntrar.innerText = "Cargando...";
+                    btnEntrar.disabled = true;
+                }
                 const { error } = await sbClient.auth.signInWithPassword({ email, password });
                 if (error) throw error;
                 showModal({
@@ -489,20 +511,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     primaryBtnAction: () => window.location.href = "mis-mascotas.html"
                 });
             } catch (error) {
+                let msg = error.message || 'Error al iniciar sesión.';
+                if (msg.includes('Email not confirmed')) {
+                    msg = 'Por favor, confirma tu correo electrónico antes de iniciar sesión. Revisa tu bandeja de entrada.';
+                } else if (msg.includes('Invalid login credentials')) {
+                    msg = 'El correo o la contraseña son incorrectos.';
+                }
                 showModal({
                     isError: true,
                     icon: 'ph-shield-warning',
                     title: 'Acceso Denegado',
-                    text: 'Las credenciales ingresadas no coinciden con nuestros registros.'
+                    text: msg
                 });
-                btnEntrar.innerText = "Entrar a mi cuenta";
-                btnEntrar.disabled = false;
+                if (btnEntrar) {
+                    btnEntrar.innerText = "Entrar a mi cuenta";
+                    btnEntrar.disabled = false;
+                }
             }
         });
     }
-    const btnRecuperar = document.getElementById('btn-recuperar');
-    if (btnRecuperar) {
-        btnRecuperar.addEventListener('click', async () => {
+    const formRecuperar = document.querySelector('#btn-recuperar')?.closest('form');
+    if (formRecuperar) {
+        formRecuperar.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btnRecuperar = document.getElementById('btn-recuperar');
             const email = document.getElementById('email').value;
             if (!validateRequired(['email'])) {
                 showModal({
@@ -514,8 +546,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             try {
-                btnRecuperar.innerText = "Enviando...";
-                btnRecuperar.disabled = true;
+                if (btnRecuperar) {
+                    btnRecuperar.innerText = "Enviando...";
+                    btnRecuperar.disabled = true;
+                }
                 const { error } = await sbClient.auth.resetPasswordForEmail(email);
                 if (error) throw error;
                 showModal({
@@ -526,16 +560,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     primaryBtnAction: () => window.location.href = "entrar.html"
                 });
             } catch (error) {
-                let msg = 'Ocurrió un error al intentar enviar el correo.';
-                if(error.code === 'auth/user-not-found') msg = 'No existe una cuenta con este correo.';
+                let msg = error.message || 'Ocurrió un error al intentar enviar el correo.';
+                if(msg.includes('user-not-found') || msg.includes('User not found')) msg = 'No existe una cuenta con este correo.';
+                if(msg.includes('rate limit')) msg = 'Has excedido el límite de intentos. Por favor, inténtalo más tarde.';
                 showModal({
                     isError: true,
                     icon: 'ph-warning-octagon',
                     title: 'Error al enviar',
                     text: msg
                 });
-                btnRecuperar.innerText = "Enviar enlace";
-                btnRecuperar.disabled = false;
+                if (btnRecuperar) {
+                    btnRecuperar.innerText = "Enviar enlace";
+                    btnRecuperar.disabled = false;
+                }
             }
         });
     }
@@ -551,7 +588,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (heading) heading.innerText = "Editar Placa";
             if (subhead) subhead.innerText = "Actualiza los datos del perfil inteligente de tu mascota.";
             
-            sbClient.from('pets').select('*').eq('id', editPetId).single().then(({ data: pet }) => {
+            sbClient.from('pets').select('*').eq('id', editPetId).single().then(({ data: pet, error }) => {
+                if (error) {
+                    console.error("Error cargando mascota:", error);
+                    return;
+                }
                 if (pet) {
                     const setValue = (id, val) => { if(document.getElementById(id)) document.getElementById(id).value = val || ''; };
                     setValue('pet-name', pet.name);
@@ -600,7 +641,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        btnGenerarPlaca.addEventListener('click', async () => {
+        document.getElementById('pet-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
             const name = document.getElementById('pet-name').value;
             const type = document.getElementById('pet-type').value;
             const sex = document.getElementById('pet-sex').value;
@@ -641,9 +683,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const userId = currentUser.id;
                 
                 if (editPetId) {
-                    await sbClient.from('pets').update({
+                    const { error } = await sbClient.from('pets').update({
                         name, type, sex, sterilized, breed, medical, ownerName, ownerPhone, ownerAltPhone, photo: base64Photo
                     }).eq('id', editPetId);
+                    if (error) throw error;
                     showModal({
                         icon: 'ph-check-circle',
                         title: '¡Cambios Guardados!',
@@ -652,10 +695,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         primaryBtnAction: () => window.location.href = "mis-mascotas.html"
                     });
                 } else {
-                    await sbClient.from('pets').insert([{
+                    const { error } = await sbClient.from('pets').insert([{
                         userId, name, type, sex, sterilized, breed, medical, ownerName, ownerPhone, ownerAltPhone, photo: base64Photo,
                         createdAt: new Date().toISOString()
                     }]);
+                    if (error) throw error;
                     document.getElementById('pet-form').reset();
                     btnGenerarPlaca.innerText = "Generar Placa";
                     btnGenerarPlaca.disabled = false;

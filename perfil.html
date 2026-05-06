@@ -160,10 +160,11 @@
                 document.getElementById('btn-whatsapp').style.display = 'none';
             }
 
-            // Record scan timestamp immediately
             sbClient.from('pets').update({
                 lastScan: { timestamp: new Date().toISOString() }
-            }).eq('id', petId);
+            }).eq('id', petId).then(({ error }) => {
+                if (error) console.error("Error registrando escaneo:", error);
+            });
 
             document.getElementById('btn-location').addEventListener('click', () => {
                 const btn = document.getElementById('btn-location');
@@ -181,7 +182,20 @@
                                 lat: lat,
                                 lng: lng
                             }
-                        }).eq('id', petId).then(() => {
+                        }).eq('id', petId).then(({ error }) => {
+                            if (error) {
+                                console.error("Error guardando ubicación:", error);
+                                btn.innerHTML = 'Error de conexión';
+                                btn.classList.add('bg-red-500', 'text-white');
+                                btn.classList.remove('bg-white', 'text-brand');
+                                setTimeout(() => {
+                                    btn.innerHTML = 'Enviar ubicación GPS';
+                                    btn.classList.remove('bg-red-500', 'text-white');
+                                    btn.classList.add('bg-white', 'text-brand');
+                                    btn.disabled = false;
+                                }, 3000);
+                                return;
+                            }
                             btn.innerHTML = '<i class="ph-bold ph-check text-xl"></i> Ubicación enviada';
                             btn.classList.add('bg-green-500', 'text-white');
                             btn.classList.remove('bg-white', 'text-brand');
@@ -215,7 +229,7 @@
         });
     });
   </script>
-<!-- Supabase already loaded above -->
+
 </body>
 </html>
 
