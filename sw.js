@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mascotasegura-v5';
+const CACHE_NAME = 'mascotasegura-v6';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -9,7 +9,6 @@ const ASSETS_TO_CACHE = [
   './crear-placa.html',
   './notificaciones.html',
   './perfil.html',
-  './sequence.js',
   './script.js',
   './paw-print-fill.svg'
 ];
@@ -40,15 +39,25 @@ self.addEventListener('fetch', (event) => {
   }
 
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(event.request).catch(() => {
-        if (event.request.mode === 'navigate') {
-          return caches.match('./index.html');
-        }
-      });
-    })
+    fetch(event.request)
+      .then((networkResponse) => {
+        // Guardar la nueva respuesta en caché para futuros usos sin conexión
+        const responseClone = networkResponse.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, responseClone);
+        });
+        return networkResponse;
+      })
+      .catch(() => {
+        // Si la red falla (offline), intentamos servir desde el caché
+        return caches.match(event.request).then((cachedResponse) => {
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+          if (event.request.mode === 'navigate') {
+            return caches.match('./index.html');
+          }
+        });
+      })
   );
 });
