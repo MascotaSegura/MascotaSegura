@@ -40,10 +40,23 @@ FOR UPDATE USING (auth.uid() = "userId");
 CREATE POLICY "Users can delete their own pets" ON public.pets
 FOR DELETE USING (auth.uid() = "userId");
 
--- Permitir la actualización anónima temporal (Necesario para que cualquiera que escanee el QR pueda actualizar el campo "lastScan" con el GPS)
--- Nota: En un entorno de producción estricto, es mejor usar un RPC para esto, pero esta política emula el comportamiento abierto que tenías en Firebase.
-CREATE POLICY "Anon can update scans" ON public.pets
-FOR UPDATE USING (auth.role() = 'anon' OR auth.role() = 'authenticated');
+-- 4. Función Segura para Actualizar Escaneos (RPC)
+-- Esta función reemplaza la política insegura anterior. Permite que cualquier persona
+-- que escanee el QR actualice ÚNICAMENTE la columna "lastScan", sin tener acceso a modificar el nombre, dueño o foto de la mascota.
+CREATE OR REPLACE FUNCTION update_last_scan(p_pet_id UUID, p_lat FLOAT DEFAULT NULL, p_lng FLOAT DEFAULT NULL)
+RETURNS VOID AS $$
+BEGIN
+  IF p_lat IS NOT NULL AND p_lng IS NOT NULL THEN
+    UPDATE public.pets
+    SET "lastScan" = jsonb_build_object('timestamp', now(), 'lat', p_lat, 'lng', p_lng)
+    WHERE id = p_pet_id;
+  ELSE
+    UPDATE public.pets
+    SET "lastScan" = jsonb_build_object('timestamp', now())
+    WHERE id = p_pet_id;
+  END IF;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- 4. Habilitar Realtime para la tabla pets
 alter publication supabase_realtime add table public.pets;

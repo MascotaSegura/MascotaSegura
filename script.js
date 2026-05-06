@@ -5,13 +5,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const uploadArea = document.getElementById('upload-area');
     const fileInput = document.getElementById('pet-photo');
     let base64Photo = null;
-    if(uploadArea && fileInput) {
+    if (uploadArea && fileInput) {
         uploadArea.addEventListener('click', () => {
             fileInput.click();
         });
         fileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
-            if(file) {
+            if (file) {
                 const reader = new FileReader();
                 reader.onload = (event) => {
                     const img = new Image();
@@ -36,9 +36,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         canvas.height = height;
                         ctx.drawImage(img, 0, 0, width, height);
                         base64Photo = canvas.toDataURL('image/jpeg', 0.8);
-                        
+
                         uploadArea.innerHTML = `<img src="${base64Photo}" class="w-full h-full object-cover rounded-full">`;
-                        
+
                         const previewPhotoContainer = document.getElementById('preview-photo-container');
                         const previewPhotoPlaceholder = document.getElementById('preview-photo-placeholder');
                         const previewPhoto = document.getElementById('preview-photo');
@@ -60,19 +60,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const petSexInput = document.getElementById('pet-sex');
     const previewName = document.getElementById('preview-name');
     const previewTags = document.getElementById('preview-tags');
-    
+
     function updatePreview() {
-        if(!previewName || !previewTags) return;
+        if (!previewName || !previewTags) return;
         const name = petNameInput.value.trim() || 'Nombre de mascota';
         const type = petTypeInput.options[petTypeInput.selectedIndex].text;
         const sex = petSexInput.options[petSexInput.selectedIndex].text;
         previewName.textContent = name;
         previewTags.innerHTML = `${sex} &bull; ${type}`;
     }
-    
-    if(petNameInput) petNameInput.addEventListener('input', updatePreview);
-    if(petTypeInput) petTypeInput.addEventListener('change', updatePreview);
-    if(petSexInput) petSexInput.addEventListener('change', updatePreview);
+
+    if (petNameInput) petNameInput.addEventListener('input', updatePreview);
+    if (petTypeInput) petTypeInput.addEventListener('change', updatePreview);
+    if (petSexInput) petSexInput.addEventListener('change', updatePreview);
 
     function showModal(config) {
         const backdrop = document.createElement('div');
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const forms = document.querySelectorAll('form');
     forms.forEach(form => {
         form.addEventListener('submit', (e) => {
-            e.preventDefault(); 
+            e.preventDefault();
         });
     });
     function clearValidations() {
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let isValid = true;
         ids.forEach(id => {
             const el = document.getElementById(id);
-            if(el && !el.value.trim()) {
+            if (el && !el.value.trim()) {
                 el.classList.remove('border-0');
                 el.classList.add('border-red-500', 'border-2');
                 isValid = false;
@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             primaryBtnAction: () => window.location.href = "mis-mascotas.html"
                         });
                     }).catch(console.error);
-                } catch(e) {
+                } catch (e) {
                     console.error('Error in pendingPet', e);
                 }
             }
@@ -212,8 +212,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const loading = document.getElementById('pets-loading');
         const empty = document.getElementById('pets-empty');
         const container = document.getElementById('pets-container');
-        if(!container) return;
-        
+        if (!container) return;
+
         async function fetchPets() {
             const { data: pets, error } = await sbClient.from('pets').select('*').eq('userId', uid);
             if (error) {
@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     icon: 'paw-print-fill.svg',
                                     vibrate: [200, 100, 200, 100, 200]
                                 });
-                                notification.onclick = function() {
+                                notification.onclick = function () {
                                     window.open(mapUrl, '_blank');
                                     notification.close();
                                 };
@@ -301,7 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
         await fetchPets();
         sbClient.channel('public:pets:mis').on('postgres_changes', { event: '*', schema: 'public', table: 'pets', filter: `userId=eq.${uid}` }, () => fetchPets()).subscribe();
     }
-    window.mostrarQR = function(petId, petName) {
+    window.mostrarQR = function (petId, petName) {
         const urlPerfil = window.location.origin + '/perfil.html?id=' + petId;
         const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(urlPerfil)}`;
         showModal({
@@ -317,11 +317,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    window.editarMascota = function(petId) {
+    window.editarMascota = function (petId) {
         window.location.href = `crear-placa.html?edit=${petId}`;
     };
 
-    window.eliminarMascota = function(petId, petName) {
+    window.eliminarMascota = function (petId, petName) {
         showModal({
             icon: 'ph-warning-octagon',
             isError: true,
@@ -335,14 +335,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert("Error al eliminar: " + error.message);
                     return;
                 }
-                if(window.location.pathname.includes('crear-placa')) {
+                if (window.location.pathname.includes('crear-placa')) {
                     window.location.href = 'mis-mascotas.html';
                 }
             },
             secondaryBtnText: 'Cancelar'
         });
     };
-    window.openScannerModal = function() {
+    window.openScannerModal = function () {
         if (window.html5QrCodeScannerIsActive) return;
         window.html5QrCodeScannerIsActive = true;
         showModal({
@@ -447,8 +447,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     btnRegistro.innerText = "Cargando...";
                     btnRegistro.disabled = true;
                 }
-                const { data, error } = await sbClient.auth.signUp({ 
-                    email, 
+                const { data, error } = await sbClient.auth.signUp({
+                    email,
                     password,
                     options: { data: { full_name: fullname } }
                 });
@@ -462,10 +462,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             } catch (error) {
                 let msg = error.message || 'Hubo un error al crear la cuenta. Inténtalo de nuevo.';
-                if(msg.includes('already registered')) msg = 'Este correo ya está registrado.';
-                if(msg.includes('Password should be at least')) msg = 'La contraseña debe tener al menos 6 caracteres.';
-                if(msg.includes('rate limit')) msg = 'Límite de correos excedido en Supabase (3 por hora). Para solucionarlo, ve a tu panel de Supabase -> Authentication -> Providers -> Email -> Desactiva "Confirm email" y guarda los cambios.';
-                
+                if (msg.includes('already registered')) msg = 'Este correo ya está registrado.';
+                if (msg.includes('Password should be at least')) msg = 'La contraseña debe tener al menos 6 caracteres.';
+                if (msg.includes('rate limit')) msg = 'Límite de correos excedido en Supabase (3 por hora). Para solucionarlo, ve a tu panel de Supabase -> Authentication -> Providers -> Email -> Desactiva "Confirm email" y guarda los cambios.';
+
                 showModal({
                     isError: true,
                     icon: 'ph-warning-octagon',
@@ -561,8 +561,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             } catch (error) {
                 let msg = error.message || 'Ocurrió un error al intentar enviar el correo.';
-                if(msg.includes('user-not-found') || msg.includes('User not found')) msg = 'No existe una cuenta con este correo.';
-                if(msg.includes('rate limit')) msg = 'Has excedido el límite de intentos. Por favor, inténtalo más tarde.';
+                if (msg.includes('user-not-found') || msg.includes('User not found')) msg = 'No existe una cuenta con este correo.';
+                if (msg.includes('rate limit')) msg = 'Has excedido el límite de intentos. Por favor, inténtalo más tarde.';
                 showModal({
                     isError: true,
                     icon: 'ph-warning-octagon',
@@ -587,14 +587,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const subhead = document.querySelector('h1 + p');
             if (heading) heading.innerText = "Editar Placa";
             if (subhead) subhead.innerText = "Actualiza los datos del perfil inteligente de tu mascota.";
-            
+
             sbClient.from('pets').select('*').eq('id', editPetId).single().then(({ data: pet, error }) => {
                 if (error) {
                     console.error("Error cargando mascota:", error);
                     return;
                 }
                 if (pet) {
-                    const setValue = (id, val) => { if(document.getElementById(id)) document.getElementById(id).value = val || ''; };
+                    const setValue = (id, val) => { if (document.getElementById(id)) document.getElementById(id).value = val || ''; };
                     setValue('pet-name', pet.name);
                     setValue('pet-type', pet.type || 'perro');
                     setValue('pet-sex', pet.sex || 'macho');
@@ -604,7 +604,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     setValue('owner-name', pet.ownerName);
                     setValue('owner-phone', pet.ownerPhone);
                     setValue('owner-alt-phone', pet.ownerAltPhone);
-                    
+
                     if (pet.photo) {
                         base64Photo = pet.photo;
                         const uploadArea = document.getElementById('upload-area');
@@ -681,7 +681,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 btnGenerarPlaca.innerText = "Guardando...";
                 btnGenerarPlaca.disabled = true;
                 const userId = currentUser.id;
-                
+
                 if (editPetId) {
                     const { error } = await sbClient.from('pets').update({
                         name, type, sex, sterilized, breed, medical, ownerName, ownerPhone, ownerAltPhone, photo: base64Photo
@@ -741,20 +741,20 @@ async function cargarNotificaciones(uid) {
     const loading = document.getElementById('notifications-loading');
     const empty = document.getElementById('notifications-empty');
     const container = document.getElementById('notifications-container');
-    if(!container) return;
+    if (!container) return;
 
     async function fetchNotifs() {
         const { data: pets, error } = await sbClient.from('pets').select('*').eq('userId', uid);
         if (error) {
             console.error("Supabase Database Error: ", error);
-            if(loading) loading.innerHTML = '<span class="text-red-500 text-sm font-medium text-center">Error de conexión con la base de datos. Verifica tu internet.</span>';
+            if (loading) loading.innerHTML = '<span class="text-red-500 text-sm font-medium text-center">Error de conexión con la base de datos. Verifica tu internet.</span>';
             return;
         }
-        if(loading) loading.classList.add('hidden');
-        
+        if (loading) loading.classList.add('hidden');
+
         if (!pets || pets.length === 0) {
-            if(empty) empty.classList.remove('hidden');
-            if(container) container.classList.add('hidden');
+            if (empty) empty.classList.remove('hidden');
+            if (container) container.classList.add('hidden');
             return;
         }
 
@@ -773,15 +773,15 @@ async function cargarNotificaciones(uid) {
         });
 
         if (notifs.length === 0) {
-            if(empty) empty.classList.remove('hidden');
-            if(container) container.classList.add('hidden');
+            if (empty) empty.classList.remove('hidden');
+            if (container) container.classList.add('hidden');
             return;
         }
 
         notifs.sort((a, b) => b.time - a.time);
 
-        if(empty) empty.classList.add('hidden');
-        if(container) {
+        if (empty) empty.classList.add('hidden');
+        if (container) {
             container.classList.remove('hidden');
             container.classList.add('flex');
             container.innerHTML = '';
@@ -790,9 +790,9 @@ async function cargarNotificaciones(uid) {
         notifs.forEach(n => {
             const card = document.createElement('div');
             card.className = 'w-full bg-white p-5 rounded-3xl flex items-center gap-4 shadow-none border-0';
-            
+
             const timeStr = n.time.toLocaleString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
-            
+
             card.innerHTML = `
                 <div class="pet-photo-container w-14 h-14 bg-surface rounded-full flex-shrink-0 flex items-center justify-center overflow-hidden border-0"></div>
                 <div class="flex-1">
@@ -829,7 +829,7 @@ async function cargarNotificaciones(uid) {
                 mapContainer.appendChild(span);
             }
 
-            if(container) container.appendChild(card);
+            if (container) container.appendChild(card);
         });
     }
     await fetchNotifs();
