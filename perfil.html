@@ -151,17 +151,21 @@
             document.getElementById('pet-sterilized').textContent = pet.sterilized || 'N/A';
             document.getElementById('pet-medical').textContent = pet.medical || 'Ninguna conocida';
 
-            const phone = pet.ownerPhone ? pet.ownerPhone.replace(/\D/g, '') : '';
+            const phone = pet.ownerPhone ? pet.ownerPhone.replace(/[^\d+]/g, '') : '';
             if (phone) {
                 document.getElementById('btn-call').href = `tel:${phone}`;
-                document.getElementById('btn-whatsapp').href = `https://wa.me/${phone}?text=Hola,%20encontré%20a%20${encodeURIComponent(pet.name)}.%20Escaneé%20su%20placa.`;
+                document.getElementById('btn-whatsapp').href = `https://wa.me/${phone.replace('+', '')}?text=Hola,%20encontré%20a%20${encodeURIComponent(pet.name)}.%20Escaneé%20su%20placa.`;
             } else {
                 document.getElementById('btn-call').style.display = 'none';
                 document.getElementById('btn-whatsapp').style.display = 'none';
             }
 
-            sbClient.rpc('update_last_scan', { p_pet_id: petId }).then(({ error }) => {
-                if (error) console.error("Error registrando escaneo:", error);
+            // Registrar el escaneo solo si el visitante NO es el dueño de la mascota
+            sbClient.auth.getUser().then(({ data }) => {
+                const isOwner = data && data.user && data.user.id === pet.userId;
+                if (!isOwner) {
+                    sbClient.rpc('update_last_scan', { p_pet_id: petId }).catch(console.error);
+                }
             });
 
             document.getElementById('btn-location').addEventListener('click', () => {
