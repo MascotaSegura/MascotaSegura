@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mascotasegura-v6';
+const CACHE_NAME = 'mascotasegura-v7';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
