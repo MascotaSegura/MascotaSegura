@@ -24,6 +24,13 @@ ALTER TABLE public.pets ENABLE ROW LEVEL SECURITY;
 
 -- 3. Crear Políticas de Acceso (Policies)
 
+-- Primero eliminamos las políticas existentes para evitar errores si ejecutas esto varias veces
+DROP POLICY IF EXISTS "Public read access" ON public.pets;
+DROP POLICY IF EXISTS "Users can insert their own pets" ON public.pets;
+DROP POLICY IF EXISTS "Users can update their own pets" ON public.pets;
+DROP POLICY IF EXISTS "Users can delete their own pets" ON public.pets;
+DROP POLICY IF EXISTS "Anon can update scans" ON public.pets; -- < ELIMINAMOS LA VULNERABLE
+
 -- Permitir a cualquier persona leer el perfil de cualquier mascota (necesario para cuando escanean el QR)
 CREATE POLICY "Public read access" ON public.pets
 FOR SELECT USING (true);
