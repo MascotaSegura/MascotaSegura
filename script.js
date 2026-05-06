@@ -196,6 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (path.includes('notificaciones')) {
                 cargarNotificaciones(user.id);
             }
+            setupPushNotifications(user.id);
         } else {
             if (navEntrar) navEntrar.classList.remove('!hidden');
             if (navRegistro) navRegistro.classList.remove('!hidden');
@@ -208,6 +209,42 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+
+    async function setupPushNotifications(uid) {
+        if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+        try {
+            const registration = await navigator.serviceWorker.ready;
+            let subscription = await registration.pushManager.getSubscription();
+            if (!subscription) {
+                const permission = await Notification.requestPermission();
+                if (permission !== 'granted') return;
+                const VAPID_PUBLIC_KEY = "BO9TeI15I4VT43x4t1fV1DH6jnmYlZivFE65gBKdVwaLtWRI7r0XMGDnS_wF4IKm2KM2n_-EczbWxle6p9O4rb4";
+                function urlB64ToUint8Array(base64String) {
+                  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+                  const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+                  const rawData = window.atob(base64);
+                  const outputArray = new Uint8Array(rawData.length);
+                  for (let i = 0; i < rawData.length; ++i) {
+                    outputArray[i] = rawData.charCodeAt(i);
+                  }
+                  return outputArray;
+                }
+                subscription = await registration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: urlB64ToUint8Array(VAPID_PUBLIC_KEY)
+                });
+            }
+            const subJson = JSON.parse(JSON.stringify(subscription));
+            const { data } = await sbClient.from('push_subscriptions').select('subscription').eq('user_id', uid);
+            const exists = data && data.some(d => JSON.stringify(d.subscription) === JSON.stringify(subJson));
+            if (!exists) {
+                await sbClient.from('push_subscriptions').insert([{ user_id: uid, subscription: subJson }]);
+            }
+        } catch (e) {
+            console.error("Error Push:", e);
+        }
+    }
+
     async function cargarMisMascotas(uid) {
         const loading = document.getElementById('pets-loading');
         const empty = document.getElementById('pets-empty');
