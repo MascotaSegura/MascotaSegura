@@ -213,6 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function setupPushNotifications(uid) {
         if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
         try {
+            await navigator.serviceWorker.register('./sw.js');
             const registration = await navigator.serviceWorker.ready;
             let subscription = await registration.pushManager.getSubscription();
             if (!subscription) {
