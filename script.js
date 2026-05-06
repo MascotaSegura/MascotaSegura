@@ -301,8 +301,8 @@ document.addEventListener('DOMContentLoaded', () => {
         await fetchPets();
         sbClient.channel('public:pets:mis').on('postgres_changes', { event: '*', schema: 'public', table: 'pets', filter: `userId=eq.${uid}` }, () => fetchPets()).subscribe();
     }
-    window.mostrarQR = function (petId, petName) {
-        const urlPerfil = window.location.origin + '/perfil.html?id=' + petId;
+    window.mostrarQR = function(petId, petName) {
+        const urlPerfil = new URL('perfil.html?id=' + petId, window.location.href).href;
         const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(urlPerfil)}`;
         showModal({
             icon: 'ph-qr-code',
