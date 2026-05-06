@@ -76,22 +76,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showModal(config) {
         const backdrop = document.createElement('div');
-        backdrop.className = 'fixed inset-0 bg-brand/80 z-[200] flex items-center justify-center p-4 md:p-6 opacity-0 transition-opacity duration-200';
+        backdrop.className = 'fixed inset-0 bg-brand/80 z-[200] flex items-center justify-center p-4 sm:p-6 opacity-0 transition-opacity duration-200 backdrop-blur-sm';
         const modal = document.createElement('div');
-        modal.className = 'bg-white w-[92%] max-w-md rounded-[2.5rem] p-6 md:p-8 flex flex-col items-center scale-95 transition-transform duration-200 border-0 shadow-none';
+        modal.className = 'bg-white w-full max-w-sm sm:max-w-md rounded-[2rem] p-6 sm:p-8 flex flex-col items-center scale-95 transition-transform duration-200 border-0 shadow-2xl max-h-[90vh] overflow-y-auto relative';
         modal.innerHTML = `
-            <div class="w-20 h-20 bg-surface rounded-full flex items-center justify-center mb-6 shadow-none">
-                <i class="ph-fill ${config.icon || 'ph-check-circle'} text-4xl ${config.isError ? 'text-red-500' : 'text-brand'}"></i>
+            <div class="w-16 h-16 bg-surface rounded-full flex shrink-0 items-center justify-center mb-4 shadow-none">
+                <i class="ph-fill ${config.icon || 'ph-check-circle'} text-3xl ${config.isError ? 'text-red-500' : 'text-brand'}"></i>
             </div>
-            <h3 class="text-2xl font-semibold text-brand text-center mb-3">${config.title}</h3>
-            <p class="text-sm text-zinc-500 text-center mb-8 leading-relaxed">${config.text}</p>
-            ${config.customHtml ? `<div class="w-full mb-8 flex justify-center">${config.customHtml}</div>` : ''}
-            <div class="w-full flex flex-col gap-3">
-                <button id="modal-primary-btn" class="w-full ${config.isError ? 'bg-red-500 hover:bg-red-600' : 'bg-brand hover:bg-brandHover'} text-white font-medium text-sm py-4 rounded-full transition-colors shadow-none border-0 appearance-none">
+            <h3 class="text-xl sm:text-2xl font-semibold text-brand text-center mb-2">${config.title}</h3>
+            <p class="text-sm text-zinc-500 text-center mb-6 leading-relaxed px-2">${config.text}</p>
+            ${config.customHtml ? `<div class="w-full mb-6 flex justify-center">${config.customHtml}</div>` : ''}
+            <div class="w-full flex flex-col gap-2.5">
+                <button id="modal-primary-btn" class="w-full ${config.isError ? 'bg-red-500 hover:bg-red-600' : 'bg-brand hover:bg-brandHover'} text-white font-medium text-sm sm:text-base py-3.5 rounded-full transition-colors shadow-none border-0 appearance-none">
                     ${config.primaryBtnText || 'Entendido'}
                 </button>
                 ${config.secondaryBtnText ? `
-                <button id="modal-secondary-btn" class="w-full bg-transparent text-zinc-500 font-medium text-sm py-3 rounded-full hover:text-brand transition-colors shadow-none border-0 appearance-none">
+                <button id="modal-secondary-btn" class="w-full bg-transparent text-zinc-500 font-medium text-sm sm:text-base py-3 rounded-full hover:text-brand hover:bg-surface transition-colors shadow-none border-0 appearance-none">
                     ${config.secondaryBtnText}
                 </button>
                 ` : ''}
@@ -308,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
             icon: 'ph-qr-code',
             title: `Placa de ${petName}`,
             text: 'Este es el código único. Quien lo escanee verá su perfil público para ayudarte a localizarlo.',
-            customHtml: `<div class="bg-surface p-4 rounded-3xl"><img src="${qrImgUrl}" alt="QR de ${petName}" class="w-48 h-48 rounded-xl object-contain mix-blend-multiply"></div>`,
+            customHtml: `<div class="bg-surface p-3 sm:p-4 rounded-3xl"><img src="${qrImgUrl}" alt="QR de ${petName}" class="w-40 h-40 sm:w-44 sm:h-44 rounded-xl object-contain mix-blend-multiply"></div>`,
             primaryBtnText: 'Cerrar',
             secondaryBtnText: 'Abrir perfil público',
             secondaryBtnAction: () => {
