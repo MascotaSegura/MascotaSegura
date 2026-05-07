@@ -215,31 +215,64 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             await navigator.serviceWorker.register('./sw.js');
             const registration = await navigator.serviceWorker.ready;
+
+            const subscribeAndSave = async () => {
+                try {
+                    const VAPID_PUBLIC_KEY = "BO9TeI15I4VT43x4t1fV1DH6jnmYlZivFE65gBKdVwaLtWRI7r0XMGDnS_wF4IKm2KM2n_-EczbWxle6p9O4rb4";
+                    function urlB64ToUint8Array(base64String) {
+                      const padding = '='.repeat((4 - base64String.length % 4) % 4);
+                      const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+                      const rawData = window.atob(base64);
+                      const outputArray = new Uint8Array(rawData.length);
+                      for (let i = 0; i < rawData.length; ++i) {
+                        outputArray[i] = rawData.charCodeAt(i);
+                      }
+                      return outputArray;
+                    }
+                    let subscription = await registration.pushManager.subscribe({
+                        userVisibleOnly: true,
+                        applicationServerKey: urlB64ToUint8Array(VAPID_PUBLIC_KEY)
+                    });
+                    const subJson = JSON.parse(JSON.stringify(subscription));
+                    const { data } = await sbClient.from('push_subscriptions').select('subscription').eq('user_id', uid);
+                    const exists = data && data.some(d => JSON.stringify(d.subscription) === JSON.stringify(subJson));
+                    if (!exists) {
+                        await sbClient.from('push_subscriptions').insert([{ user_id: uid, subscription: subJson }]);
+                    }
+                } catch (e) {
+                    console.error("Error subscribing:", e);
+                }
+            };
+
             let subscription = await registration.pushManager.getSubscription();
             if (!subscription) {
-                const permission = await Notification.requestPermission();
-                if (permission !== 'granted') return;
-                const VAPID_PUBLIC_KEY = "BO9TeI15I4VT43x4t1fV1DH6jnmYlZivFE65gBKdVwaLtWRI7r0XMGDnS_wF4IKm2KM2n_-EczbWxle6p9O4rb4";
-                function urlB64ToUint8Array(base64String) {
-                  const padding = '='.repeat((4 - base64String.length % 4) % 4);
-                  const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
-                  const rawData = window.atob(base64);
-                  const outputArray = new Uint8Array(rawData.length);
-                  for (let i = 0; i < rawData.length; ++i) {
-                    outputArray[i] = rawData.charCodeAt(i);
-                  }
-                  return outputArray;
+                if (Notification.permission === 'default') {
+                    if (!sessionStorage.getItem('pushPrompted')) {
+                        sessionStorage.setItem('pushPrompted', 'true');
+                        showModal({
+                            icon: 'ph-bell-ringing',
+                            title: 'Activa las Alertas',
+                            text: 'Recibe una notificación inmediata en tu dispositivo cuando alguien escanee la placa de tu mascota.',
+                            primaryBtnText: 'Activar Alertas',
+                            primaryBtnAction: async () => {
+                                const permission = await Notification.requestPermission();
+                                if (permission === 'granted') {
+                                    await subscribeAndSave();
+                                }
+                            },
+                            secondaryBtnText: 'Ahora no'
+                        });
+                    }
+                } else if (Notification.permission === 'granted') {
+                    await subscribeAndSave();
                 }
-                subscription = await registration.pushManager.subscribe({
-                    userVisibleOnly: true,
-                    applicationServerKey: urlB64ToUint8Array(VAPID_PUBLIC_KEY)
-                });
-            }
-            const subJson = JSON.parse(JSON.stringify(subscription));
-            const { data } = await sbClient.from('push_subscriptions').select('subscription').eq('user_id', uid);
-            const exists = data && data.some(d => JSON.stringify(d.subscription) === JSON.stringify(subJson));
-            if (!exists) {
-                await sbClient.from('push_subscriptions').insert([{ user_id: uid, subscription: subJson }]);
+            } else {
+                const subJson = JSON.parse(JSON.stringify(subscription));
+                const { data } = await sbClient.from('push_subscriptions').select('subscription').eq('user_id', uid);
+                const exists = data && data.some(d => JSON.stringify(d.subscription) === JSON.stringify(subJson));
+                if (!exists) {
+                    await sbClient.from('push_subscriptions').insert([{ user_id: uid, subscription: subJson }]);
+                }
             }
         } catch (e) {
             console.error("Error Push:", e);
