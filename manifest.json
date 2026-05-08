@@ -1,7 +1,7 @@
 {
   "name": "MascotaSegura",
   "short_name": "MascotaSegura",
-  "start_url": "index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#09090B",

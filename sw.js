@@ -1,6 +1,5 @@
 const CACHE_NAME = 'mascotasegura-v7';
 const ASSETS_TO_CACHE = [
-  './',
   './index.html',
   './entrar.html',
   './registro.html',
@@ -44,7 +43,9 @@ self.addEventListener('fetch', (event) => {
         // Guardar la nueva respuesta en caché para futuros usos sin conexión
         const responseClone = networkResponse.clone();
         caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseClone);
+          if (event.request.method === 'GET') {
+            cache.put(event.request, responseClone);
+          }
         });
         return networkResponse;
       })

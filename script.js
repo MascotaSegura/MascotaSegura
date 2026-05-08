@@ -1,6 +1,30 @@
 const SUPABASE_URL = "https://vaztacfioinkkkxmimaw.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_WHwWYUn52u_73tvPN-PC4A_fDUTRNVD";
 const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    setTimeout(() => {
+        if (window.showModal) {
+            window.showModal({
+                icon: 'ph-download-simple',
+                title: 'Instala la App',
+                text: 'Agrega MascotaSegura a tu pantalla de inicio para un acceso más rápido y experiencia a pantalla completa.',
+                primaryBtnText: 'Instalar App',
+                primaryBtnAction: async () => {
+                    if (deferredPrompt) {
+                        deferredPrompt.prompt();
+                        await deferredPrompt.userChoice;
+                        deferredPrompt = null;
+                    }
+                },
+                secondaryBtnText: 'Ahora no'
+            });
+        }
+    }, 1500);
+});
 document.addEventListener('DOMContentLoaded', () => {
     const uploadArea = document.getElementById('upload-area');
     const fileInput = document.getElementById('pet-photo');
@@ -74,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (petTypeInput) petTypeInput.addEventListener('change', updatePreview);
     if (petSexInput) petSexInput.addEventListener('change', updatePreview);
 
-    function showModal(config) {
+    window.showModal = function(config) {
         const backdrop = document.createElement('div');
         backdrop.className = 'fixed inset-0 bg-brand/80 z-[200] flex items-center justify-center p-4 sm:p-6 opacity-0 transition-opacity duration-200';
         const modal = document.createElement('div');
@@ -87,11 +111,11 @@ document.addEventListener('DOMContentLoaded', () => {
             <p class="text-sm text-zinc-500 text-center mb-6 leading-relaxed px-2">${config.text}</p>
             ${config.customHtml ? `<div class="w-full mb-6 flex justify-center">${config.customHtml}</div>` : ''}
             <div class="w-full flex flex-col gap-2.5">
-                <button id="modal-primary-btn" class="w-full ${config.isError ? 'bg-red-500 hover:bg-red-600' : 'bg-brand hover:bg-brandHover'} text-white font-medium text-sm sm:text-base py-3.5 rounded-full transition-colors">
+                <button class="modal-primary-btn w-full ${config.isError ? 'bg-red-500 hover:bg-red-600' : 'bg-brand hover:bg-brandHover'} text-white font-medium text-sm sm:text-base py-3.5 rounded-full transition-colors">
                     ${config.primaryBtnText || 'Entendido'}
                 </button>
                 ${config.secondaryBtnText ? `
-                <button id="modal-secondary-btn" class="w-full bg-transparent text-zinc-500 font-medium text-sm sm:text-base py-3 rounded-full hover:text-brand hover:bg-surface transition-colors">
+                <button class="modal-secondary-btn w-full bg-transparent text-zinc-500 font-medium text-sm sm:text-base py-3 rounded-full hover:text-brand hover:bg-surface transition-colors">
                     ${config.secondaryBtnText}
                 </button>
                 ` : ''}
@@ -108,17 +132,17 @@ document.addEventListener('DOMContentLoaded', () => {
             modal.classList.add('scale-95');
             setTimeout(() => backdrop.remove(), 300);
         };
-        document.getElementById('modal-primary-btn').addEventListener('click', () => {
+        modal.querySelector('.modal-primary-btn').addEventListener('click', () => {
             close();
             if (config.primaryBtnAction) config.primaryBtnAction();
         });
         if (config.secondaryBtnText) {
-            document.getElementById('modal-secondary-btn').addEventListener('click', () => {
+            modal.querySelector('.modal-secondary-btn').addEventListener('click', () => {
                 close();
                 if (config.secondaryBtnAction) config.secondaryBtnAction();
             });
         }
-    }
+    };
     const forms = document.querySelectorAll('form');
     forms.forEach(form => {
         form.addEventListener('submit', (e) => {
@@ -210,6 +234,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Run setupPushNotifications even if not logged in so the prompt appears
+    setupPushNotifications(null);
+
     async function setupPushNotifications(uid) {
         if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
         try {
@@ -233,11 +260,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         userVisibleOnly: true,
                         applicationServerKey: urlB64ToUint8Array(VAPID_PUBLIC_KEY)
                     });
-                    const subJson = JSON.parse(JSON.stringify(subscription));
-                    const { data } = await sbClient.from('push_subscriptions').select('subscription').eq('user_id', uid);
-                    const exists = data && data.some(d => JSON.stringify(d.subscription) === JSON.stringify(subJson));
-                    if (!exists) {
-                        await sbClient.from('push_subscriptions').insert([{ user_id: uid, subscription: subJson }]);
+                    if (uid) {
+                        const subJson = JSON.parse(JSON.stringify(subscription));
+                        const { data } = await sbClient.from('push_subscriptions').select('subscription').eq('user_id', uid);
+                        const exists = data && data.some(d => JSON.stringify(d.subscription) === JSON.stringify(subJson));
+                        if (!exists) {
+                            await sbClient.from('push_subscriptions').insert([{ user_id: uid, subscription: subJson }]);
+                        }
                     }
                 } catch (e) {
                     console.error("Error subscribing:", e);
@@ -246,27 +275,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let subscription = await registration.pushManager.getSubscription();
             if (!subscription) {
-                if (Notification.permission === 'default') {
-                    if (!sessionStorage.getItem('pushPrompted')) {
-                        sessionStorage.setItem('pushPrompted', 'true');
-                        showModal({
-                            icon: 'ph-bell-ringing',
-                            title: 'Activa las Alertas',
-                            text: 'Recibe una notificación inmediata en tu dispositivo cuando alguien escanee la placa de tu mascota.',
-                            primaryBtnText: 'Activar Alertas',
-                            primaryBtnAction: async () => {
-                                const permission = await Notification.requestPermission();
-                                if (permission === 'granted') {
-                                    await subscribeAndSave();
-                                }
-                            },
-                            secondaryBtnText: 'Ahora no'
-                        });
-                    }
-                } else if (Notification.permission === 'granted') {
-                    await subscribeAndSave();
-                }
-            } else {
+                window.showModal({
+                    icon: 'ph-bell-ringing',
+                    title: 'Activa las Alertas',
+                    text: 'Recibe una notificación inmediata en tu dispositivo cuando alguien escanee la placa de tu mascota.',
+                    primaryBtnText: 'Activar Alertas',
+                    primaryBtnAction: async () => {
+                        const permission = await Notification.requestPermission();
+                        if (permission === 'granted') {
+                            await subscribeAndSave();
+                        }
+                    },
+                    secondaryBtnText: 'Ahora no'
+                });
+            } else if (uid) {
                 const subJson = JSON.parse(JSON.stringify(subscription));
                 const { data } = await sbClient.from('push_subscriptions').select('subscription').eq('user_id', uid);
                 const exists = data && data.some(d => JSON.stringify(d.subscription) === JSON.stringify(subJson));
@@ -420,7 +442,7 @@ document.addEventListener('DOMContentLoaded', () => {
             icon: 'ph-scan',
             title: 'Escanear Placa',
             text: 'Apunta la cámara al código QR de la mascota.',
-            customHtml: '<div id="qr-reader" class="w-full h-64 rounded-2xl overflow-hidden bg-black flex items-center justify-center"></div>',
+            customHtml: '<div id="qr-reader" class="w-full h-64 rounded-2xl overflow-hidden bg-black flex items-center justify-center"><i class="ph-bold ph-spinner animate-spin text-3xl text-white"></i></div>',
             primaryBtnText: 'Cancelar Escaneo',
             primaryBtnAction: () => {
                 if (window.html5QrCode) {
@@ -431,38 +453,64 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.html5QrCodeScannerIsActive = false;
             }
         });
-        setTimeout(() => {
-            if (typeof Html5Qrcode !== 'undefined') {
-                window.html5QrCode = new Html5Qrcode("qr-reader");
-                const config = { fps: 10, qrbox: { width: 220, height: 220 }, aspectRatio: 1.0 };
-                window.html5QrCode.start({ facingMode: "environment" }, config, (decodedText) => {
-                    window.html5QrCode.stop().then(() => {
-                        window.html5QrCode.clear();
-                        window.html5QrCodeScannerIsActive = false;
-                        document.getElementById('modal-primary-btn').click();
-                        setTimeout(() => {
-                            if (decodedText.includes('perfil.html?id=')) {
-                                window.location.href = decodedText;
-                            } else {
-                                showModal({
-                                    icon: 'ph-check-circle',
-                                    title: 'Placa Detectada',
-                                    text: 'Contenido del código escaneado:',
-                                    customHtml: `<div class="bg-surface p-4 rounded-xl w-full break-all text-center font-medium text-brand">` + decodedText + `</div>`,
-                                    primaryBtnText: 'Entendido'
-                                });
-                            }
-                        }, 400);
-                    });
-                }).catch((err) => {
-                    window.html5QrCodeScannerIsActive = false;
-                });
-            } else {
+
+        const startScanner = () => {
+            setTimeout(() => {
                 const qrContainer = document.getElementById('qr-reader');
-                if (qrContainer) qrContainer.innerHTML = '<span class="text-sm text-red-500 font-medium px-4 text-center">Error al cargar la cámara.</span>';
+                if (!qrContainer) {
+                    window.html5QrCodeScannerIsActive = false;
+                    return;
+                }
+                if (typeof Html5Qrcode !== 'undefined') {
+                    qrContainer.innerHTML = '';
+                    window.html5QrCode = new Html5Qrcode("qr-reader");
+                    const config = { fps: 10, qrbox: { width: 220, height: 220 }, aspectRatio: 1.0 };
+                    window.html5QrCode.start({ facingMode: "environment" }, config, (decodedText) => {
+                        window.html5QrCode.stop().then(() => {
+                            window.html5QrCode.clear();
+                            window.html5QrCodeScannerIsActive = false;
+                            const primaryBtn = document.querySelector('.modal-primary-btn');
+                            if (primaryBtn) primaryBtn.click();
+                            setTimeout(() => {
+                                if (decodedText.includes('perfil.html?id=')) {
+                                    window.location.href = decodedText;
+                                } else {
+                                    showModal({
+                                        icon: 'ph-check-circle',
+                                        title: 'Placa Detectada',
+                                        text: 'Contenido del código escaneado:',
+                                        customHtml: `<div class="bg-surface p-4 rounded-xl w-full break-all text-center font-medium text-brand">` + decodedText + `</div>`,
+                                        primaryBtnText: 'Entendido'
+                                    });
+                                }
+                            }, 400);
+                        });
+                    }).catch((err) => {
+                        window.html5QrCodeScannerIsActive = false;
+                        if (qrContainer && !window.html5QrCode.isScanning) {
+                            qrContainer.innerHTML = '<span class="text-sm text-red-500 font-medium px-4 text-center">Error al acceder a la cámara. Revisa los permisos.</span>';
+                        }
+                    });
+                } else {
+                    qrContainer.innerHTML = '<span class="text-sm text-red-500 font-medium px-4 text-center">Error al cargar la librería del escáner.</span>';
+                    window.html5QrCodeScannerIsActive = false;
+                }
+            }, 300);
+        };
+
+        if (typeof Html5Qrcode === 'undefined') {
+            const script = document.createElement('script');
+            script.src = "https://unpkg.com/html5-qrcode";
+            script.onload = startScanner;
+            script.onerror = () => {
+                const qrContainer = document.getElementById('qr-reader');
+                if (qrContainer) qrContainer.innerHTML = '<span class="text-sm text-red-500 font-medium px-4 text-center">Error de red al cargar el escáner.</span>';
                 window.html5QrCodeScannerIsActive = false;
-            }
-        }, 500);
+            };
+            document.head.appendChild(script);
+        } else {
+            startScanner();
+        }
     };
     const handleLogout = async () => {
         try {
@@ -800,11 +848,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    let deferredPrompt = null;
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-    });
+
 });
 
 
