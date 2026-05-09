@@ -33,7 +33,6 @@
   <link rel="icon" type="image/svg+xml" href="paw-print-fill.svg">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#09090B">
-  <style id="mobile-user-menu-style">@media (max-width: 767px) { #nav-user-menu { display: none !important; } }</style>
 </head>
 <body class="bg-surface text-brand antialiased min-h-screen flex flex-col selection:bg-brand selection:text-white overflow-x-hidden pb-16 md:pb-0">
       <header class="w-full relative bg-brand text-white">
@@ -45,13 +44,13 @@
       <nav class="hidden md:flex items-center gap-6">
         <a href="crear-placa.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Crear Placa</a>
         <a href="mis-mascotas.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Mis Mascotas</a>
-        <a href="notificaciones.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors auth-link hidden">Notificaciones</a>
-        <a href="mi-cuenta.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors auth-link hidden">Mi Cuenta</a>
+        <a href="notificaciones.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Notificaciones</a>
+        <a href="mi-cuenta.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Mi Cuenta</a>
       </nav>
       <div class="flex items-center gap-4 shrink-0">
         <button id="nav-entrar" onclick="window.location.href='entrar.html'" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none">Entrar</button>
         <button id="nav-registro" onclick="window.location.href='registro.html'" class="hidden md:block bg-white text-brand text-sm font-medium px-5 py-2 rounded-lg hover:bg-surface transition-colors appearance-none">Registro</button>
-        <button id="nav-salir" class="hidden md:block !hidden text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none">Salir</button>
+        <button id="nav-salir" class="hidden text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none">Salir</button>
       </div>
     </div>
   </header>
@@ -78,6 +77,15 @@
       
     </div>
   </main>
+  <footer class="w-full mt-auto bg-white border-t border-zinc-200">
+    <div class="max-w-6xl mx-auto px-6 py-8 flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="flex items-center gap-2 cursor-pointer" onclick="window.location.href='index.html'">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 fill-current text-brand" viewBox="0 0 256 256"><path d="M240,108a28,28,0,1,1-28-28A28,28,0,0,1,240,108ZM72,108a28,28,0,1,0-28,28A28,28,0,0,0,72,108ZM92,88A28,28,0,1,0,64,60,28,28,0,0,0,92,88Zm72,0a28,28,0,1,0-28-28A28,28,0,0,0,164,88Zm23.12,60.86a35.3,35.3,0,0,1-16.87-21.14,44,44,0,0,0-84.5,0A35.25,35.25,0,0,1,69,148.82,40,40,0,0,0,88,224a39.48,39.48,0,0,0,15.52-3.13,64.09,64.09,0,0,1,48.87,0,40,40,0,0,0,34.73-72Z"></path></svg>
+        <span class="text-base font-semibold tracking-tight text-brand">MascotaSegura</span>
+      </div>
+      <span class="text-sm text-zinc-400 font-normal">&copy; 2026 MascotaSegura. Todos los derechos reservados.</span>
+    </div>
+  </footer>
                   <nav class="fixed bottom-0 left-0 w-full md:hidden bg-white border-t border-zinc-200 flex z-40" style="padding-bottom:env(safe-area-inset-bottom)">
     <a href="mis-mascotas.html" id="bn-mascotas" class="flex-1 flex flex-col items-center justify-center py-2 gap-1 text-zinc-400 hover:text-brand transition-colors min-h-[56px] appearance-none">
       <i class="ph ph-paw-print text-xl sm:text-2xl nav-icon"></i>
@@ -95,6 +103,10 @@
       <i class="ph ph-user text-xl sm:text-2xl nav-icon"></i>
       <span class="text-[9px] sm:text-[10px] font-medium uppercase tracking-wider">Cuenta</span>
     </a>
+    <button id="bn-salir" class="flex-1 flex flex-col items-center justify-center py-2 gap-1 text-zinc-400 hover:text-brand transition-colors min-h-[56px] appearance-none focus:outline-none">
+      <i class="ph ph-sign-out text-xl sm:text-2xl nav-icon pointer-events-none"></i>
+      <span class="text-[9px] sm:text-[10px] font-medium uppercase tracking-wider pointer-events-none">Salir</span>
+    </button>
   </nav>
   <script>
     (function() {

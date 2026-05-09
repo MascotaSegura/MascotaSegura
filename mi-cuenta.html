@@ -33,7 +33,6 @@
   <link rel="icon" type="image/svg+xml" href="paw-print-fill.svg">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#09090B">
-  <style id="mobile-user-menu-style">@media (max-width: 767px) { #nav-user-menu { display: none !important; } }</style>
 </head>
 <body class="bg-surface text-brand antialiased min-h-screen flex flex-col selection:bg-brand selection:text-white overflow-x-hidden pb-16 md:pb-0">
       <header class="w-full relative bg-brand text-white">
@@ -45,13 +44,13 @@
       <nav class="hidden md:flex items-center gap-6">
         <a href="crear-placa.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Crear Placa</a>
         <a href="mis-mascotas.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Mis Mascotas</a>
-        <a href="notificaciones.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors auth-link hidden">Notificaciones</a>
-        <a href="mi-cuenta.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors auth-link hidden">Mi Cuenta</a>
+        <a href="notificaciones.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Notificaciones</a>
+        <a href="mi-cuenta.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Mi Cuenta</a>
       </nav>
       <div class="flex items-center gap-4 shrink-0">
         <button id="nav-entrar" onclick="window.location.href='entrar.html'" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none">Entrar</button>
         <button id="nav-registro" onclick="window.location.href='registro.html'" class="hidden md:block bg-white text-brand text-sm font-medium px-5 py-2 rounded-lg hover:bg-surface transition-colors appearance-none">Registro</button>
-        <button id="nav-salir" class="hidden md:block !hidden text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none">Salir</button>
+        <button id="nav-salir" class="hidden text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none">Salir</button>
       </div>
     </div>
   </header>
@@ -212,6 +211,10 @@
       <i class="ph ph-user text-xl sm:text-2xl nav-icon"></i>
       <span class="text-[9px] sm:text-[10px] font-medium uppercase tracking-wider">Cuenta</span>
     </a>
+    <button id="bn-salir" class="flex-1 flex flex-col items-center justify-center py-2 gap-1 text-zinc-400 hover:text-brand transition-colors min-h-[56px] appearance-none focus:outline-none">
+      <i class="ph ph-sign-out text-xl sm:text-2xl nav-icon pointer-events-none"></i>
+      <span class="text-[9px] sm:text-[10px] font-medium uppercase tracking-wider pointer-events-none">Salir</span>
+    </button>
   </nav>
   <script>
     (function() {

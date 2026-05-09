@@ -33,9 +33,8 @@
   <link rel="icon" type="image/svg+xml" href="paw-print-fill.svg">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#09090B">
-  <style id="mobile-user-menu-style">@media (max-width: 767px) { #nav-user-menu { display: none !important; } }</style>
 </head>
-<body class="bg-surface text-brand antialiased min-h-screen flex flex-col selection:bg-brand selection:text-white overflow-x-hidden pb-16 md:pb-0">
+<body class="bg-surface text-brand antialiased min-h-screen flex flex-col selection:bg-brand selection:text-white overflow-x-hidden pb-0">
   <main class="w-full max-w-md mx-auto flex-1 flex flex-col relative px-4 py-8">
 
     <div id="loading-state" class="absolute inset-0 flex flex-col items-center justify-center bg-surface z-10">
@@ -220,54 +219,5 @@
     });
   </script>
 
-                <nav class="fixed bottom-0 left-0 w-full md:hidden bg-white border-t border-zinc-200 flex z-40" style="padding-bottom:env(safe-area-inset-bottom)">
-    <a href="mis-mascotas.html" id="bn-mascotas" class="flex-1 flex flex-col items-center justify-center py-2 gap-1 text-zinc-400 hover:text-brand transition-colors min-h-[56px] appearance-none">
-      <i class="ph ph-paw-print text-xl sm:text-2xl nav-icon"></i>
-      <span class="text-[9px] sm:text-[10px] font-medium uppercase tracking-wider">Mascotas</span>
-    </a>
-    <button onclick="if(window.openScannerModal) window.openScannerModal(); else window.location.href='mis-mascotas.html';" id="bn-scan" class="flex-1 flex flex-col items-center justify-center py-2 gap-1 text-zinc-400 hover:text-brand transition-colors min-h-[56px] appearance-none focus:outline-none">
-      <i class="ph ph-qr-code text-xl sm:text-2xl nav-icon pointer-events-none"></i>
-      <span class="text-[9px] sm:text-[10px] font-medium uppercase tracking-wider pointer-events-none">Escanear</span>
-    </button>
-    <a href="notificaciones.html" id="bn-notificaciones" class="flex-1 flex flex-col items-center justify-center py-2 gap-1 text-zinc-400 hover:text-brand transition-colors min-h-[56px] appearance-none">
-      <i class="ph ph-bell text-xl sm:text-2xl nav-icon"></i>
-      <span class="text-[9px] sm:text-[10px] font-medium uppercase tracking-wider">Alertas</span>
-    </a>
-    <a href="mi-cuenta.html" id="bn-cuenta" class="flex-1 flex flex-col items-center justify-center py-2 gap-1 text-zinc-400 hover:text-brand transition-colors min-h-[56px] appearance-none">
-      <i class="ph ph-user text-xl sm:text-2xl nav-icon"></i>
-      <span class="text-[9px] sm:text-[10px] font-medium uppercase tracking-wider">Cuenta</span>
-    </a>
-  </nav>
-  <script>
-    (function() {
-      var p = window.location.pathname;
-      var map = {'mis-mascotas.html':'bn-mascotas','crear-placa.html':'bn-mascotas','mi-cuenta.html':'bn-cuenta','notificaciones.html':'bn-notificaciones'};
-      Object.keys(map).forEach(function(k) {
-        if (p.endsWith(k)) {
-          var el = document.getElementById(map[k]);
-          if (el) { 
-            el.classList.remove('text-zinc-400'); 
-            el.classList.add('text-brand');
-            var icon = el.querySelector('.nav-icon');
-            if (icon) {
-              icon.className = icon.className.replace('ph ', 'ph-fill ');
-            }
-          }
-        }
-      });
-    })();
-  </script>
-  <script>
-    (function() {
-      var logoutBtn = document.getElementById('bn-salir');
-      if (!logoutBtn || typeof sbClient === 'undefined') return;
-      logoutBtn.addEventListener('click', async function() {
-        try {
-          await sbClient.auth.signOut();
-        } catch (e) {}
-        window.location.href = 'index.html';
-      });
-    })();
-  </script>
 </body>
 </html>
