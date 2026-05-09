@@ -150,9 +150,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     function clearValidations() {
-        document.querySelectorAll('.border-error').forEach(el => {
-            el.classList.remove('border-error', 'border-2');
-            el.classList.add('border-0');
+        document.querySelectorAll('.ring-error').forEach(el => {
+            el.classList.remove('ring-error', 'ring-2', 'ring-error/60');
         });
     }
     function validateRequired(ids) {
@@ -161,8 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ids.forEach(id => {
             const el = document.getElementById(id);
             if (el && !el.value.trim()) {
-                el.classList.remove('border-0');
-                el.classList.add('border-error', 'border-2');
+                el.classList.add('ring-2', 'ring-error/60', 'ring-error');
                 isValid = false;
             }
         });
@@ -1057,3 +1055,47 @@ async function initMiCuenta(user) {
 }
 
 
+
+document.addEventListener('DOMContentLoaded', () => {
+    var btn = document.getElementById('mobile-menu-btn');
+    var overlay = document.getElementById('mobile-menu-overlay');
+    var panel = document.getElementById('mobile-menu-panel');
+    var closeBtn = document.getElementById('mobile-menu-close');
+    if (!btn || !overlay || !panel || !closeBtn) return;
+
+    var previousOverflow = '';
+    var previousFocus = null;
+    var open = function () {
+    previousFocus = document.activeElement;
+    previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    overlay.classList.remove('hidden');
+    overlay.setAttribute('aria-hidden', 'false');
+    btn.setAttribute('aria-expanded', 'true');
+    closeBtn.focus();
+    };
+    var close = function () {
+    overlay.classList.add('hidden');
+    overlay.setAttribute('aria-hidden', 'true');
+    btn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = previousOverflow || '';
+    if (previousFocus && typeof previousFocus.focus === 'function') previousFocus.focus();
+    };
+
+    btn.addEventListener('click', function () {
+    if (overlay.classList.contains('hidden')) open();
+    else close();
+    });
+    closeBtn.addEventListener('click', close);
+    overlay.addEventListener('click', function (e) {
+    if (e.target === overlay) close();
+    });
+    overlay.querySelectorAll('a, button').forEach(function (el) {
+    el.addEventListener('click', function () {
+        setTimeout(close, 0);
+    });
+    });
+    document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') close();
+    });
+});
