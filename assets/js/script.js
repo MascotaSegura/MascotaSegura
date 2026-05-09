@@ -347,7 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 const mapUrl = `https://www.google.com/maps?q=${pet.lastScan.lat},${pet.lastScan.lng}`;
                                 const notification = new Notification(`¡Alerta! ${pet.name || 'Tu mascota'} localizada`, {
                                     body: `Alguien acaba de escanear su placa. Toca aquí para abrir su ubicación GPS exacta en Google Maps.`,
-                                    icon: 'paw-print-fill.svg',
+                                    icon: 'assets/icons/paw-print-fill.svg',
                                     vibrate: [200, 100, 200, 100, 200]
                                 });
                                 notification.onclick = function () {

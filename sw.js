@@ -9,8 +9,8 @@ const ASSETS_TO_CACHE = [
   './notificaciones.html',
   './perfil.html',
   './mi-cuenta.html',
-  './script.js',
-  './paw-print-fill.svg'
+  './assets/js/script.js',
+  './assets/icons/paw-print-fill.svg'
 ];
 
 self.addEventListener('install', (event) => {
@@ -67,7 +67,7 @@ self.addEventListener('push', (event) => {
   event.waitUntil(
     self.registration.showNotification(data.title, {
       body: data.body,
-      icon: data.icon || './paw-print-fill.svg',
+      icon: data.icon || './assets/icons/paw-print-fill.svg',
       data: data.data
     })
   );
