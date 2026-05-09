@@ -43,15 +43,15 @@
         <span class="text-xl font-semibold tracking-tight truncate">MascotaSegura</span>
       </a>
       <nav class="hidden md:flex items-center gap-6">
-        <a href="crear-placa.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Crear Placa</a>
-        <a href="mis-mascotas.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Mis Mascotas</a>
-        <a href="notificaciones.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors auth-link hidden">Notificaciones</a>
-        <a href="mi-cuenta.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors auth-link hidden">Mi Cuenta</a>
+        <a href="crear-placa.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded-lg px-2 py-1">Crear Placa</a>
+        <a href="mis-mascotas.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded-lg px-2 py-1">Mis Mascotas</a>
+        <a href="notificaciones.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded-lg px-2 py-1 auth-link hidden">Notificaciones</a>
+        <a href="mi-cuenta.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded-lg px-2 py-1 auth-link hidden">Mi Cuenta</a>
       </nav>
       <div class="hidden md:flex items-center gap-4 shrink-0">
-        <button id="nav-entrar" onclick="window.location.href='entrar.html'" class="hidden text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none">Entrar</button>
-        <button id="nav-registro" onclick="window.location.href='registro.html'" class="hidden bg-white text-brand text-sm font-medium px-5 py-2 rounded-lg hover:bg-surface transition-colors appearance-none">Registro</button>
-        <button id="nav-salir" class="hidden text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none">Salir</button>
+        <button id="nav-entrar" onclick="window.location.href='entrar.html'" class="hidden text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none focus:outline-none focus:ring-2 focus:ring-white/30 rounded-lg px-2 py-1">Entrar</button>
+        <button id="nav-registro" onclick="window.location.href='registro.html'" class="hidden bg-white text-brand text-sm font-medium px-5 py-2 rounded-lg hover:bg-surface transition-colors appearance-none focus:outline-none focus:ring-2 focus:ring-white/30">Registro</button>
+        <button id="nav-salir" class="hidden text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none focus:outline-none focus:ring-2 focus:ring-white/30 rounded-lg px-2 py-1">Salir</button>
       </div>
       <button id="mobile-menu-btn" class="md:hidden w-11 h-11 rounded-lg bg-brandHover hover:bg-zinc-800 transition-colors flex items-center justify-center appearance-none focus:outline-none focus:ring-2 focus:ring-white/30" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu-overlay">
         <i class="ph ph-list text-2xl text-white" aria-hidden="true"></i>
@@ -247,19 +247,19 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script.js"></script>
                   <nav class="fixed bottom-0 left-0 w-full md:hidden bg-white flex z-40" style="padding-bottom:env(safe-area-inset-bottom)">
-    <a href="mis-mascotas.html" id="bn-mascotas" class="flex-1 flex flex-col items-center justify-center py-2 gap-1 text-zinc-400 hover:text-brand transition-colors min-h-[56px] appearance-none">
+    <a href="mis-mascotas.html" id="bn-mascotas" class="flex-1 flex flex-col items-center justify-center py-2 gap-1 text-zinc-400 hover:text-brand transition-colors min-h-[56px] appearance-none focus:outline-none focus:bg-surface">
       <i class="ph ph-paw-print text-xl sm:text-2xl nav-icon"></i>
       <span class="text-[9px] sm:text-[10px] font-medium uppercase tracking-wider">Mascotas</span>
     </a>
-    <button onclick="if(window.openScannerModal) window.openScannerModal(); else window.location.href='mis-mascotas.html';" id="bn-scan" class="flex-1 flex flex-col items-center justify-center py-2 gap-1 text-zinc-400 hover:text-brand transition-colors min-h-[56px] appearance-none focus:outline-none">
+    <button onclick="if(window.openScannerModal) window.openScannerModal(); else window.location.href='mis-mascotas.html';" id="bn-scan" class="flex-1 flex flex-col items-center justify-center py-2 gap-1 text-zinc-400 hover:text-brand transition-colors min-h-[56px] appearance-none focus:outline-none focus:bg-surface">
       <i class="ph ph-qr-code text-xl sm:text-2xl nav-icon pointer-events-none"></i>
       <span class="text-[9px] sm:text-[10px] font-medium uppercase tracking-wider pointer-events-none">Escanear</span>
     </button>
-    <a href="notificaciones.html" id="bn-notificaciones" class="flex-1 flex flex-col items-center justify-center py-2 gap-1 text-zinc-400 hover:text-brand transition-colors min-h-[56px] appearance-none">
+    <a href="notificaciones.html" id="bn-notificaciones" class="flex-1 flex flex-col items-center justify-center py-2 gap-1 text-zinc-400 hover:text-brand transition-colors min-h-[56px] appearance-none focus:outline-none focus:bg-surface">
       <i class="ph ph-bell text-xl sm:text-2xl nav-icon"></i>
       <span class="text-[9px] sm:text-[10px] font-medium uppercase tracking-wider">Alertas</span>
     </a>
-    <a href="mi-cuenta.html" id="bn-cuenta" class="flex-1 flex flex-col items-center justify-center py-2 gap-1 text-zinc-400 hover:text-brand transition-colors min-h-[56px] appearance-none">
+    <a href="mi-cuenta.html" id="bn-cuenta" class="flex-1 flex flex-col items-center justify-center py-2 gap-1 text-zinc-400 hover:text-brand transition-colors min-h-[56px] appearance-none focus:outline-none focus:bg-surface">
       <i class="ph ph-user text-xl sm:text-2xl nav-icon"></i>
       <span class="text-[9px] sm:text-[10px] font-medium uppercase tracking-wider">Cuenta</span>
     </a>
