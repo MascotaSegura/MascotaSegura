@@ -860,6 +860,28 @@ if (path.includes('entrar') || path.includes('registro') || path.includes('recup
         });
     }
 
+    const btnUserDropdown = document.getElementById('btn-user-dropdown');
+    const userDropdownContent = document.getElementById('user-dropdown-content');
+    if (btnUserDropdown && userDropdownContent) {
+        btnUserDropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userDropdownContent.classList.toggle('hidden');
+        });
+        document.addEventListener('click', (e) => {
+            if (!userDropdownContent.contains(e.target)) {
+                userDropdownContent.classList.add('hidden');
+            }
+        });
+    }
+
+    const navSalirBtn = document.getElementById('nav-salir');
+    const navSalirMobileBtn = document.getElementById('mobile-salir-2');
+    const handleLogout = async () => {
+        await sbClient.auth.signOut();
+        window.location.href = 'index.html';
+    };
+    if (navSalirBtn) navSalirBtn.addEventListener('click', handleLogout);
+    if (navSalirMobileBtn) navSalirMobileBtn.addEventListener('click', handleLogout);
 
 });
 
@@ -1061,26 +1083,3 @@ async function initMiCuenta(user) {
 }
 
 
-
-    const btnUserDropdown = document.getElementById('btn-user-dropdown');
-    const userDropdownContent = document.getElementById('user-dropdown-content');
-    if (btnUserDropdown && userDropdownContent) {
-        btnUserDropdown.addEventListener('click', (e) => {
-            e.stopPropagation();
-            userDropdownContent.classList.toggle('hidden');
-        });
-        document.addEventListener('click', (e) => {
-            if (!userDropdownContent.contains(e.target)) {
-                userDropdownContent.classList.add('hidden');
-            }
-        });
-    }
-
-    const navSalirBtn = document.getElementById('nav-salir');
-    const navSalirMobileBtn = document.getElementById('mobile-salir-2');
-    const handleLogout = async () => {
-        await sbClient.auth.signOut();
-        window.location.href = 'index.html';
-    };
-    if (navSalirBtn) navSalirBtn.addEventListener('click', handleLogout);
-    if (navSalirMobileBtn) navSalirMobileBtn.addEventListener('click', handleLogout);
