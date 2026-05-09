@@ -194,28 +194,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const navEntrar = document.getElementById('nav-entrar');
         const navRegistro = document.getElementById('nav-registro');
         const navSalir = document.getElementById('nav-salir');
+        const authLinks = document.querySelectorAll('.auth-link');
+        
         if (user) {
-            
-            const navEntrar = document.getElementById('nav-entrar');
-            const navRegistro = document.getElementById('nav-registro');
-            const navUserMenu = document.getElementById('nav-user-menu');
-            
-            if (navEntrar) navEntrar.classList.add('hidden');
-            if (navRegistro) navRegistro.classList.add('hidden');
-            if (navUserMenu) navUserMenu.classList.remove('hidden');
+            if (navEntrar) navEntrar.classList.add('!hidden');
+            if (navRegistro) navRegistro.classList.add('!hidden');
+            if (navSalir) navSalir.classList.remove('hidden');
+            authLinks.forEach(link => link.classList.remove('hidden'));
 
-            const fname = user.user_metadata?.full_name || 'Usuario';
-            const firstName = fname.split(' ')[0];
-            const navUserName = document.getElementById('nav-user-name');
-            const navUserInitials = document.getElementById('nav-user-initials');
-            const ddUserName = document.getElementById('dropdown-user-name');
-            const ddUserEmail = document.getElementById('dropdown-user-email');
-            
-            if (navUserName) navUserName.textContent = firstName;
-            if (navUserInitials) navUserInitials.textContent = fname.charAt(0).toUpperCase();
-            if (ddUserName) ddUserName.textContent = fname;
-            if (ddUserEmail) ddUserEmail.textContent = user.email;
-if (path.includes('entrar') || path.includes('registro') || path.includes('recuperar')) {
+            if (path.includes('entrar') || path.includes('registro') || path.includes('recuperar')) {
                 window.location.href = 'mis-mascotas.html';
             }
             const protectedContent = document.getElementById('protected-content');
@@ -231,9 +218,10 @@ if (path.includes('entrar') || path.includes('registro') || path.includes('recup
             }
             setupPushNotifications(user.id);
         } else {
-            if (navEntrar) navEntrar.classList.remove('hidden');
-            if (navRegistro) navRegistro.classList.remove('hidden');
-            if (navSalir) navSalir.classList.add('!hidden');
+            if (navEntrar) navEntrar.classList.remove('!hidden', 'hidden');
+            if (navRegistro) navRegistro.classList.remove('!hidden', 'hidden');
+            if (navSalir) navSalir.classList.add('hidden');
+            authLinks.forEach(link => link.classList.add('hidden'));
             if (path.includes('mis-mascotas')) {
                 window.location.href = 'entrar.html';
             }
