@@ -530,15 +530,24 @@ if (path.includes('entrar') || path.includes('registro') || path.includes('recup
             startScanner();
         }
     };
-    const handleLogout = async () => {
-        try {
-            const { error } = await sbClient.auth.signOut();
-            if (error) throw error;
-            window.location.href = 'index.html';
-        } catch (error) { showModal({isError: true, title: 'Error', text: error.message || 'Ha ocurrido un error inesperado.'}); }
-    };
-    
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (mobileMenuBtn && mobileMenu) {
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            const icon = mobileMenuBtn.querySelector('i');
+            if (icon) {
+                if (mobileMenu.classList.contains('hidden')) {
+                    icon.classList.remove('ph-x');
+                    icon.classList.add('ph-list');
+                } else {
+                    icon.classList.remove('ph-list');
+                    icon.classList.add('ph-x');
+                }
+            }
+        });
     }
+
     const formRegistro = document.getElementById('registro-form');
     if (formRegistro) {
         formRegistro.addEventListener('submit', async (e) => {
