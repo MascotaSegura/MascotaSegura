@@ -43,7 +43,7 @@
     </div>
 
     <div id="not-found-state" class="hidden absolute inset-0 flex flex-col items-center justify-center bg-surface z-10 px-6 text-center">
-      <div class="w-20 h-20 bg-white rounded-lg flex items-center justify-center mb-6 border border-zinc-200">
+      <div class="w-20 h-20 bg-white rounded-lg flex items-center justify-center mb-6">
         <i class="ph-fill ph-warning-circle text-4xl text-error"></i>
       </div>
       <h2 class="text-2xl font-semibold text-brand mb-2">Perfil no encontrado</h2>
@@ -59,9 +59,9 @@
         <span class="text-sm font-semibold tracking-tight text-brand">MascotaSegura</span>
       </div>
 
-      <div class="w-full bg-white rounded-lg p-6 sm:p-8 flex flex-col gap-6 border border-zinc-200">
+      <div class="w-full bg-white rounded-lg p-6 sm:p-8 flex flex-col gap-6">
         <div class="flex flex-col items-center">
-          <div id="pet-photo-container" class="w-28 h-28 rounded-lg overflow-hidden mb-4 border border-zinc-200 flex items-center justify-center bg-surface">
+          <div id="pet-photo-container" class="w-28 h-28 rounded-lg overflow-hidden mb-4 flex items-center justify-center bg-surface">
             <i id="pet-photo-placeholder" class="ph-fill ph-dog text-5xl text-zinc-400 hidden"></i>
             <img id="pet-photo" src="" class="w-full h-full object-cover hidden" alt="Foto de mascota">
           </div>
@@ -81,15 +81,15 @@
         </div>
 
         <div class="flex flex-col gap-3">
-          <div class="flex flex-col gap-1 bg-surface px-4 py-4 rounded-lg border border-zinc-200">
+          <div class="flex flex-col gap-1 bg-surface px-4 py-4 rounded-lg">
             <span class="text-xs font-medium text-zinc-400 uppercase tracking-wider">Raza y color</span>
             <span id="pet-breed" class="text-sm font-medium text-brand">Raza</span>
           </div>
-          <div class="flex flex-col gap-1 bg-surface px-4 py-4 rounded-lg border border-zinc-200">
+          <div class="flex flex-col gap-1 bg-surface px-4 py-4 rounded-lg">
             <span class="text-xs font-medium text-zinc-400 uppercase tracking-wider">Esterilizado</span>
             <span id="pet-sterilized" class="text-sm font-medium text-brand">No</span>
           </div>
-          <div class="flex flex-col gap-2 bg-surface px-4 py-4 rounded-lg border border-zinc-200">
+          <div class="flex flex-col gap-2 bg-surface px-4 py-4 rounded-lg">
             <div class="flex items-center gap-2">
               <i class="ph-fill ph-first-aid text-error text-base"></i>
               <span class="text-xs font-medium text-error uppercase tracking-wider">Informacion Medica</span>
@@ -219,5 +219,38 @@
     });
   </script>
 
+    <nav class="fixed bottom-0 left-0 w-full md:hidden bg-white border-t border-zinc-200 flex z-40" style="padding-bottom:env(safe-area-inset-bottom)">
+    <a href="mis-mascotas.html" id="bn-mascotas" class="flex-1 flex flex-col items-center justify-center py-3 gap-1 text-zinc-400 hover:text-brand transition-colors min-h-[56px] appearance-none">
+      <i class="ph ph-paw-print text-2xl nav-icon"></i>
+      <span class="text-[10px] font-medium uppercase tracking-wider">Mascotas</span>
+    </a>
+    <button onclick="if(window.openScannerModal) window.openScannerModal(); else window.location.href='mis-mascotas.html';" id="bn-scan" class="flex-1 flex flex-col items-center justify-center py-3 gap-1 text-zinc-400 hover:text-brand transition-colors min-h-[56px] appearance-none focus:outline-none">
+      <i class="ph ph-qr-code text-2xl nav-icon pointer-events-none"></i>
+      <span class="text-[10px] font-medium uppercase tracking-wider pointer-events-none">Escanear</span>
+    </button>
+    <a href="mi-cuenta.html" id="bn-cuenta" class="flex-1 flex flex-col items-center justify-center py-3 gap-1 text-zinc-400 hover:text-brand transition-colors min-h-[56px] appearance-none">
+      <i class="ph ph-user text-2xl nav-icon"></i>
+      <span class="text-[10px] font-medium uppercase tracking-wider">Cuenta</span>
+    </a>
+  </nav>
+  <script>
+    (function() {
+      var p = window.location.pathname;
+      var map = {'mis-mascotas.html':'bn-mascotas','crear-placa.html':'bn-mascotas','mi-cuenta.html':'bn-cuenta','notificaciones.html':'bn-cuenta'};
+      Object.keys(map).forEach(function(k) {
+        if (p.endsWith(k)) {
+          var el = document.getElementById(map[k]);
+          if (el) { 
+            el.classList.remove('text-zinc-400'); 
+            el.classList.add('text-brand');
+            var icon = el.querySelector('.nav-icon');
+            if (icon) {
+              icon.className = icon.className.replace('ph ', 'ph-fill ');
+            }
+          }
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

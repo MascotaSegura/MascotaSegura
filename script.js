@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.className = 'bg-white w-full max-w-sm sm:max-w-md rounded-lg p-6 sm:p-8 flex flex-col items-center scale-95 transition-transform duration-200 max-h-[90vh] overflow-y-auto relative';
         modal.innerHTML = `
             <div class="w-16 h-16 bg-surface rounded-lg flex shrink-0 items-center justify-center mb-4">
-                <i class="ph-fill ${config.icon || (config.isError ? 'ph-warning-circle' : 'ph-check-circle')} text-3xl ${config.isError ? 'text-red-500' : 'text-brand'}"></i>
+                <i class="ph-fill ${config.icon || (config.isError ? 'ph-warning-circle' : 'ph-check-circle')} text-3xl ${config.isError ? 'text-error' : 'text-brand'}"></i>
             </div>
             <h3 class="text-xl sm:text-2xl font-semibold text-brand text-center mb-2">${config.title}</h3>
             <p class="text-sm text-zinc-500 text-center mb-6 leading-relaxed px-2">${config.text}</p>
@@ -150,8 +150,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     function clearValidations() {
-        document.querySelectorAll('.border-red-500').forEach(el => {
-            el.classList.remove('border-red-500', 'border-2');
+        document.querySelectorAll('.border-error').forEach(el => {
+            el.classList.remove('border-error', 'border-2');
             el.classList.add('border-0');
         });
     }
@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const el = document.getElementById(id);
             if (el && !el.value.trim()) {
                 el.classList.remove('border-0');
-                el.classList.add('border-red-500', 'border-2');
+                el.classList.add('border-error', 'border-2');
                 isValid = false;
             }
         });
@@ -329,7 +329,7 @@ if (path.includes('entrar') || path.includes('registro') || path.includes('recup
             const { data: pets, error } = await sbClient.from('pets').select('*').eq('userId', uid);
             if (error) {
                 if (loading) {
-                    loading.innerHTML = '<span class="text-red-500 text-sm font-medium text-center">Error de sincronización con la base de datos. Verifica tu internet.</span>';
+                    loading.innerHTML = '<span class="text-error text-sm font-medium text-center">Error de sincronización con la base de datos. Verifica tu internet.</span>';
                 }
                 return;
             }
@@ -419,7 +419,7 @@ if (path.includes('entrar') || path.includes('registro') || path.includes('recup
             icon: 'ph-qr-code',
             title: `Placa de ${petName}`,
             text: 'Este es el código único. Quien lo escanee verá su perfil público para ayudarte a localizarlo.',
-            customHtml: `<div class="bg-surface p-3 sm:p-4 rounded-lg"><img src="${qrImgUrl}" alt="QR de ${petName}" class="w-40 h-40 sm:w-44 sm:h-44 rounded-lg object-contain mix-blend-multiply"></div>`,
+            customHtml: `<div class="bg-white p-3 sm:p-4 rounded-lg"><img src="${qrImgUrl}" alt="QR de ${petName}" class="w-40 h-40 sm:w-44 sm:h-44 rounded-lg object-contain"></div>`,
             primaryBtnText: 'Cerrar',
             secondaryBtnText: 'Abrir perfil público',
             secondaryBtnAction: () => {
@@ -506,11 +506,11 @@ if (path.includes('entrar') || path.includes('registro') || path.includes('recup
                     }).catch((err) => {
                         window.html5QrCodeScannerIsActive = false;
                         if (qrContainer && !window.html5QrCode.isScanning) {
-                            qrContainer.innerHTML = '<span class="text-sm text-red-500 font-medium px-4 text-center">Error al acceder a la cámara. Revisa los permisos.</span>';
+                            qrContainer.innerHTML = '<span class="text-sm text-error font-medium px-4 text-center">Error al acceder a la cámara. Revisa los permisos.</span>';
                         }
                     });
                 } else {
-                    qrContainer.innerHTML = '<span class="text-sm text-red-500 font-medium px-4 text-center">Error al cargar la librería del escáner.</span>';
+                    qrContainer.innerHTML = '<span class="text-sm text-error font-medium px-4 text-center">Error al cargar la librería del escáner.</span>';
                     window.html5QrCodeScannerIsActive = false;
                 }
             }, 300);
@@ -522,7 +522,7 @@ if (path.includes('entrar') || path.includes('registro') || path.includes('recup
             script.onload = startScanner;
             script.onerror = () => {
                 const qrContainer = document.getElementById('qr-reader');
-                if (qrContainer) qrContainer.innerHTML = '<span class="text-sm text-red-500 font-medium px-4 text-center">Error de red al cargar el escáner.</span>';
+                if (qrContainer) qrContainer.innerHTML = '<span class="text-sm text-error font-medium px-4 text-center">Error de red al cargar el escáner.</span>';
                 window.html5QrCodeScannerIsActive = false;
             };
             document.head.appendChild(script);
@@ -767,7 +767,7 @@ if (path.includes('entrar') || path.includes('registro') || path.includes('recup
                 const deleteBtnContainer = document.createElement('div');
                 deleteBtnContainer.className = 'mt-6 w-full flex justify-center';
                 deleteBtnContainer.innerHTML = `
-                    <button type="button" id="btn-eliminar-placa" class="text-red-500 font-medium text-sm hover:underline flex items-center gap-2 bg-transparent cursor-pointer">
+                    <button type="button" id="btn-eliminar-placa" class="text-error font-medium text-sm hover:underline flex items-center gap-2 bg-transparent cursor-pointer">
                         <i class="ph-bold ph-trash text-lg"></i> Eliminar placa permanentemente
                     </button>
                 `;
@@ -905,7 +905,7 @@ async function cargarNotificaciones(uid) {
         const { data: pets, error } = await sbClient.from('pets').select('*').eq('userId', uid);
         if (error) {
 
-            if (loading) loading.innerHTML = '<span class="text-red-500 text-sm font-medium text-center">Error de conexión con la base de datos. Verifica tu internet.</span>';
+            if (loading) loading.innerHTML = '<span class="text-error text-sm font-medium text-center">Error de conexión con la base de datos. Verifica tu internet.</span>';
             return;
         }
         if (loading) loading.classList.add('hidden');
@@ -1002,7 +1002,6 @@ async function initMiCuenta(user) {
     const accCity = document.getElementById('acc-city');
     const accAddress = document.getElementById('acc-address');
     
-    // Load current metadata
     const metadata = user.user_metadata || {};
     if (accFullname) accFullname.value = metadata.full_name || '';
     if (accEmail) accEmail.value = user.email || '';
@@ -1080,8 +1079,6 @@ async function initMiCuenta(user) {
                 primaryBtnText: 'Sí, eliminar todo',
                 primaryBtnAction: async () => {
                     try {
-                        // Normally handled via Edge Function or backend admin API,
-                        // for client side without RLS admin policy, we just call a standard flow or error out gracefully.
                         showModal({isError:true, title:'Aviso', text:'Por seguridad, la eliminación de cuenta debe realizarse contactando a soporte.'});
                     } catch (err) {}
                 },
