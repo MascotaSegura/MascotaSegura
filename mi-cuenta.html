@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Cuenta - MascotaSegura</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        fontFamily: { sans: ['Inter', 'sans-serif'] },
+        extend: {
+          colors: {
+            brand: '#000000',
+            brandHover: '#333333',
+            surface: '#F4F4F5',
+            surfaceHover: '#E4E4E7',
+            error: '#EF4444',
+            success: '#22C55E',
+            warning: '#F59E0B',
+            secondary: '#6B7280'
+          },
+          spacing: { 'safe': 'env(safe-area-inset-bottom)' },
+          borderRadius: { 'global': '8px' }
+        }
+      }
+    }
+  </script>
+  <link rel="icon" type="image/svg+xml" href="paw-print-fill.svg">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#09090B">
+</head>
+<body class="bg-surface text-brand antialiased min-h-screen flex flex-col selection:bg-brand selection:text-white overflow-x-hidden">
+  <header class="w-full relative bg-brand text-white">
+    <div class="max-w-6xl mx-auto px-5 sm:px-6 py-4 flex justify-between items-center">
+      <div class="flex items-center gap-2 cursor-pointer shrink-0" onclick="window.location.href='index.html'">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 fill-current text-white" viewBox="0 0 256 256"><path d="M240,108a28,28,0,1,1-28-28A28,28,0,0,1,240,108ZM72,108a28,28,0,1,0-28,28A28,28,0,0,0,72,108ZM92,88A28,28,0,1,0,64,60,28,28,0,0,0,92,88Zm72,0a28,28,0,1,0-28-28A28,28,0,0,0,164,88Zm23.12,60.86a35.3,35.3,0,0,1-16.87-21.14,44,44,0,0,0-84.5,0A35.25,35.25,0,0,1,69,148.82,40,40,0,0,0,88,224a39.48,39.48,0,0,0,15.52-3.13,64.09,64.09,0,0,1,48.87,0,40,40,0,0,0,34.73-72Z"></path></svg>
+        <span class="text-lg sm:text-xl font-semibold tracking-tight truncate">MascotaSegura</span>
+      </div>
+      <nav class="hidden md:flex items-center gap-8">
+        <a href="crear-placa.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Crear Placa</a>
+        <a href="mis-mascotas.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Mis Mascotas</a>
+      </nav>
+      <div class="flex items-center gap-2 sm:gap-4 shrink-0">
+        <button id="nav-entrar" onclick="window.location.href='entrar.html'" class="hidden md:block px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none">Entrar</button>
+        <button id="nav-registro" onclick="window.location.href='registro.html'" class="hidden md:block bg-white text-brand text-sm font-medium px-5 py-2 rounded-lg hover:bg-surface transition-colors appearance-none">Registro</button>
+        <button id="nav-salir" class="hidden md:block !hidden px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none">Salir</button>
+        
+        <button id="mobile-menu-btn" class="md:hidden p-2 text-white flex items-center justify-center appearance-none">
+          <i class="ph-bold ph-list text-2xl pointer-events-none"></i>
+        </button>
+      </div>
+    </div>
+  
+    <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 z-50 w-full bg-brand px-5 py-6 flex flex-col gap-6 max-h-[calc(100dvh-60px)] overflow-y-auto">
+      <a href="crear-placa.html" class="block w-full py-1 text-base font-medium text-zinc-400 hover:text-white transition-colors">Crear Placa</a>
+      <a href="mis-mascotas.html" class="block w-full py-1 text-base font-medium text-zinc-400 hover:text-white transition-colors">Mis Mascotas</a>
+      <a href="index.html#como-funciona" class="block w-full py-1 text-base font-medium text-zinc-400 hover:text-white transition-colors">Cómo funciona</a>
+      <button onclick="if(window.openScannerModal) window.openScannerModal(); else window.location.href='mis-mascotas.html';" class="block w-full py-1 text-base font-medium text-zinc-400 hover:text-white transition-colors text-left flex items-center gap-2">
+        <i class="ph-bold ph-qr-code text-xl"></i> Escanear Placa
+      </button>
+      <button id="mobile-entrar" onclick="window.location.href='entrar.html'" class="block w-full text-base font-medium text-zinc-400 hover:text-white transition-colors text-left appearance-none py-1 mt-2">Entrar</button>
+      <button id="mobile-registro" onclick="window.location.href='registro.html'" class="sm:hidden bg-white text-brand text-base font-medium px-5 py-3 rounded-lg hover:bg-surface transition-colors appearance-none w-full text-center mt-2">Registro</button>
+      <button id="mobile-salir" class="block w-full text-base font-medium text-zinc-400 hover:text-white transition-colors text-left appearance-none py-1 mt-2 !hidden">Salir</button>
+    </div>
+  </header>
+
+  <main class="w-full max-w-6xl mx-auto px-6 py-10 flex-1 flex flex-col md:flex-row gap-8">
+    <!-- Sidebar -->
+    <aside class="w-full md:w-64 shrink-0 flex flex-col gap-2">
+      <h1 class="text-2xl font-semibold tracking-tight text-brand mb-4">Mi Cuenta</h1>
+      <button onclick="switchTab('perfil')" id="tab-perfil" class="account-tab w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-brand text-white font-medium text-sm transition-colors text-left border border-zinc-200">
+        <i class="ph-bold ph-user text-lg"></i> Perfil Personal
+      </button>
+      <button onclick="switchTab('seguridad')" id="tab-seguridad" class="account-tab w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-white text-zinc-500 hover:text-brand hover:bg-surface font-medium text-sm transition-colors text-left border border-zinc-200">
+        <i class="ph-bold ph-lock-key text-lg"></i> Seguridad
+      </button>
+    </aside>
+
+    <!-- Content -->
+    <div class="flex-1 bg-white rounded-lg p-6 sm:p-8 border border-zinc-200 min-h-[500px]">
+      
+      <!-- Tab: Perfil -->
+      <div id="content-perfil" class="account-content flex flex-col gap-8">
+        <div>
+          <h2 class="text-xl font-semibold text-brand">Perfil Personal</h2>
+          <p class="text-sm text-zinc-500 mt-1">Actualiza tu foto y tus datos de contacto principales.</p>
+        </div>
+
+        <form id="form-perfil" class="flex flex-col gap-6">
+          <div class="flex items-center gap-6">
+            <div id="profile-upload-area" class="w-20 h-20 rounded-lg bg-surface flex items-center justify-center cursor-pointer border border-zinc-200 overflow-hidden shrink-0 group relative">
+              <i class="ph-fill ph-user text-3xl text-zinc-400 group-hover:hidden"></i>
+              <i class="ph-bold ph-camera text-2xl text-brand hidden group-hover:block z-10"></i>
+            </div>
+            <input type="file" id="profile-photo" accept="image/*" class="hidden">
+            <div class="flex flex-col">
+              <span class="text-sm font-medium text-brand">Foto de perfil</span>
+              <span class="text-xs text-zinc-500 mt-0.5">JPG, PNG o GIF. Máx. 2MB.</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div class="flex flex-col gap-2">
+              <label for="acc-fullname" class="text-sm font-medium text-brand">Nombre completo *</label>
+              <input type="text" id="acc-fullname" class="w-full bg-surface px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-brand/20 transition-colors text-sm text-brand border border-zinc-200" required>
+              <span id="err-acc-fullname" class="text-xs text-error hidden">Campo obligatorio</span>
+            </div>
+            <div class="flex flex-col gap-2">
+              <label for="acc-email" class="text-sm font-medium text-brand">Correo electrónico *</label>
+              <input type="email" id="acc-email" class="w-full bg-surface px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-brand/20 transition-colors text-sm text-brand border border-zinc-200" required disabled>
+              <span class="text-xs text-zinc-500">El correo no se puede cambiar directamente.</span>
+            </div>
+            <div class="flex flex-col gap-2">
+              <label for="acc-phone1" class="text-sm font-medium text-brand">Teléfono principal *</label>
+              <input type="tel" id="acc-phone1" class="w-full bg-surface px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-brand/20 transition-colors text-sm text-brand border border-zinc-200" required>
+              <span id="err-acc-phone1" class="text-xs text-error hidden">Campo obligatorio</span>
+            </div>
+            <div class="flex flex-col gap-2">
+              <label for="acc-phone2" class="text-sm font-medium text-brand">Teléfono de emergencia</label>
+              <input type="tel" id="acc-phone2" class="w-full bg-surface px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-brand/20 transition-colors text-sm text-brand border border-zinc-200">
+            </div>
+            <div class="flex flex-col gap-2">
+              <label for="acc-city" class="text-sm font-medium text-brand">Ciudad y Estado *</label>
+              <input type="text" id="acc-city" class="w-full bg-surface px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-brand/20 transition-colors text-sm text-brand border border-zinc-200" required>
+              <span id="err-acc-city" class="text-xs text-error hidden">Campo obligatorio</span>
+            </div>
+            <div class="flex flex-col gap-2">
+              <label for="acc-address" class="text-sm font-medium text-brand">Dirección</label>
+              <input type="text" id="acc-address" class="w-full bg-surface px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-brand/20 transition-colors text-sm text-brand border border-zinc-200">
+            </div>
+          </div>
+          
+          <div class="w-full flex justify-end mt-4">
+            <button type="submit" id="btn-save-profile" class="bg-brand text-white px-8 py-3.5 rounded-lg text-sm font-medium hover:bg-brandHover transition-colors border border-zinc-200">Guardar Cambios</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Tab: Seguridad -->
+      <div id="content-seguridad" class="account-content flex flex-col gap-8 hidden">
+        <div>
+          <h2 class="text-xl font-semibold text-brand">Seguridad</h2>
+          <p class="text-sm text-zinc-500 mt-1">Gestiona tu contraseña y elimina tu cuenta.</p>
+        </div>
+
+        <form id="form-password" class="flex flex-col gap-6 max-w-md">
+          <h3 class="text-sm font-medium text-brand border-b border-zinc-200 pb-2">Cambiar contraseña</h3>
+          <div class="flex flex-col gap-2">
+            <label for="acc-pwd-new" class="text-sm font-medium text-brand">Nueva contraseña</label>
+            <input type="password" id="acc-pwd-new" class="w-full bg-surface px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-brand/20 transition-colors text-sm text-brand border border-zinc-200" required>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="acc-pwd-confirm" class="text-sm font-medium text-brand">Confirmar nueva contraseña</label>
+            <input type="password" id="acc-pwd-confirm" class="w-full bg-surface px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-brand/20 transition-colors text-sm text-brand border border-zinc-200" required>
+            <span id="err-pwd-match" class="text-xs text-error hidden">Las contraseñas no coinciden.</span>
+          </div>
+          <div>
+            <button type="submit" id="btn-save-pwd" class="bg-brand text-white px-6 py-3 rounded-lg text-sm font-medium hover:bg-brandHover transition-colors border border-zinc-200">Actualizar Contraseña</button>
+          </div>
+        </form>
+
+        <div class="border-t border-zinc-200 pt-8 mt-4 flex flex-col gap-4">
+          <div>
+            <h3 class="text-sm font-medium text-error">Eliminar cuenta</h3>
+            <p class="text-xs text-zinc-500 mt-1">Al eliminar tu cuenta, se borrarán todos tus datos y placas generadas permanentemente.</p>
+          </div>
+          <div>
+            <button id="btn-delete-account" type="button" class="bg-surface text-error px-6 py-3 rounded-lg text-sm font-medium hover:bg-[#FEF2F2] transition-colors border border-zinc-200">Eliminar cuenta permanentemente</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="w-full mt-auto bg-white">
+    <div class="max-w-6xl mx-auto px-6 py-8 md:py-12 flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="flex flex-col items-center md:items-start gap-2">
+        <div class="flex items-center gap-2 cursor-pointer" onclick="window.location.href='index.html'">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 fill-current text-brand" viewBox="0 0 256 256"><path d="M240,108a28,28,0,1,1-28-28A28,28,0,0,1,240,108ZM72,108a28,28,0,1,0-28,28A28,28,0,0,0,72,108ZM92,88A28,28,0,1,0,64,60,28,28,0,0,0,92,88Zm72,0a28,28,0,1,0-28-28A28,28,0,0,0,164,88Zm23.12,60.86a35.3,35.3,0,0,1-16.87-21.14,44,44,0,0,0-84.5,0A35.25,35.25,0,0,1,69,148.82,40,40,0,0,0,88,224a39.48,39.48,0,0,0,15.52-3.13,64.09,64.09,0,0,1,48.87,0,40,40,0,0,0,34.73-72Z"></path></svg>
+          <span class="text-base font-semibold tracking-tight text-brand">MascotaSegura</span>
+        </div>
+        <span class="text-xs text-zinc-400 font-normal">&copy; 2026 MascotaSegura. Todos los derechos reservados.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.account-tab').forEach(el => {
+        el.classList.remove('bg-brand', 'text-white');
+        el.classList.add('bg-white', 'text-zinc-500');
+      });
+      document.querySelectorAll('.account-content').forEach(el => el.classList.add('hidden'));
+      
+      const activeBtn = document.getElementById('tab-' + tabId);
+      activeBtn.classList.remove('bg-white', 'text-zinc-500');
+      activeBtn.classList.add('bg-brand', 'text-white');
+      
+      document.getElementById('content-' + tabId).classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>

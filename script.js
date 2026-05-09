@@ -1,4 +1,4 @@
-﻿const SUPABASE_URL = "https://vaztacfioinkkkxmimaw.supabase.co";
+const SUPABASE_URL = "https://vaztacfioinkkkxmimaw.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_WHwWYUn52u_73tvPN-PC4A_fDUTRNVD";
 const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -214,6 +214,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (path.includes('notificaciones')) {
                 cargarNotificaciones(user.id);
+            }
+            if (path.includes('mi-cuenta')) {
+                initMiCuenta(user);
             }
             setupPushNotifications(user.id);
         } else {
@@ -532,24 +535,41 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-    const formRegistro = document.querySelector('#btn-registro')?.closest('form');
+    const formRegistro = document.getElementById('registro-form');
     if (formRegistro) {
         formRegistro.addEventListener('submit', async (e) => {
             e.preventDefault();
             const btnRegistro = document.getElementById('btn-registro');
-            const email = document.getElementById('email').value;
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
-            const fullname = document.getElementById('fullname').value;
-            const requiredFields = ['email', 'password', 'fullname'];
+            const passwordConfirm = document.getElementById('password_confirm').value;
+            const fullname = document.getElementById('fullname').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const phoneAlt = document.getElementById('phone_alt').value.trim();
+            const city = document.getElementById('city').value.trim();
+            const address = document.getElementById('address').value.trim();
+
+            const requiredFields = ['email', 'password', 'password_confirm', 'fullname', 'phone', 'city'];
             if (!validateRequired(requiredFields)) {
                 showModal({
                     isError: true,
                     icon: 'ph-warning-circle',
                     title: 'Faltan datos',
-                    text: 'Por favor, llena los campos resaltados en rojo para poder crear tu cuenta.'
+                    text: 'Por favor, llena todos los campos obligatorios (*).'
                 });
                 return;
             }
+
+            if (password !== passwordConfirm) {
+                showModal({
+                    isError: true,
+                    icon: 'ph-warning-circle',
+                    title: 'Contraseñas no coinciden',
+                    text: 'Por favor verifica que ambas contraseñas sean idénticas.'
+                });
+                return;
+            }
+
             try {
                 if (btnRegistro) {
                     btnRegistro.innerText = "Cargando...";
@@ -558,13 +578,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 const { data, error } = await sbClient.auth.signUp({
                     email,
                     password,
-                    options: { data: { full_name: fullname } }
+                    options: { data: { full_name: fullname, phone, phone_alt: phoneAlt, city, address } }
                 });
                 if (error) throw error;
                 showModal({
                     icon: 'ph-party-confetti',
                     title: '¡Bienvenido!',
-                    text: 'Tu cuenta ha sido creada exitosamente. Si se requiere confirmación, revisa tu correo electrónico.',
+                    text: 'Tu cuenta ha sido creada exitosamente. Entrando a tu cuenta...',
                     primaryBtnText: 'Empezar ahora',
                     primaryBtnAction: () => window.location.href = "mis-mascotas.html"
                 });
@@ -572,7 +592,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 let msg = error.message || 'Hubo un error al crear la cuenta. Inténtalo de nuevo.';
                 if (msg.includes('already registered')) msg = 'Este correo ya está registrado.';
                 if (msg.includes('Password should be at least')) msg = 'La contraseña debe tener al menos 6 caracteres.';
-                if (msg.includes('rate limit')) msg = 'Límite de correos excedido en Supabase (3 por hora). Para solucionarlo, ve a tu panel de Supabase -> Authentication -> Providers -> Email -> Desactiva "Confirm email" y guarda los cambios.';
+                if (msg.includes('rate limit')) msg = 'Límite de correos excedido en Supabase.';
 
                 showModal({
                     isError: true,
@@ -581,7 +601,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     text: msg
                 });
                 if (btnRegistro) {
-                    btnRegistro.innerText = "Crear mi cuenta";
+                    btnRegistro.innerText = "Crear cuenta";
                     btnRegistro.disabled = false;
                 }
             }
@@ -937,6 +957,103 @@ async function cargarNotificaciones(uid) {
     }
     await fetchNotifs();
     sbClient.channel('public:pets:notifs').on('postgres_changes', { event: '*', schema: 'public', table: 'pets', filter: `userId=eq.${uid}` }, () => fetchNotifs()).subscribe();
+}
+
+async function initMiCuenta(user) {
+    const accFullname = document.getElementById('acc-fullname');
+    const accEmail = document.getElementById('acc-email');
+    const accPhone1 = document.getElementById('acc-phone1');
+    const accPhone2 = document.getElementById('acc-phone2');
+    const accCity = document.getElementById('acc-city');
+    const accAddress = document.getElementById('acc-address');
+    
+    // Load current metadata
+    const metadata = user.user_metadata || {};
+    if (accFullname) accFullname.value = metadata.full_name || '';
+    if (accEmail) accEmail.value = user.email || '';
+    if (accPhone1) accPhone1.value = metadata.phone || '';
+    if (accPhone2) accPhone2.value = metadata.phone_alt || '';
+    if (accCity) accCity.value = metadata.city || '';
+    if (accAddress) accAddress.value = metadata.address || '';
+
+    const formPerfil = document.getElementById('form-perfil');
+    if (formPerfil) {
+        formPerfil.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btnSave = document.getElementById('btn-save-profile');
+            if (!validateRequired(['acc-fullname', 'acc-phone1', 'acc-city'])) {
+                showModal({isError: true, title: 'Faltan datos', text: 'Llena los campos obligatorios (*).'});
+                return;
+            }
+            try {
+                btnSave.innerText = "Guardando...";
+                btnSave.disabled = true;
+                const { data, error } = await sbClient.auth.updateUser({
+                    data: {
+                        full_name: accFullname.value.trim(),
+                        phone: accPhone1.value.trim(),
+                        phone_alt: accPhone2.value.trim(),
+                        city: accCity.value.trim(),
+                        address: accAddress.value.trim()
+                    }
+                });
+                if (error) throw error;
+                showModal({icon: 'ph-check-circle', title: '¡Guardado!', text: 'Tus datos se actualizaron correctamente.'});
+            } catch (error) {
+                showModal({isError: true, title: 'Error', text: error.message});
+            } finally {
+                btnSave.innerText = "Guardar Cambios";
+                btnSave.disabled = false;
+            }
+        });
+    }
+
+    const formPassword = document.getElementById('form-password');
+    if (formPassword) {
+        formPassword.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const pwdNew = document.getElementById('acc-pwd-new').value;
+            const pwdConfirm = document.getElementById('acc-pwd-confirm').value;
+            if (pwdNew !== pwdConfirm) {
+                showModal({isError: true, title: 'Error', text: 'Las contraseñas no coinciden.'});
+                return;
+            }
+            try {
+                const btnSavePwd = document.getElementById('btn-save-pwd');
+                btnSavePwd.innerText = "Actualizando...";
+                btnSavePwd.disabled = true;
+                const { data, error } = await sbClient.auth.updateUser({ password: pwdNew });
+                if (error) throw error;
+                showModal({icon: 'ph-shield-check', title: '¡Contraseña actualizada!', text: 'Tu contraseña se cambió exitosamente.'});
+                formPassword.reset();
+            } catch (error) {
+                showModal({isError: true, title: 'Error', text: error.message});
+            } finally {
+                document.getElementById('btn-save-pwd').innerText = "Actualizar Contraseña";
+                document.getElementById('btn-save-pwd').disabled = false;
+            }
+        });
+    }
+
+    const btnDeleteAcc = document.getElementById('btn-delete-account');
+    if (btnDeleteAcc) {
+        btnDeleteAcc.addEventListener('click', () => {
+            showModal({
+                isError: true, icon: 'ph-warning-octagon',
+                title: '¿Eliminar cuenta?',
+                text: 'Esta acción es permanente. Se borrarán todas tus mascotas, placas y datos. ¿Estás absolutamente seguro?',
+                primaryBtnText: 'Sí, eliminar todo',
+                primaryBtnAction: async () => {
+                    try {
+                        // Normally handled via Edge Function or backend admin API,
+                        // for client side without RLS admin policy, we just call a standard flow or error out gracefully.
+                        showModal({isError:true, title:'Aviso', text:'Por seguridad, la eliminación de cuenta debe realizarse contactando a soporte.'});
+                    } catch (err) {}
+                },
+                secondaryBtnText: 'Cancelar'
+            });
+        });
+    }
 }
 
 
