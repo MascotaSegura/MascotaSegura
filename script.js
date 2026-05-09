@@ -194,12 +194,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const navEntrar = document.getElementById('nav-entrar');
         const navRegistro = document.getElementById('nav-registro');
         const navSalir = document.getElementById('nav-salir');
+        const mmEntrar = document.getElementById('mm-entrar');
+        const mmRegistro = document.getElementById('mm-registro');
+        const mmSalir = document.getElementById('mm-salir');
         const authLinks = document.querySelectorAll('.auth-link');
         
         if (user) {
-            if (navEntrar) navEntrar.classList.add('!hidden');
-            if (navRegistro) navRegistro.classList.add('!hidden');
-            if (navSalir) navSalir.classList.remove('!hidden');
+            if (navEntrar) navEntrar.classList.add('hidden');
+            if (navRegistro) navRegistro.classList.add('hidden');
+            if (navSalir) navSalir.classList.remove('hidden');
+            if (mmEntrar) mmEntrar.classList.add('hidden');
+            if (mmRegistro) mmRegistro.classList.add('hidden');
+            if (mmSalir) mmSalir.classList.remove('hidden');
             authLinks.forEach(link => link.classList.remove('hidden'));
 
             if (path.includes('entrar') || path.includes('registro') || path.includes('recuperar')) {
@@ -218,9 +224,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             setupPushNotifications(user.id);
         } else {
-            if (navEntrar) navEntrar.classList.remove('!hidden', 'hidden');
-            if (navRegistro) navRegistro.classList.remove('!hidden', 'hidden');
-            if (navSalir) navSalir.classList.add('!hidden');
+            if (navEntrar) navEntrar.classList.remove('hidden');
+            if (navRegistro) navRegistro.classList.remove('hidden');
+            if (navSalir) navSalir.classList.add('hidden');
+            if (mmEntrar) mmEntrar.classList.remove('hidden');
+            if (mmRegistro) mmRegistro.classList.remove('hidden');
+            if (mmSalir) mmSalir.classList.add('hidden');
             authLinks.forEach(link => link.classList.add('hidden'));
             if (path.includes('mis-mascotas') || path.includes('notificaciones') || path.includes('mi-cuenta')) {
                 window.location.href = 'entrar.html';
@@ -839,6 +848,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const navSalirBtn = document.getElementById('nav-salir');
     const bnSalirBtn = document.getElementById('bn-salir');
+    const mmSalirBtn = document.getElementById('mm-salir');
     const btnLogoutAccount = document.getElementById('btn-logout-account');
     
     const handleLogout = async () => {
@@ -847,6 +857,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     if (navSalirBtn) navSalirBtn.addEventListener('click', handleLogout);
     if (bnSalirBtn) bnSalirBtn.addEventListener('click', handleLogout);
+    if (mmSalirBtn) mmSalirBtn.addEventListener('click', handleLogout);
     if (btnLogoutAccount) btnLogoutAccount.addEventListener('click', handleLogout);
     
 });
