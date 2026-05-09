@@ -6,6 +6,7 @@ let deferredPrompt = null;
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
+    if (localStorage.getItem('pwaPromptDeclined')) return;
     setTimeout(() => {
         if (window.showModal) {
             window.showModal({
@@ -18,9 +19,13 @@ window.addEventListener('beforeinstallprompt', (e) => {
                         deferredPrompt.prompt();
                         await deferredPrompt.userChoice;
                         deferredPrompt = null;
+                        localStorage.setItem('pwaPromptDeclined', 'true');
                     }
                 },
-                secondaryBtnText: 'Ahora no'
+                secondaryBtnText: 'Ahora no',
+                secondaryBtnAction: () => {
+                    localStorage.setItem('pwaPromptDeclined', 'true');
+                }
             });
         }
     }, 1500);
@@ -111,11 +116,11 @@ document.addEventListener('DOMContentLoaded', () => {
             <p class="text-sm text-zinc-500 text-center mb-6 leading-relaxed px-2">${config.text}</p>
             ${config.customHtml ? `<div class="w-full mb-6 flex justify-center">${config.customHtml}</div>` : ''}
             <div class="w-full flex flex-col gap-2.5">
-                <button class="modal-primary-btn w-full bg-brand hover:bg-brandHover text-white font-medium text-base py-4 rounded-lg transition-colors appearance-none focus:outline-none focus:ring-2 focus:ring-brand/20">
+                <button class="modal-primary-btn w-full bg-brand hover:bg-brandHover text-white font-medium text-base py-4 rounded-lg transition-colors appearance-none focus:outline-none focus:ring-2 focus:ring-brand/50">
                     ${config.primaryBtnText || 'Entendido'}
                 </button>
                 ${config.secondaryBtnText ? `
-                <button class="modal-secondary-btn w-full bg-transparent text-zinc-500 font-medium text-base py-4 rounded-lg hover:text-brand hover:bg-surface transition-colors appearance-none focus:outline-none focus:ring-2 focus:ring-brand/20">
+                <button class="modal-secondary-btn w-full bg-transparent text-zinc-500 font-medium text-base py-4 rounded-lg hover:text-brand hover:bg-surface transition-colors appearance-none focus:outline-none focus:ring-2 focus:ring-brand/50">
                     ${config.secondaryBtnText}
                 </button>
                 ` : ''}
@@ -207,6 +212,8 @@ document.addEventListener('DOMContentLoaded', () => {
             authLinks.forEach(link => link.classList.remove('hidden'));
 
             if (path.includes('entrar') || path.includes('registro') || path.includes('recuperar')) {
+                document.title = "Cargando...";
+                document.body.style.display = 'none';
                 window.location.href = 'mis-mascotas.html';
             }
             const protectedContent = document.getElementById('protected-content');
@@ -230,6 +237,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (mmSalir) mmSalir.classList.add('hidden');
             authLinks.forEach(link => link.classList.add('hidden'));
             if (path.includes('mis-mascotas') || path.includes('notificaciones') || path.includes('mi-cuenta')) {
+                document.title = "Cargando...";
+                document.body.style.display = 'none';
                 window.location.href = 'entrar.html';
             }
         }
@@ -352,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const card = document.createElement('div');
                 card.className = 'w-full bg-white rounded-lg p-6 sm:p-8 flex flex-col items-center gap-6 relative';
                 card.innerHTML = `
-                    <button class="btn-edit absolute top-6 right-6 w-12 h-12 bg-surface rounded-lg flex items-center justify-center text-zinc-400 hover:text-brand hover:bg-surfaceHover transition-colors appearance-none focus:outline-none focus:ring-2 focus:ring-brand/20" aria-label="Editar mascota">
+                    <button class="btn-edit absolute top-6 right-6 w-12 h-12 bg-surface rounded-lg flex items-center justify-center text-zinc-400 hover:text-brand hover:bg-surfaceHover transition-colors appearance-none focus:outline-none focus:ring-2 focus:ring-brand/50" aria-label="Editar mascota">
                         <i class="ph-bold ph-pencil-simple text-xl pointer-events-none" aria-hidden="true"></i>
                     </button>
                     
@@ -363,7 +372,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <h3 class="pet-name-display text-2xl font-semibold text-brand"></h3>
                     </div>
 
-                    <button class="btn-qr w-full bg-brand text-white font-medium text-base py-4 rounded-lg hover:bg-brandHover transition-colors flex items-center justify-center gap-2 mt-4 appearance-none focus:outline-none focus:ring-2 focus:ring-brand/20">
+                    <button class="btn-qr w-full bg-brand text-white font-medium text-base py-4 rounded-lg hover:bg-brandHover transition-colors flex items-center justify-center gap-2 mt-4 appearance-none focus:outline-none focus:ring-2 focus:ring-brand/50">
                         <i class="ph-bold ph-qr-code text-xl" aria-hidden="true"></i> Ver Placa QR
                     </button>
                 `;
@@ -728,7 +737,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const deleteBtnContainer = document.createElement('div');
                 deleteBtnContainer.className = 'mt-6 w-full flex justify-center';
                 deleteBtnContainer.innerHTML = `
-                    <button type="button" id="btn-eliminar-placa" class="text-error font-medium text-sm hover:underline flex items-center gap-2 bg-transparent cursor-pointer appearance-none focus:outline-none focus:ring-2 focus:ring-error/20 rounded">
+                    <button type="button" id="btn-eliminar-placa" class="text-error font-medium text-sm hover:underline flex items-center gap-2 bg-transparent cursor-pointer appearance-none focus:outline-none focus:ring-2 focus:ring-error/50 rounded">
                         <i class="ph-bold ph-trash text-lg"></i> Eliminar placa permanentemente
                     </button>
                 `;
@@ -942,7 +951,7 @@ async function cargarNotificaciones(uid) {
             const mapContainer = card.querySelector('.map-btn-container');
             if (n.lat && n.lng) {
                 const btn = document.createElement('button');
-                btn.className = 'mt-2 text-sm font-medium text-brand bg-surface hover:bg-surfaceHover px-4 py-3 rounded-lg transition-colors inline-flex items-center gap-2 appearance-none focus:outline-none focus:ring-2 focus:ring-brand/20';
+                btn.className = 'mt-2 text-sm font-medium text-brand bg-surface hover:bg-surfaceHover px-4 py-3 rounded-lg transition-colors inline-flex items-center gap-2 appearance-none focus:outline-none focus:ring-2 focus:ring-brand/50';
                 btn.innerHTML = '<i class="ph-bold ph-map-pin" aria-hidden="true"></i> Ver Ubicación GPS';
                 btn.addEventListener('click', () => window.open(`https://www.google.com/maps?q=${n.lat},${n.lng}`, '_blank'));
                 mapContainer.appendChild(btn);

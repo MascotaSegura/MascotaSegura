@@ -37,22 +37,22 @@
 <body class="bg-surface text-brand antialiased min-h-screen flex flex-col selection:bg-brand selection:text-white overflow-x-hidden pb-16 md:pb-0">
       <header class="w-full relative bg-brand text-white">
     <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-      <a href="index.html" class="flex items-center gap-2 shrink-0 focus:outline-none focus:ring-2 focus:ring-white/30 rounded-lg">
+      <a href="index.html" class="flex items-center gap-2 shrink-0 focus:outline-none focus:ring-2 focus:ring-white/50 rounded-lg">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 fill-current text-white" viewBox="0 0 256 256"><path d="M240,108a28,28,0,1,1-28-28A28,28,0,0,1,240,108ZM72,108a28,28,0,1,0-28,28A28,28,0,0,0,72,108ZM92,88A28,28,0,1,0,64,60,28,28,0,0,0,92,88Zm72,0a28,28,0,1,0-28-28A28,28,0,0,0,164,88Zm23.12,60.86a35.3,35.3,0,0,1-16.87-21.14,44,44,0,0,0-84.5,0A35.25,35.25,0,0,1,69,148.82,40,40,0,0,0,88,224a39.48,39.48,0,0,0,15.52-3.13,64.09,64.09,0,0,1,48.87,0,40,40,0,0,0,34.73-72Z"></path></svg>
         <span class="text-xl font-semibold tracking-tight truncate">MascotaSegura</span>
       </a>
       <nav class="hidden md:flex items-center gap-6">
-        <a href="crear-placa.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded-lg px-2 py-1">Crear Placa</a>
-        <a href="mis-mascotas.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded-lg px-2 py-1">Mis Mascotas</a>
-        <a href="notificaciones.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded-lg px-2 py-1 auth-link hidden">Notificaciones</a>
-        <a href="mi-cuenta.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded-lg px-2 py-1 auth-link hidden">Mi Cuenta</a>
+        <a href="crear-placa.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/50 rounded-lg px-2 py-1">Crear Placa</a>
+        <a href="mis-mascotas.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/50 rounded-lg px-2 py-1">Mis Mascotas</a>
+        <a href="notificaciones.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/50 rounded-lg px-2 py-1 auth-link hidden">Notificaciones</a>
+        <a href="mi-cuenta.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/50 rounded-lg px-2 py-1 auth-link hidden">Mi Cuenta</a>
       </nav>
       <div class="hidden md:flex items-center gap-4 shrink-0">
-        <button id="nav-entrar" onclick="window.location.href='entrar.html'" class="hidden text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none focus:outline-none focus:ring-2 focus:ring-white/30 rounded-lg px-2 py-1">Entrar</button>
-        <button id="nav-registro" onclick="window.location.href='registro.html'" class="hidden bg-white text-brand text-sm font-medium px-5 py-2 rounded-lg hover:bg-surface transition-colors appearance-none focus:outline-none focus:ring-2 focus:ring-white/30">Registro</button>
-        <button id="nav-salir" class="hidden text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none focus:outline-none focus:ring-2 focus:ring-white/30 rounded-lg px-2 py-1">Salir</button>
+        <button id="nav-entrar" onclick="window.location.href='entrar.html'" class="hidden text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none focus:outline-none focus:ring-2 focus:ring-white/50 rounded-lg px-2 py-1">Entrar</button>
+        <button id="nav-registro" onclick="window.location.href='registro.html'" class="hidden bg-white text-brand text-sm font-medium px-5 py-2 rounded-lg hover:bg-surface transition-colors appearance-none focus:outline-none focus:ring-2 focus:ring-white/50">Registro</button>
+        <button id="nav-salir" class="hidden text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none focus:outline-none focus:ring-2 focus:ring-white/50 rounded-lg px-2 py-1">Salir</button>
       </div>
-      <button id="mobile-menu-btn" class="md:hidden w-11 h-11 rounded-lg bg-brandHover hover:bg-zinc-800 transition-colors flex items-center justify-center appearance-none focus:outline-none focus:ring-2 focus:ring-white/30" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu-overlay">
+      <button id="mobile-menu-btn" class="md:hidden w-11 h-11 rounded-lg bg-brandHover hover:bg-zinc-800 transition-colors flex items-center justify-center appearance-none focus:outline-none focus:ring-2 focus:ring-white/50" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu-overlay">
         <i class="ph ph-list text-2xl text-white" aria-hidden="true"></i>
       </button>
     </div>
@@ -61,7 +61,7 @@
     <div id="mobile-menu-panel" class="absolute top-0 right-0 h-full w-[86%] max-w-sm bg-white text-brand p-6 flex flex-col" role="dialog" aria-modal="true" aria-label="Menú">
       <div class="flex items-center justify-between mb-6">
         <span class="text-base font-semibold tracking-tight">Menú</span>
-        <button id="mobile-menu-close" class="w-11 h-11 rounded-lg bg-surface hover:bg-surfaceHover transition-colors flex items-center justify-center appearance-none focus:outline-none focus:ring-2 focus:ring-brand/20" aria-label="Cerrar menú">
+        <button id="mobile-menu-close" class="w-11 h-11 rounded-lg bg-surface hover:bg-surfaceHover transition-colors flex items-center justify-center appearance-none focus:outline-none focus:ring-2 focus:ring-brand/50" aria-label="Cerrar menú">
           <i class="ph ph-x text-xl" aria-hidden="true"></i>
         </button>
       </div>
@@ -74,9 +74,9 @@
       </div>
 
       <div class="mt-6 flex flex-col gap-2">
-        <button id="mm-entrar" onclick="window.location.href='entrar.html'" class="hidden w-full bg-brand text-white hover:bg-brandHover transition-colors rounded-lg px-4 py-3 text-sm font-medium appearance-none">Entrar</button>
-        <button id="mm-registro" onclick="window.location.href='registro.html'" class="hidden w-full bg-surface hover:bg-surfaceHover transition-colors rounded-lg px-4 py-3 text-sm font-medium appearance-none">Registro</button>
-        <button id="mm-salir" class="hidden w-full bg-surface hover:bg-surfaceHover transition-colors rounded-lg px-4 py-3 text-sm font-medium appearance-none">Salir</button>
+        <button id="mm-registro" onclick="window.location.href='registro.html'" class="hidden w-full bg-brand text-white hover:bg-brandHover transition-colors rounded-lg px-4 py-3 text-sm font-medium appearance-none">Registro</button>
+        <button id="mm-entrar" onclick="window.location.href='entrar.html'" class="hidden w-full bg-surface hover:bg-surfaceHover transition-colors rounded-lg px-4 py-3 text-sm font-medium appearance-none text-brand">Entrar</button>
+        <button id="mm-salir" class="hidden w-full bg-surface hover:bg-surfaceHover transition-colors rounded-lg px-4 py-3 text-sm font-medium appearance-none text-brand">Salir</button>
       </div>
 
       <div class="mt-auto pt-6" style="padding-bottom:env(safe-area-inset-bottom)">
@@ -89,14 +89,14 @@
     
     <aside class="w-full md:w-64 shrink-0 flex flex-col gap-2">
       <h1 class="text-2xl font-semibold tracking-tight text-brand mb-4">Mi Cuenta</h1>
-      <button onclick="switchTab('perfil')" id="tab-perfil" class="account-tab w-full flex items-center gap-3 px-4 py-4 rounded-lg bg-brand text-white font-medium text-base transition-colors text-left appearance-none focus:outline-none focus:ring-2 focus:ring-brand/20">
+      <button onclick="switchTab('perfil')" id="tab-perfil" class="account-tab w-full flex items-center gap-3 px-4 py-4 rounded-lg bg-brand text-white font-medium text-base transition-colors text-left appearance-none focus:outline-none focus:ring-2 focus:ring-brand/50">
         <i class="ph-bold ph-user text-lg"></i> Perfil Personal
       </button>
-      <button onclick="switchTab('seguridad')" id="tab-seguridad" class="account-tab w-full flex items-center gap-3 px-4 py-4 rounded-lg bg-white text-zinc-500 hover:text-brand hover:bg-surface font-medium text-base transition-colors text-left appearance-none focus:outline-none focus:ring-2 focus:ring-brand/20">
+      <button onclick="switchTab('seguridad')" id="tab-seguridad" class="account-tab w-full flex items-center gap-3 px-4 py-4 rounded-lg bg-white text-zinc-500 hover:text-brand hover:bg-surface font-medium text-base transition-colors text-left appearance-none focus:outline-none focus:ring-2 focus:ring-brand/50">
         <i class="ph-bold ph-lock-key text-lg"></i> Seguridad
       </button>
       <div class="w-full h-px bg-zinc-200 my-2"></div>
-      <button id="btn-logout-account" class="w-full flex items-center gap-3 px-4 py-4 rounded-lg bg-white text-zinc-500 hover:text-brand hover:bg-surface font-medium text-base transition-colors text-left appearance-none focus:outline-none focus:ring-2 focus:ring-brand/20">
+      <button id="btn-logout-account" class="w-full flex items-center gap-3 px-4 py-4 rounded-lg bg-white text-zinc-500 hover:text-brand hover:bg-surface font-medium text-base transition-colors text-left appearance-none focus:outline-none focus:ring-2 focus:ring-brand/50">
         <i class="ph-bold ph-sign-out text-lg"></i> Cerrar sesión
       </button>
     </aside>
@@ -127,31 +127,31 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div class="flex flex-col gap-2">
               <label for="acc-fullname" class="text-sm font-medium text-brand">Nombre completo *</label>
-              <input type="text" id="acc-fullname" class="w-full bg-surface px-5 py-3.5 rounded-lg outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand appearance-none" required>
+              <input type="text" id="acc-fullname" class="w-full bg-surface px-5 py-3.5 rounded-lg outline-none focus:ring-2 focus:ring-brand/50 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand appearance-none" required>
               <span id="err-acc-fullname" class="text-xs text-error hidden">Campo obligatorio</span>
             </div>
             <div class="flex flex-col gap-2">
               <label for="acc-email" class="text-sm font-medium text-brand">Correo electrónico *</label>
-              <input type="email" id="acc-email" class="w-full bg-surface px-5 py-3.5 rounded-lg outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand appearance-none" required disabled>
+              <input type="email" id="acc-email" class="w-full bg-surface px-5 py-3.5 rounded-lg outline-none focus:ring-2 focus:ring-brand/50 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand appearance-none" required disabled>
               <span class="text-xs text-zinc-500">El correo no se puede cambiar directamente.</span>
             </div>
             <div class="flex flex-col gap-2">
               <label for="acc-phone1" class="text-sm font-medium text-brand">Teléfono principal *</label>
-              <input type="tel" id="acc-phone1" class="w-full bg-surface px-5 py-3.5 rounded-lg outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand appearance-none" required>
+              <input type="tel" id="acc-phone1" class="w-full bg-surface px-5 py-3.5 rounded-lg outline-none focus:ring-2 focus:ring-brand/50 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand appearance-none" required>
               <span id="err-acc-phone1" class="text-xs text-error hidden">Campo obligatorio</span>
             </div>
             <div class="flex flex-col gap-2">
               <label for="acc-phone2" class="text-sm font-medium text-brand">Teléfono de emergencia</label>
-              <input type="tel" id="acc-phone2" class="w-full bg-surface px-5 py-3.5 rounded-lg outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand appearance-none">
+              <input type="tel" id="acc-phone2" class="w-full bg-surface px-5 py-3.5 rounded-lg outline-none focus:ring-2 focus:ring-brand/50 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand appearance-none">
             </div>
             <div class="flex flex-col gap-2">
               <label for="acc-city" class="text-sm font-medium text-brand">Ciudad y Estado *</label>
-              <input type="text" id="acc-city" class="w-full bg-surface px-5 py-3.5 rounded-lg outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand appearance-none" required>
+              <input type="text" id="acc-city" class="w-full bg-surface px-5 py-3.5 rounded-lg outline-none focus:ring-2 focus:ring-brand/50 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand appearance-none" required>
               <span id="err-acc-city" class="text-xs text-error hidden">Campo obligatorio</span>
             </div>
             <div class="flex flex-col gap-2">
               <label for="acc-address" class="text-sm font-medium text-brand">Dirección</label>
-              <input type="text" id="acc-address" class="w-full bg-surface px-5 py-3.5 rounded-lg outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand appearance-none">
+              <input type="text" id="acc-address" class="w-full bg-surface px-5 py-3.5 rounded-lg outline-none focus:ring-2 focus:ring-brand/50 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand appearance-none">
             </div>
           </div>
           
@@ -172,15 +172,15 @@
           <h3 class="text-sm font-medium text-brand pb-2">Cambiar contraseña</h3>
           <div class="flex flex-col gap-2">
             <label for="acc-pwd-new" class="text-sm font-medium text-brand">Nueva contraseña</label>
-            <input type="password" id="acc-pwd-new" class="w-full bg-surface px-5 py-3.5 rounded-lg outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand appearance-none" required>
+            <input type="password" id="acc-pwd-new" class="w-full bg-surface px-5 py-3.5 rounded-lg outline-none focus:ring-2 focus:ring-brand/50 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand appearance-none" required>
           </div>
           <div class="flex flex-col gap-2">
             <label for="acc-pwd-confirm" class="text-sm font-medium text-brand">Confirmar nueva contraseña</label>
-            <input type="password" id="acc-pwd-confirm" class="w-full bg-surface px-5 py-3.5 rounded-lg outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand appearance-none" required>
+            <input type="password" id="acc-pwd-confirm" class="w-full bg-surface px-5 py-3.5 rounded-lg outline-none focus:ring-2 focus:ring-brand/50 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand appearance-none" required>
             <span id="err-pwd-match" class="text-xs text-error hidden">Las contraseñas no coinciden.</span>
           </div>
           <div>
-            <button type="submit" id="btn-save-pwd" class="w-full sm:w-auto bg-brand text-white px-8 py-4 rounded-lg text-base font-medium hover:bg-brandHover transition-colors appearance-none focus:outline-none focus:ring-2 focus:ring-brand/20">Actualizar Contraseña</button>
+            <button type="submit" id="btn-save-pwd" class="w-full sm:w-auto bg-brand text-white px-8 py-4 rounded-lg text-base font-medium hover:bg-brandHover transition-colors appearance-none focus:outline-none focus:ring-2 focus:ring-brand/50">Actualizar Contraseña</button>
           </div>
         </form>
 
@@ -190,7 +190,7 @@
             <p class="text-xs text-zinc-500 mt-1">Al eliminar tu cuenta, se borrarán todos tus datos y placas generadas permanentemente.</p>
           </div>
           <div>
-            <button id="btn-delete-account" type="button" class="w-full sm:w-auto bg-surface text-error px-8 py-4 rounded-lg text-base font-medium hover:bg-surfaceHover transition-colors appearance-none focus:outline-none focus:ring-2 focus:ring-error/20">Eliminar cuenta permanentemente</button>
+            <button id="btn-delete-account" type="button" class="w-full sm:w-auto bg-surface text-error px-8 py-4 rounded-lg text-base font-medium hover:bg-surfaceHover transition-colors appearance-none focus:outline-none focus:ring-2 focus:ring-error/50">Eliminar cuenta permanentemente</button>
           </div>
         </div>
       </div>
@@ -199,7 +199,7 @@
 
     <footer class="w-full mt-auto bg-white">
     <div class="max-w-6xl mx-auto px-6 py-8 flex flex-col md:flex-row justify-between items-center gap-6">
-      <a href="index.html" class="flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-brand/20 rounded-lg">
+      <a href="index.html" class="flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-brand/50 rounded-lg">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 fill-current text-brand" viewBox="0 0 256 256"><path d="M240,108a28,28,0,1,1-28-28A28,28,0,0,1,240,108ZM72,108a28,28,0,1,0-28,28A28,28,0,0,0,72,108ZM92,88A28,28,0,1,0,64,60,28,28,0,0,0,92,88Zm72,0a28,28,0,1,0-28-28A28,28,0,0,0,164,88Zm23.12,60.86a35.3,35.3,0,0,1-16.87-21.14,44,44,0,0,0-84.5,0A35.25,35.25,0,0,1,69,148.82,40,40,0,0,0,88,224a39.48,39.48,0,0,0,15.52-3.13,64.09,64.09,0,0,1,48.87,0,40,40,0,0,0,34.73-72Z"></path></svg>
         <span class="text-base font-semibold tracking-tight text-brand">MascotaSegura</span>
       </a>
