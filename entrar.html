@@ -35,39 +35,64 @@
   <meta name="theme-color" content="#09090B">
 </head>
 <body class="bg-white text-brand antialiased min-h-screen flex flex-col selection:bg-brand selection:text-white overflow-x-hidden">
-  <header class="w-full relative bg-brand text-white">
-    <div class="max-w-6xl mx-auto px-5 sm:px-6 py-4 flex justify-between items-center">
+    <header class="w-full relative bg-brand text-white">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
       <div class="flex items-center gap-2 cursor-pointer shrink-0" onclick="window.location.href='index.html'">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 fill-current text-white" viewBox="0 0 256 256"><path d="M240,108a28,28,0,1,1-28-28A28,28,0,0,1,240,108ZM72,108a28,28,0,1,0-28,28A28,28,0,0,0,72,108ZM92,88A28,28,0,1,0,64,60,28,28,0,0,0,92,88Zm72,0a28,28,0,1,0-28-28A28,28,0,0,0,164,88Zm23.12,60.86a35.3,35.3,0,0,1-16.87-21.14,44,44,0,0,0-84.5,0A35.25,35.25,0,0,1,69,148.82,40,40,0,0,0,88,224a39.48,39.48,0,0,0,15.52-3.13,64.09,64.09,0,0,1,48.87,0,40,40,0,0,0,34.73-72Z"></path></svg>
-        <span class="text-lg sm:text-xl font-semibold tracking-tight truncate">MascotaSegura</span>
+        <span class="text-xl font-semibold tracking-tight truncate">MascotaSegura</span>
       </div>
       <nav class="hidden md:flex items-center gap-8">
         <a href="crear-placa.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Crear Placa</a>
         <a href="mis-mascotas.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Mis Mascotas</a>
-        <a href="index.html#como-funciona" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Cómo funciona</a>
       </nav>
-      <div class="flex items-center gap-2 sm:gap-4 shrink-0">
-        <button onclick="if(window.openScannerModal) window.openScannerModal(); else window.location.href='mis-mascotas.html';" class="hidden sm:flex px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none items-center gap-2" title="Escanear Placa">
-          <i class="ph-bold ph-qr-code text-xl"></i> Escanear
-        </button>
-        <button id="nav-entrar" onclick="window.location.href='entrar.html'" class="hidden sm:block px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none">Entrar</button>
-        <button id="nav-registro" onclick="window.location.href='registro.html'" class="hidden sm:block bg-white text-brand text-sm font-medium px-5 py-2 rounded-lg hover:bg-surface transition-colors appearance-none">Registro</button>
-        <button id="nav-salir" class="hidden sm:block !hidden px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none">Salir</button>
+      <div class="flex items-center gap-4 shrink-0">
+        <button id="nav-entrar" onclick="window.location.href='entrar.html'" class="hidden md:block text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none">Entrar</button>
+        <button id="nav-registro" onclick="window.location.href='registro.html'" class="hidden md:block bg-white text-brand text-sm font-medium px-5 py-2 rounded-lg hover:bg-surface transition-colors appearance-none border border-zinc-200">Registro</button>
+        
+        <div id="nav-user-menu" class="relative hidden">
+          <button id="btn-user-dropdown" class="flex items-center gap-2 focus:outline-none appearance-none">
+            <div class="w-8 h-8 rounded-lg bg-surface text-brand flex items-center justify-center font-semibold text-sm uppercase border border-zinc-200" id="nav-user-initials">U</div>
+            <span class="text-sm font-medium text-white hidden sm:block" id="nav-user-name">Usuario</span>
+            <i class="ph-bold ph-caret-down text-zinc-400 text-xs"></i>
+          </button>
+          
+          <div id="user-dropdown-content" class="hidden absolute right-0 top-full mt-3 w-64 bg-white border border-zinc-200 rounded-lg p-2 z-50 flex flex-col">
+            <div class="px-3 py-3 border-b border-zinc-200 mb-2">
+              <span class="block text-sm font-semibold text-brand truncate" id="dropdown-user-name">Nombre</span>
+              <span class="block text-xs text-zinc-500 truncate" id="dropdown-user-email">email@correo.com</span>
+            </div>
+            <a href="perfil.html" class="px-3 py-2 text-sm text-zinc-600 hover:text-brand hover:bg-surface rounded-md transition-colors text-left flex items-center gap-2"><i class="ph-bold ph-user text-lg"></i> Mi Perfil</a>
+            <a href="mis-mascotas.html" class="px-3 py-2 text-sm text-zinc-600 hover:text-brand hover:bg-surface rounded-md transition-colors text-left flex items-center gap-2"><i class="ph-bold ph-paw-print text-lg"></i> Mis Mascotas</a>
+            <a href="notificaciones.html" class="px-3 py-2 text-sm text-zinc-600 hover:text-brand hover:bg-surface rounded-md transition-colors text-left flex items-center gap-2"><i class="ph-bold ph-bell text-lg"></i> Notificaciones</a>
+            <a href="mi-cuenta.html" class="px-3 py-2 text-sm text-zinc-600 hover:text-brand hover:bg-surface rounded-md transition-colors text-left flex items-center gap-2"><i class="ph-bold ph-gear text-lg"></i> Mi Cuenta</a>
+            <div class="border-t border-zinc-200 mt-2 pt-2">
+              <button id="nav-salir" class="w-full px-3 py-2 text-sm text-zinc-400 hover:text-brand hover:bg-surface rounded-md transition-colors text-left appearance-none flex items-center gap-2"><i class="ph-bold ph-sign-out text-lg"></i> Cerrar sesión</button>
+            </div>
+          </div>
+        </div>
+
         <button id="mobile-menu-btn" class="md:hidden p-2 text-white flex items-center justify-center appearance-none">
           <i class="ph-bold ph-list text-2xl pointer-events-none"></i>
         </button>
       </div>
     </div>
-    <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 z-50 w-full bg-brand px-5 py-6 flex flex-col gap-6 max-h-[calc(100dvh-60px)] overflow-y-auto">
-      <a href="crear-placa.html" class="block w-full py-1 text-base font-medium text-zinc-400">Crear Placa</a>
-      <a href="mis-mascotas.html" class="block w-full py-1 text-base font-medium text-zinc-400">Mis Mascotas</a>
-      <a href="index.html#como-funciona" class="block w-full py-1 text-base font-medium text-zinc-400">Cómo funciona</a>
-      <button onclick="if(window.openScannerModal) window.openScannerModal(); else window.location.href='mis-mascotas.html';" class="block w-full py-1 text-base font-medium text-zinc-400 text-left flex items-center gap-2">
+  
+    <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 z-50 w-full bg-brand px-6 py-6 flex flex-col gap-4 max-h-[calc(100dvh-60px)] overflow-y-auto border-t border-zinc-800">
+      <a href="crear-placa.html" class="block w-full text-base font-medium text-zinc-400 hover:text-white transition-colors">Crear Placa</a>
+      <a href="mis-mascotas.html" class="block w-full text-base font-medium text-zinc-400 hover:text-white transition-colors">Mis Mascotas</a>
+      <button onclick="if(window.openScannerModal) window.openScannerModal(); else window.location.href='mis-mascotas.html';" class="block w-full text-base font-medium text-zinc-400 hover:text-white transition-colors text-left flex items-center gap-2 appearance-none">
         <i class="ph-bold ph-qr-code text-xl"></i> Escanear Placa
       </button>
-      <button id="mobile-entrar" onclick="window.location.href='entrar.html'" class="block w-full text-base font-medium text-zinc-400 text-left hover:text-white transition-colors appearance-none py-1 mt-2">Entrar</button>
-      <button id="mobile-registro" onclick="window.location.href='registro.html'" class="sm:hidden bg-white text-brand text-base font-medium px-5 py-3 rounded-lg hover:bg-surface transition-colors appearance-none w-full text-center">Registro</button>
-      <button id="mobile-salir" class="block w-full text-base font-medium text-zinc-400 text-left appearance-none py-1 mt-2 !hidden">Salir</button>
+      <div class="w-full h-px bg-zinc-800 my-2"></div>
+      <button id="mobile-entrar" onclick="window.location.href='entrar.html'" class="block w-full text-base font-medium text-zinc-400 hover:text-white transition-colors text-left appearance-none">Entrar</button>
+      <button id="mobile-registro" onclick="window.location.href='registro.html'" class="bg-white text-brand text-base font-medium px-5 py-3 rounded-lg hover:bg-surface transition-colors appearance-none w-full text-center mt-2 border border-zinc-200">Registro</button>
+      <div id="mobile-user-links" class="hidden flex-col gap-4 w-full">
+        <a href="perfil.html" class="block w-full text-base font-medium text-zinc-400 hover:text-white transition-colors">Mi Perfil</a>
+        <a href="notificaciones.html" class="block w-full text-base font-medium text-zinc-400 hover:text-white transition-colors">Notificaciones</a>
+        <a href="mi-cuenta.html" class="block w-full text-base font-medium text-zinc-400 hover:text-white transition-colors">Mi Cuenta</a>
+        <div class="w-full h-px bg-zinc-800 my-2"></div>
+        <button id="mobile-salir-2" class="block w-full text-sm font-medium text-zinc-500 hover:text-white transition-colors text-left appearance-none">Cerrar sesión</button>
+      </div>
     </div>
   </header>
   <main class="w-full max-w-md mx-auto px-6 py-16 flex-1 flex flex-col justify-center">
@@ -93,15 +118,13 @@
       </div>
     </form>
   </main>
-  <footer class="w-full mt-auto bg-white">
-    <div class="max-w-6xl mx-auto px-6 py-8 md:py-12 flex flex-col md:flex-row justify-between items-center gap-6">
-      <div class="flex flex-col items-center md:items-start gap-2">
-        <div class="flex items-center gap-2 cursor-pointer" onclick="window.location.href='index.html'">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 fill-current text-brand" viewBox="0 0 256 256"><path d="M240,108a28,28,0,1,1-28-28A28,28,0,0,1,240,108ZM72,108a28,28,0,1,0-28,28A28,28,0,0,0,72,108ZM92,88A28,28,0,1,0,64,60,28,28,0,0,0,92,88Zm72,0a28,28,0,1,0-28-28A28,28,0,0,0,164,88Zm23.12,60.86a35.3,35.3,0,0,1-16.87-21.14,44,44,0,0,0-84.5,0A35.25,35.25,0,0,1,69,148.82,40,40,0,0,0,88,224a39.48,39.48,0,0,0,15.52-3.13,64.09,64.09,0,0,1,48.87,0,40,40,0,0,0,34.73-72Z"></path></svg>
-          <span class="text-base font-semibold tracking-tight text-brand">MascotaSegura</span>
-        </div>
-        <span class="text-xs text-zinc-400 font-normal">&copy; 2026 MascotaSegura. Todos los derechos reservados.</span>
+    <footer class="w-full mt-auto bg-white border-t border-zinc-200">
+    <div class="max-w-6xl mx-auto px-6 py-8 flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="flex items-center gap-2 cursor-pointer" onclick="window.location.href='index.html'">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 fill-current text-brand" viewBox="0 0 256 256"><path d="M240,108a28,28,0,1,1-28-28A28,28,0,0,1,240,108ZM72,108a28,28,0,1,0-28,28A28,28,0,0,0,72,108ZM92,88A28,28,0,1,0,64,60,28,28,0,0,0,92,88Zm72,0a28,28,0,1,0-28-28A28,28,0,0,0,164,88Zm23.12,60.86a35.3,35.3,0,0,1-16.87-21.14,44,44,0,0,0-84.5,0A35.25,35.25,0,0,1,69,148.82,40,40,0,0,0,88,224a39.48,39.48,0,0,0,15.52-3.13,64.09,64.09,0,0,1,48.87,0,40,40,0,0,0,34.73-72Z"></path></svg>
+        <span class="text-base font-semibold tracking-tight text-brand">MascotaSegura</span>
       </div>
+      <span class="text-sm text-zinc-400 font-normal">&copy; 2026 MascotaSegura. Todos los derechos reservados.</span>
     </div>
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

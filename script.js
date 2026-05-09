@@ -198,13 +198,37 @@ document.addEventListener('DOMContentLoaded', () => {
         const mobileRegistro = document.getElementById('mobile-registro');
         const mobileSalir = document.getElementById('mobile-salir');
         if (user) {
-            if (navEntrar) navEntrar.classList.add('!hidden');
-            if (navRegistro) navRegistro.classList.add('!hidden');
-            if (navSalir) navSalir.classList.remove('!hidden');
-            if (mobileEntrar) mobileEntrar.classList.add('!hidden');
-            if (mobileRegistro) mobileRegistro.classList.add('!hidden');
-            if (mobileSalir) mobileSalir.classList.remove('!hidden');
-            if (path.includes('entrar') || path.includes('registro') || path.includes('recuperar')) {
+            
+            const navEntrar = document.getElementById('nav-entrar');
+            const navRegistro = document.getElementById('nav-registro');
+            const navUserMenu = document.getElementById('nav-user-menu');
+            const mobileEntrar = document.getElementById('mobile-entrar');
+            const mobileRegistro = document.getElementById('mobile-registro');
+            const mobileUserLinks = document.getElementById('mobile-user-links');
+            
+            if (navEntrar) navEntrar.classList.add('hidden');
+            if (navRegistro) navRegistro.classList.add('hidden');
+            if (navUserMenu) navUserMenu.classList.remove('hidden');
+            
+            if (mobileEntrar) mobileEntrar.classList.add('hidden');
+            if (mobileRegistro) mobileRegistro.classList.add('hidden');
+            if (mobileUserLinks) {
+                mobileUserLinks.classList.remove('hidden');
+                mobileUserLinks.classList.add('flex');
+            }
+
+            const fname = user.user_metadata?.full_name || 'Usuario';
+            const firstName = fname.split(' ')[0];
+            const navUserName = document.getElementById('nav-user-name');
+            const navUserInitials = document.getElementById('nav-user-initials');
+            const ddUserName = document.getElementById('dropdown-user-name');
+            const ddUserEmail = document.getElementById('dropdown-user-email');
+            
+            if (navUserName) navUserName.textContent = firstName;
+            if (navUserInitials) navUserInitials.textContent = fname.charAt(0).toUpperCase();
+            if (ddUserName) ddUserName.textContent = fname;
+            if (ddUserEmail) ddUserEmail.textContent = user.email;
+if (path.includes('entrar') || path.includes('registro') || path.includes('recuperar')) {
                 window.location.href = 'mis-mascotas.html';
             }
             const protectedContent = document.getElementById('protected-content');
@@ -220,8 +244,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             setupPushNotifications(user.id);
         } else {
-            if (navEntrar) navEntrar.classList.remove('!hidden');
-            if (navRegistro) navRegistro.classList.remove('!hidden');
+            if (navEntrar) navEntrar.classList.remove('hidden');
+            if (navRegistro) navRegistro.classList.remove('hidden');
             if (navSalir) navSalir.classList.add('!hidden');
             if (mobileEntrar) mobileEntrar.classList.remove('!hidden');
             if (mobileRegistro) mobileRegistro.classList.remove('!hidden');
@@ -513,27 +537,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'index.html';
         } catch (error) { showModal({isError: true, title: 'Error', text: error.message || 'Ha ocurrido un error inesperado.'}); }
     };
-    const navSalirBtn = document.getElementById('nav-salir');
-    const mobileSalirBtn = document.getElementById('mobile-salir');
-    if (navSalirBtn) navSalirBtn.addEventListener('click', handleLogout);
-    if (mobileSalirBtn) mobileSalirBtn.addEventListener('click', handleLogout);
-
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    if (mobileMenuBtn && mobileMenu) {
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-            const icon = mobileMenuBtn.querySelector('i');
-            if (icon) {
-                if (mobileMenu.classList.contains('hidden')) {
-                    icon.classList.remove('ph-x');
-                    icon.classList.add('ph-list');
-                } else {
-                    icon.classList.remove('ph-list');
-                    icon.classList.add('ph-x');
-                }
-            }
-        });
+    
     }
     const formRegistro = document.getElementById('registro-form');
     if (formRegistro) {
@@ -1057,3 +1061,26 @@ async function initMiCuenta(user) {
 }
 
 
+
+    const btnUserDropdown = document.getElementById('btn-user-dropdown');
+    const userDropdownContent = document.getElementById('user-dropdown-content');
+    if (btnUserDropdown && userDropdownContent) {
+        btnUserDropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userDropdownContent.classList.toggle('hidden');
+        });
+        document.addEventListener('click', (e) => {
+            if (!userDropdownContent.contains(e.target)) {
+                userDropdownContent.classList.add('hidden');
+            }
+        });
+    }
+
+    const navSalirBtn = document.getElementById('nav-salir');
+    const navSalirMobileBtn = document.getElementById('mobile-salir-2');
+    const handleLogout = async () => {
+        await sbClient.auth.signOut();
+        window.location.href = 'index.html';
+    };
+    if (navSalirBtn) navSalirBtn.addEventListener('click', handleLogout);
+    if (navSalirMobileBtn) navSalirMobileBtn.addEventListener('click', handleLogout);
