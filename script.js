@@ -840,11 +840,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const navSalirBtn = document.getElementById('nav-salir');
-        const handleLogout = async () => {
+    const bnSalirBtn = document.getElementById('bn-salir');
+    
+    const handleLogout = async () => {
         await sbClient.auth.signOut();
         window.location.href = 'index.html';
     };
     if (navSalirBtn) navSalirBtn.addEventListener('click', handleLogout);
+    if (bnSalirBtn) bnSalirBtn.addEventListener('click', handleLogout);
     
 });
 
