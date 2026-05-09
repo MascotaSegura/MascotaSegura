@@ -51,22 +51,20 @@ El proyecto está construido bajo un enfoque sin servidor (serverless) utilizand
 
 ## Instalación y Despliegue Local
 
-Al ser un proyecto estático que consume APIs de Supabase, no requiere un proceso de compilación complejo para ejecutarse localmente.
+Este repositorio contiene código propietario y de uso comercial. **No es de código abierto ni debe ser clonado o distribuido.**
 
-1. **Clonar el repositorio:**
-   ```bash
-   git clone https://github.com/MascotaSegura/MascotaSegura.git
-   cd MascotaSegura
-   ```
+### Despliegue y Pruebas Internas
 
-2. **Servir localmente:**
+Para el equipo de desarrollo interno, al ser un proyecto estático que consume APIs de Supabase, se puede ejecutar localmente levantando un servidor web desde la raíz del proyecto.
+
+1. **Servir localmente:**
    Levanta un servidor HTTP simple en la raíz del proyecto. Por ejemplo, usando Python:
    ```bash
    python -m http.server 8000
    ```
    *Nota: Para probar las Notificaciones Push o el escáner QR en un dispositivo móvil, es necesario que el entorno local se sirva sobre `https` (o usando un túnel como ngrok).*
 
-3. **Configuración de Supabase:**
+2. **Configuración de Supabase:**
    - La base de datos requiere la ejecución de los esquemas ubicados en `supabase/migrations/`.
    - El envío de notificaciones depende de la Edge Function en `supabase/functions/send-push/`.
    - Las variables de entorno para el cliente en `script.js` deben configurarse con tu propia URL y Clave Anónima de Supabase si deseas utilizar un entorno propio.
