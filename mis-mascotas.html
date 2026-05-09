@@ -33,6 +33,7 @@
   <link rel="icon" type="image/svg+xml" href="paw-print-fill.svg">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#09090B">
+  <style id="mobile-user-menu-style">@media (max-width: 767px) { #nav-user-menu { display: none !important; } }</style>
 </head>
 <body class="bg-surface text-brand antialiased min-h-screen flex flex-col selection:bg-brand selection:text-white overflow-x-hidden pb-16 md:pb-0">
   
@@ -47,7 +48,7 @@
         <a href="mis-mascotas.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Mis Mascotas</a>
       </nav>
       <div class="flex items-center gap-4 shrink-0">
-        <button id="nav-entrar" onclick="window.location.href='entrar.html'" class="hidden md:block text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none">Entrar</button>
+        <button id="nav-entrar" onclick="window.location.href='entrar.html'" class=" text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none">Entrar</button>
         <button id="nav-registro" onclick="window.location.href='registro.html'" class="hidden md:block bg-white text-brand text-sm font-medium px-5 py-2 rounded-lg hover:bg-surface transition-colors appearance-none">Registro</button>
         
         <div id="nav-user-menu" class="relative hidden">
@@ -72,30 +73,11 @@
           </div>
         </div>
 
-        <button id="mobile-menu-btn" class="md:hidden p-2 text-white flex items-center justify-center appearance-none">
-          <i class="ph-bold ph-list text-2xl pointer-events-none"></i>
-        </button>
+        
       </div>
     </div>
   
-    <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 z-50 w-full bg-brand px-6 py-6 flex flex-col gap-4 max-h-[calc(100dvh-60px)] overflow-y-auto border-t border-zinc-800">
-      <a href="crear-placa.html" class="block w-full text-base font-medium text-zinc-400 hover:text-white transition-colors">Crear Placa</a>
-      <a href="mis-mascotas.html" class="block w-full text-base font-medium text-zinc-400 hover:text-white transition-colors">Mis Mascotas</a>
-      <button onclick="if(window.openScannerModal) window.openScannerModal(); else window.location.href='mis-mascotas.html';" class="block w-full text-base font-medium text-zinc-400 hover:text-white transition-colors text-left flex items-center gap-2 appearance-none">
-        <i class="ph-bold ph-qr-code text-xl"></i> Escanear Placa
-      </button>
-      <div class="w-full h-px bg-zinc-800 my-2"></div>
-      <button id="mobile-entrar" onclick="window.location.href='entrar.html'" class="block w-full text-base font-medium text-zinc-400 hover:text-white transition-colors text-left appearance-none">Entrar</button>
-      <button id="mobile-registro" onclick="window.location.href='registro.html'" class="bg-white text-brand text-base font-medium px-5 py-3 rounded-lg hover:bg-surface transition-colors appearance-none w-full text-center mt-2">Registro</button>
-      <div id="mobile-user-links" class="hidden flex-col gap-4 w-full">
-        <a href="perfil.html" class="block w-full text-base font-medium text-zinc-400 hover:text-white transition-colors">Mi Perfil</a>
-        <a href="notificaciones.html" class="block w-full text-base font-medium text-zinc-400 hover:text-white transition-colors">Notificaciones</a>
-        <a href="mi-cuenta.html" class="block w-full text-base font-medium text-zinc-400 hover:text-white transition-colors">Mi Cuenta</a>
-        <div class="w-full h-px bg-zinc-800 my-2"></div>
-        <button id="mobile-salir-2" class="block w-full text-sm font-medium text-zinc-500 hover:text-white transition-colors text-left appearance-none">Cerrar sesión</button>
-      </div>
-    </div>
-  </header>
+    </header>
 
   <main id="protected-content" class="w-full max-w-6xl mx-auto px-6 py-12 flex-1">
     <div class="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-4">

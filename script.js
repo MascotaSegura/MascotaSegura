@@ -194,28 +194,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const navEntrar = document.getElementById('nav-entrar');
         const navRegistro = document.getElementById('nav-registro');
         const navSalir = document.getElementById('nav-salir');
-        const mobileEntrar = document.getElementById('mobile-entrar');
-        const mobileRegistro = document.getElementById('mobile-registro');
-        const mobileSalir = document.getElementById('mobile-salir');
         if (user) {
             
             const navEntrar = document.getElementById('nav-entrar');
             const navRegistro = document.getElementById('nav-registro');
             const navUserMenu = document.getElementById('nav-user-menu');
-            const mobileEntrar = document.getElementById('mobile-entrar');
-            const mobileRegistro = document.getElementById('mobile-registro');
-            const mobileUserLinks = document.getElementById('mobile-user-links');
             
             if (navEntrar) navEntrar.classList.add('hidden');
             if (navRegistro) navRegistro.classList.add('hidden');
             if (navUserMenu) navUserMenu.classList.remove('hidden');
-            
-            if (mobileEntrar) mobileEntrar.classList.add('hidden');
-            if (mobileRegistro) mobileRegistro.classList.add('hidden');
-            if (mobileUserLinks) {
-                mobileUserLinks.classList.remove('hidden');
-                mobileUserLinks.classList.add('flex');
-            }
 
             const fname = user.user_metadata?.full_name || 'Usuario';
             const firstName = fname.split(' ')[0];
@@ -247,9 +234,6 @@ if (path.includes('entrar') || path.includes('registro') || path.includes('recup
             if (navEntrar) navEntrar.classList.remove('hidden');
             if (navRegistro) navRegistro.classList.remove('hidden');
             if (navSalir) navSalir.classList.add('!hidden');
-            if (mobileEntrar) mobileEntrar.classList.remove('!hidden');
-            if (mobileRegistro) mobileRegistro.classList.remove('!hidden');
-            if (mobileSalir) mobileSalir.classList.add('!hidden');
             if (path.includes('mis-mascotas')) {
                 window.location.href = 'entrar.html';
             }
@@ -530,23 +514,7 @@ if (path.includes('entrar') || path.includes('registro') || path.includes('recup
             startScanner();
         }
     };
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    if (mobileMenuBtn && mobileMenu) {
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-            const icon = mobileMenuBtn.querySelector('i');
-            if (icon) {
-                if (mobileMenu.classList.contains('hidden')) {
-                    icon.classList.remove('ph-x');
-                    icon.classList.add('ph-list');
-                } else {
-                    icon.classList.remove('ph-list');
-                    icon.classList.add('ph-x');
-                }
-            }
-        });
-    }
+    
 
     const formRegistro = document.getElementById('registro-form');
     if (formRegistro) {
@@ -884,14 +852,12 @@ if (path.includes('entrar') || path.includes('registro') || path.includes('recup
     }
 
     const navSalirBtn = document.getElementById('nav-salir');
-    const navSalirMobileBtn = document.getElementById('mobile-salir-2');
-    const handleLogout = async () => {
+        const handleLogout = async () => {
         await sbClient.auth.signOut();
         window.location.href = 'index.html';
     };
     if (navSalirBtn) navSalirBtn.addEventListener('click', handleLogout);
-    if (navSalirMobileBtn) navSalirMobileBtn.addEventListener('click', handleLogout);
-
+    
 });
 
 
