@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -6,25 +6,26 @@
   <title>Mis Mascotas - MascotaSegura</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
-        fontFamily: {
-          sans: ['Poppins', 'sans-serif'],
-        },
+        fontFamily: { sans: ['Inter', 'sans-serif'] },
         extend: {
           colors: {
-            brand: '#09090B',
-            brandHover: '#27272A',
+            brand: '#000000',
+            brandHover: '#333333',
             surface: '#F4F4F5',
-            surfaceHover: '#E4E4E7'
+            surfaceHover: '#E4E4E7',
+            error: '#EF4444',
+            success: '#22C55E',
+            warning: '#F59E0B',
+            secondary: '#6B7280'
           },
-          spacing: {
-            'safe': 'env(safe-area-inset-bottom)'
-          }
+          spacing: { 'safe': 'env(safe-area-inset-bottom)' },
+          borderRadius: { 'global': '8px' }
         }
       }
     }
@@ -45,19 +46,19 @@
         <a href="crear-placa.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Crear Placa</a>
         <a href="mis-mascotas.html" class="relative text-sm font-medium text-white transition-colors pb-1">
           Mis Mascotas
-          <span class="absolute bottom-0 left-0 w-full h-[3px] bg-white rounded-full"></span>
+          <span class="absolute bottom-0 left-0 w-full h-[3px] bg-white rounded-lg"></span>
         </a>
         <a href="notificaciones.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Alertas</a>
       </nav>
       <div class="flex items-center gap-2 sm:gap-4 shrink-0">
-        <button onclick="if(window.openScannerModal) window.openScannerModal(); else window.location.href='mis-mascotas.html';" class="hidden md:flex px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors shadow-none border-0 appearance-none items-center gap-2" title="Escanear Placa">
+        <button onclick="if(window.openScannerModal) window.openScannerModal(); else window.location.href='mis-mascotas.html';" class="hidden md:flex px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none items-center gap-2" title="Escanear Placa">
           <i class="ph-bold ph-qr-code text-xl"></i> Escanear
         </button>
-        <button id="nav-entrar" onclick="window.location.href='entrar.html'" class="hidden md:block px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors shadow-none border-0 appearance-none">Entrar</button>
-        <button id="nav-registro" onclick="window.location.href='registro.html'" class="hidden md:block bg-white text-brand text-sm font-medium px-5 py-2 rounded-full hover:bg-surface transition-colors shadow-none border-0 appearance-none">Registro</button>
-        <button id="nav-salir" class="hidden md:block !hidden px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors shadow-none border-0 appearance-none">Salir</button>
+        <button id="nav-entrar" onclick="window.location.href='entrar.html'" class="hidden md:block px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none">Entrar</button>
+        <button id="nav-registro" onclick="window.location.href='registro.html'" class="hidden md:block bg-white text-brand text-sm font-medium px-5 py-2 rounded-lg hover:bg-surface transition-colors appearance-none">Registro</button>
+        <button id="nav-salir" class="hidden md:block !hidden px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none">Salir</button>
         
-        <button id="mobile-salir" class="md:hidden text-zinc-400 hover:text-white transition-colors shadow-none border-0 appearance-none !hidden">
+        <button id="mobile-salir" class="md:hidden text-zinc-400 hover:text-white transition-colors appearance-none !hidden">
           <i class="ph-bold ph-sign-out text-2xl pointer-events-none"></i>
         </button>
       </div>
@@ -72,7 +73,7 @@
       </div>
       <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
         <button onclick="window.location.href='crear-placa.html'"
-          class="bg-brand text-white px-6 py-3.5 rounded-full text-sm font-medium hover:bg-brandHover transition-colors shadow-none border-0 appearance-none w-full md:w-auto text-center shrink-0">
+          class="bg-brand text-white px-6 py-3.5 rounded-lg text-sm font-medium hover:bg-brandHover transition-colors appearance-none w-full md:w-auto text-center shrink-0">
           Crear Nueva Placa
         </button>
       </div>
@@ -83,14 +84,14 @@
       <span class="text-zinc-500 font-medium text-sm">Cargando tus mascotas...</span>
     </div>
     
-    <div id="pets-empty" class="hidden w-full text-center py-16 md:py-24 bg-white rounded-[2.5rem] border-0 shadow-none flex flex-col items-center justify-center px-6">
-      <div class="w-20 h-20 bg-surface rounded-full flex items-center justify-center mb-6 shadow-none">
+    <div id="pets-empty" class="hidden w-full text-center py-16 md:py-24 bg-white rounded-lg border border-zinc-200 flex flex-col items-center justify-center px-6">
+      <div class="w-20 h-20 bg-surface rounded-lg flex items-center justify-center mb-6 border border-zinc-200">
         <i class="ph-fill ph-paw-print text-3xl text-zinc-500"></i>
       </div>
       <h3 class="text-xl font-semibold text-brand mb-2">Aún no tienes placas registradas</h3>
       <p class="text-zinc-500 text-sm mb-8 max-w-sm">Crea un perfil inteligente para tu mascota y asegúrate de que siempre pueda volver a casa.</p>
       <button onclick="window.location.href='crear-placa.html'"
-        class="bg-brand text-white px-8 py-3.5 rounded-full text-sm font-medium hover:bg-brandHover transition-colors shadow-none border-0 appearance-none">
+        class="bg-brand text-white px-8 py-3.5 rounded-lg text-sm font-medium hover:bg-brandHover transition-colors appearance-none">
         Empezar ahora
       </button>
     </div>
@@ -109,14 +110,14 @@
       </div>
     </div>
   </footer>
-  <nav class="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-zinc-100 z-50 flex justify-around items-center h-16 px-2 pb-safe shadow-none">
+  <nav class="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-zinc-100 z-50 flex justify-around items-center h-16 px-2 pb-safe border border-zinc-200">
     <a href="mis-mascotas.html" class="flex flex-col items-center justify-center w-16 h-full text-brand transition-colors">
       <i class="ph-fill ph-paw-print text-2xl mb-1"></i>
       <span class="text-[10px] font-bold tracking-wide">Mascotas</span>
     </a>
     
     <div class="relative -top-5">
-      <button onclick="if(window.openScannerModal) window.openScannerModal(); else window.location.href='mis-mascotas.html';" class="flex items-center justify-center w-14 h-14 bg-brand text-white rounded-full shadow-none border-4 border-white outline-none appearance-none hover:bg-brandHover transition-colors">
+      <button onclick="if(window.openScannerModal) window.openScannerModal(); else window.location.href='mis-mascotas.html';" class="flex items-center justify-center w-14 h-14 bg-brand text-white rounded-lg border border-zinc-200 border-4 border-white outline-none appearance-none hover:bg-brandHover transition-colors">
         <i class="ph-bold ph-qr-code text-2xl pointer-events-none"></i>
       </button>
     </div>
@@ -131,4 +132,6 @@
     <script src="script.js"></script>
 </body>
 </html>
+
+
 

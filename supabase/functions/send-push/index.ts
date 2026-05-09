@@ -15,15 +15,12 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 serve(async (req) => {
   try {
     const payload = await req.json()
-    // El webhook envía el registro actualizado en `record`
     const pet = payload.record
 
-    // Solo notificar si hay un escaneo nuevo (lat/lng/timestamp existen)
     if (!pet || !pet.lastScan || !pet.lastScan.timestamp) {
       return new Response('No hay datos de escaneo', { status: 200 })
     }
 
-    // Obtener las suscripciones del dueño de la mascota
     const { data: subs, error } = await supabase
       .from('push_subscriptions')
       .select('subscription')
@@ -44,13 +41,9 @@ serve(async (req) => {
       data: { url: mapUrl || '/' }
     })
 
-    // Enviar la notificación a todos los dispositivos del usuario
     const pushPromises = subs.map(sub => 
       webpush.sendNotification(sub.subscription, notificationPayload).catch(err => {
-        if (err.statusCode === 404 || err.statusCode === 410) {
-          // La suscripción expiró o fue eliminada, idealmente deberíamos borrarla de la base de datos aquí
-          console.log('Suscripción expirada:', err)
-        } else {
+        if (err.statusCode !== 404 && err.statusCode !== 410) {
           console.error('Error enviando push:', err)
         }
       })

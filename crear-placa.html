@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -6,26 +6,27 @@
   <title>Crear Placa - MascotaSegura</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/html5-qrcode"></script>
   <script>
     tailwind.config = {
       theme: {
-        fontFamily: {
-          sans: ['Poppins', 'sans-serif'],
-        },
+        fontFamily: { sans: ['Inter', 'sans-serif'] },
         extend: {
           colors: {
-            brand: '#09090B',
-            brandHover: '#27272A',
+            brand: '#000000',
+            brandHover: '#333333',
             surface: '#F4F4F5',
-            surfaceHover: '#E4E4E7'
+            surfaceHover: '#E4E4E7',
+            error: '#EF4444',
+            success: '#22C55E',
+            warning: '#F59E0B',
+            secondary: '#6B7280'
           },
-          spacing: {
-            'safe': 'env(safe-area-inset-bottom)'
-          }
+          spacing: { 'safe': 'env(safe-area-inset-bottom)' },
+          borderRadius: { 'global': '8px' }
         }
       }
     }
@@ -44,20 +45,20 @@
       <nav class="hidden md:flex items-center gap-8">
         <a href="crear-placa.html" class="relative text-sm font-medium text-white transition-colors pb-1">
           Crear Placa
-          <span class="absolute bottom-0 left-0 w-full h-[3px] bg-white rounded-full"></span>
+          <span class="absolute bottom-0 left-0 w-full h-[3px] bg-white rounded-lg"></span>
         </a>
         <a href="mis-mascotas.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Mis Mascotas</a>
         <a href="notificaciones.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Alertas</a>
       </nav>
       <div class="flex items-center gap-2 sm:gap-4 shrink-0">
-        <button onclick="if(window.openScannerModal) window.openScannerModal(); else window.location.href='mis-mascotas.html';" class="hidden md:flex px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors shadow-none border-0 appearance-none items-center gap-2" title="Escanear Placa">
+        <button onclick="if(window.openScannerModal) window.openScannerModal(); else window.location.href='mis-mascotas.html';" class="hidden md:flex px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none items-center gap-2" title="Escanear Placa">
           <i class="ph-bold ph-qr-code text-xl"></i> Escanear
         </button>
-        <button id="nav-entrar" onclick="window.location.href='entrar.html'" class="hidden md:block px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors shadow-none border-0 appearance-none">Entrar</button>
-        <button id="nav-registro" onclick="window.location.href='registro.html'" class="hidden md:block bg-white text-brand text-sm font-medium px-5 py-2 rounded-full hover:bg-surface transition-colors shadow-none border-0 appearance-none">Registro</button>
-        <button id="nav-salir" class="hidden md:block !hidden px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors shadow-none border-0 appearance-none">Salir</button>
+        <button id="nav-entrar" onclick="window.location.href='entrar.html'" class="hidden md:block px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none">Entrar</button>
+        <button id="nav-registro" onclick="window.location.href='registro.html'" class="hidden md:block bg-white text-brand text-sm font-medium px-5 py-2 rounded-lg hover:bg-surface transition-colors appearance-none">Registro</button>
+        <button id="nav-salir" class="hidden md:block !hidden px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none">Salir</button>
         
-        <button id="mobile-salir" class="md:hidden text-zinc-400 hover:text-white transition-colors shadow-none border-0 appearance-none !hidden">
+        <button id="mobile-salir" class="md:hidden text-zinc-400 hover:text-white transition-colors appearance-none !hidden">
           <i class="ph-bold ph-sign-out text-2xl pointer-events-none"></i>
         </button>
       </div>
@@ -74,7 +75,7 @@
       <form id="pet-form" class="flex flex-col gap-6">
         <div class="flex items-center gap-6 mb-2">
           <div id="upload-area"
-            class="w-16 h-16 bg-surface rounded-full flex items-center justify-center cursor-pointer shrink-0 hover:bg-surfaceHover transition-colors overflow-hidden border-0">
+            class="w-16 h-16 bg-surface rounded-lg flex items-center justify-center cursor-pointer shrink-0 hover:bg-surfaceHover transition-colors overflow-hidden border border-zinc-200">
             <i class="ph-fill ph-camera text-xl text-zinc-400"></i>
             <input type="file" id="pet-photo" accept="image/*" class="hidden">
           </div>
@@ -88,14 +89,14 @@
           <div class="flex flex-col gap-2">
             <label for="pet-name" class="text-sm font-medium text-brand">Nombre</label>
             <input type="text" id="pet-name" placeholder="Ej. Max"
-              class="w-full bg-surface px-5 py-3.5 rounded-2xl outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand shadow-none appearance-none border-0"
+              class="w-full bg-surface px-5 py-3.5 rounded-lg outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand appearance-none border border-zinc-200"
               required>
           </div>
           <div class="flex flex-col gap-2">
             <label for="pet-type" class="text-sm font-medium text-brand">Especie</label>
             <div class="relative">
               <select id="pet-type"
-                class="w-full bg-surface px-5 py-3.5 rounded-2xl outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal appearance-none text-brand shadow-none border-0">
+                class="w-full bg-surface px-5 py-3.5 rounded-lg outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal appearance-none text-brand border border-zinc-200">
                 <option value="perro">Perro</option>
                 <option value="gato">Gato</option>
                 <option value="otro">Otro</option>
@@ -111,7 +112,7 @@
             <label for="pet-sex" class="text-sm font-medium text-brand">Sexo</label>
             <div class="relative">
               <select id="pet-sex"
-                class="w-full bg-surface px-5 py-3.5 rounded-2xl outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal appearance-none text-brand shadow-none border-0">
+                class="w-full bg-surface px-5 py-3.5 rounded-lg outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal appearance-none text-brand border border-zinc-200">
                 <option value="macho">Macho</option>
                 <option value="hembra">Hembra</option>
               </select>
@@ -122,7 +123,7 @@
             <label for="pet-sterilized" class="text-sm font-medium text-brand">Esterilizado / Castrado</label>
             <div class="relative">
               <select id="pet-sterilized"
-                class="w-full bg-surface px-5 py-3.5 rounded-2xl outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal appearance-none text-brand shadow-none border-0">
+                class="w-full bg-surface px-5 py-3.5 rounded-lg outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal appearance-none text-brand border border-zinc-200">
                 <option value="si">Sí</option>
                 <option value="no">No</option>
               </select>
@@ -134,13 +135,13 @@
         <div class="flex flex-col gap-2">
           <label for="pet-breed" class="text-sm font-medium text-brand">Raza y color predominante</label>
           <input type="text" id="pet-breed" placeholder="Ej. Golden Retriever, Dorado"
-            class="w-full bg-surface px-5 py-3.5 rounded-2xl outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand shadow-none appearance-none border-0">
+            class="w-full bg-surface px-5 py-3.5 rounded-lg outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand appearance-none border border-zinc-200">
         </div>
 
         <div class="flex flex-col gap-2">
           <label for="pet-medical" class="text-sm font-medium text-brand">Información médica</label>
           <textarea id="pet-medical" rows="3" placeholder="Alergias, cuidados especiales..."
-            class="w-full bg-surface px-5 py-3.5 rounded-2xl outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal resize-none placeholder-zinc-400 text-brand shadow-none appearance-none border-0"></textarea>
+            class="w-full bg-surface px-5 py-3.5 rounded-lg outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal resize-none placeholder-zinc-400 text-brand appearance-none border border-zinc-200"></textarea>
         </div>
 
         <div class="pt-6 mt-2">
@@ -149,59 +150,59 @@
             <div class="flex flex-col gap-2">
               <label for="owner-name" class="text-sm font-medium text-brand">Tu nombre</label>
               <input type="text" id="owner-name" placeholder="Ej. Carlos"
-                class="w-full bg-surface px-5 py-3.5 rounded-2xl outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand shadow-none appearance-none border-0"
+                class="w-full bg-surface px-5 py-3.5 rounded-lg outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand appearance-none border border-zinc-200"
                 required>
             </div>
             <div class="flex flex-col gap-2">
               <label for="owner-phone" class="text-sm font-medium text-brand">Teléfono principal</label>
               <input type="tel" id="owner-phone" placeholder="Ej. 555 123 456"
-                class="w-full bg-surface px-5 py-3.5 rounded-2xl outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand shadow-none appearance-none border-0"
+                class="w-full bg-surface px-5 py-3.5 rounded-lg outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand appearance-none border border-zinc-200"
                 required>
             </div>
           </div>
           <div class="flex flex-col gap-2 mt-6">
             <label for="owner-alt-phone" class="text-sm font-medium text-brand">Teléfono secundario (Opcional)</label>
             <input type="tel" id="owner-alt-phone" placeholder="Ej. 555 987 654"
-              class="w-full bg-surface px-5 py-3.5 rounded-2xl outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand shadow-none appearance-none border-0">
+              class="w-full bg-surface px-5 py-3.5 rounded-lg outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand appearance-none border border-zinc-200">
           </div>
         </div>
 
         <button type="submit" id="btn-generar-placa"
-          class="mt-8 bg-brand text-white rounded-full py-4 text-base font-medium hover:bg-brandHover transition-colors w-full shadow-none border-0 appearance-none">
+          class="mt-8 bg-brand text-white rounded-lg py-4 text-base font-medium hover:bg-brandHover transition-colors w-full appearance-none">
           Generar Placa
         </button>
       </form>
     </section>
 
     <section class="flex justify-center lg:justify-end items-start pt-2">
-      <div class="w-full max-w-[360px] bg-white rounded-[2.5rem] p-8 flex flex-col gap-8 shadow-none border-0">
+      <div class="w-full max-w-[360px] bg-white rounded-lg p-8 flex flex-col gap-8 border border-zinc-200">
         <div class="flex flex-col items-center mt-2">
-          <div id="preview-photo-container" class="hidden w-24 h-24 rounded-full overflow-hidden mb-4 border-4 border-surface bg-surface">
+          <div id="preview-photo-container" class="hidden w-24 h-24 rounded-lg overflow-hidden mb-4 border-4 border-surface bg-surface">
              <img id="preview-photo" src="" class="w-full h-full object-cover">
           </div>
-          <div id="preview-photo-placeholder" class="w-24 h-24 bg-surface rounded-full flex items-center justify-center mb-4 border-4 border-surface shadow-none">
+          <div id="preview-photo-placeholder" class="w-24 h-24 bg-surface rounded-lg flex items-center justify-center mb-4 border-4 border-surface border border-zinc-200">
              <i class="ph-fill ph-dog text-4xl text-zinc-400"></i>
           </div>
           <h3 id="preview-name" class="text-2xl font-semibold mb-2 text-brand">Nombre</h3>
           <span id="preview-tags"
-            class="bg-surface text-brand px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide uppercase">Macho &bull; Perro</span>
+            class="bg-surface text-brand px-4 py-1.5 rounded-lg text-xs font-semibold tracking-wide uppercase">Macho &bull; Perro</span>
         </div>
 
         <div class="flex gap-4">
           <div
-            class="flex-1 bg-surface rounded-3xl py-5 flex flex-col items-center gap-2 cursor-pointer hover:bg-surfaceHover transition-colors shadow-none border-0">
+            class="flex-1 bg-surface rounded-lg py-5 flex flex-col items-center gap-2 cursor-pointer hover:bg-surfaceHover transition-colors border border-zinc-200">
             <i class="ph-fill ph-phone text-2xl text-brand"></i>
             <span class="text-xs font-semibold text-brand uppercase tracking-wider">Llamar</span>
           </div>
           <div
-            class="flex-1 bg-surface rounded-3xl py-5 flex flex-col items-center gap-2 cursor-pointer hover:bg-surfaceHover transition-colors shadow-none border-0">
+            class="flex-1 bg-surface rounded-lg py-5 flex flex-col items-center gap-2 cursor-pointer hover:bg-surfaceHover transition-colors border border-zinc-200">
             <i class="ph-fill ph-whatsapp-logo text-2xl text-brand"></i>
             <span class="text-xs font-semibold text-brand uppercase tracking-wider">Mensaje</span>
           </div>
         </div>
 
         <div class="w-full space-y-4">
-            <div class="flex flex-col gap-2 bg-[#FEF2F2] px-6 py-5 rounded-3xl shadow-none border-0">
+            <div class="flex flex-col gap-2 bg-[#FEF2F2] px-6 py-5 rounded-lg border border-zinc-200">
                 <div class="flex items-center gap-2">
                     <i class="ph-fill ph-first-aid text-red-500 text-lg"></i>
                     <span class="text-[10px] font-bold text-red-500 uppercase tracking-wider">Información Médica</span>
@@ -224,14 +225,14 @@
     </div>
   </footer>
 
-  <nav class="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-zinc-100 z-50 flex justify-around items-center h-16 px-2 pb-safe shadow-none">
+  <nav class="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-zinc-100 z-50 flex justify-around items-center h-16 px-2 pb-safe border border-zinc-200">
     <a href="mis-mascotas.html" class="flex flex-col items-center justify-center w-16 h-full text-zinc-400 hover:text-brand transition-colors">
       <i class="ph-bold ph-paw-print text-2xl mb-1"></i>
       <span class="text-[10px] font-medium tracking-wide">Mascotas</span>
     </a>
     
     <div class="relative -top-5">
-      <button onclick="if(window.openScannerModal) window.openScannerModal(); else window.location.href='mis-mascotas.html';" class="flex items-center justify-center w-14 h-14 bg-brand text-white rounded-full shadow-none border-4 border-white outline-none appearance-none hover:bg-brandHover transition-colors">
+      <button onclick="if(window.openScannerModal) window.openScannerModal(); else window.location.href='mis-mascotas.html';" class="flex items-center justify-center w-14 h-14 bg-brand text-white rounded-lg border border-zinc-200 border-4 border-white outline-none appearance-none hover:bg-brandHover transition-colors">
         <i class="ph-bold ph-qr-code text-2xl pointer-events-none"></i>
       </button>
     </div>
@@ -245,4 +246,6 @@
     <script src="script.js"></script>
 </body>
 </html>
+
+
 

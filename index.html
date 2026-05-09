@@ -3,29 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MascotaSegura - La identidad digital de tu mejor amigo</title>
+  <title>MascotaSegura - Placas Inteligentes</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/html5-qrcode"></script>
   <script>
     tailwind.config = {
       theme: {
-        fontFamily: {
-          sans: ['Poppins', 'sans-serif'],
-        },
+        fontFamily: { sans: ['Inter', 'sans-serif'] },
         extend: {
           colors: {
-            brand: '#09090B',
-            brandHover: '#27272A',
+            brand: '#000000',
+            brandHover: '#333333',
             surface: '#F4F4F5',
-            surfaceHover: '#E4E4E7'
+            surfaceHover: '#E4E4E7',
+            error: '#EF4444',
+            success: '#22C55E',
+            warning: '#F59E0B',
+            secondary: '#6B7280'
           },
-          spacing: {
-            'safe': 'env(safe-area-inset-bottom)'
-          }
+          spacing: { 'safe': 'env(safe-area-inset-bottom)' },
+          borderRadius: { 'global': '8px' }
         }
       }
     }
@@ -35,168 +35,141 @@
   <meta name="theme-color" content="#09090B">
 </head>
 <body class="bg-white text-brand antialiased min-h-screen flex flex-col selection:bg-brand selection:text-white overflow-x-hidden">
-  <header class="w-full sticky top-0 z-50 bg-brand text-white">
+  
+  <header class="w-full relative bg-brand text-white">
     <div class="max-w-6xl mx-auto px-5 sm:px-6 py-4 flex justify-between items-center">
-      <a href="index.html" class="flex items-center gap-2 shrink-0 group">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 fill-current text-white group-hover:text-zinc-300 transition-colors" viewBox="0 0 256 256"><path d="M240,108a28,28,0,1,1-28-28A28,28,0,0,1,240,108ZM72,108a28,28,0,1,0-28,28A28,28,0,0,0,72,108ZM92,88A28,28,0,1,0,64,60,28,28,0,0,0,92,88Zm72,0a28,28,0,1,0-28-28A28,28,0,0,0,164,88Zm23.12,60.86a35.3,35.3,0,0,1-16.87-21.14,44,44,0,0,0-84.5,0A35.25,35.25,0,0,1,69,148.82,40,40,0,0,0,88,224a39.48,39.48,0,0,0,15.52-3.13,64.09,64.09,0,0,1,48.87,0,40,40,0,0,0,34.73-72Z"></path></svg>
-        <span class="text-lg sm:text-xl font-semibold tracking-tight truncate group-hover:text-zinc-300 transition-colors">MascotaSegura</span>
-      </a>
+      <div class="flex items-center gap-2 cursor-pointer shrink-0" onclick="window.location.href='index.html'">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 fill-current text-white" viewBox="0 0 256 256"><path d="M240,108a28,28,0,1,1-28-28A28,28,0,0,1,240,108ZM72,108a28,28,0,1,0-28,28A28,28,0,0,0,72,108ZM92,88A28,28,0,1,0,64,60,28,28,0,0,0,92,88Zm72,0a28,28,0,1,0-28-28A28,28,0,0,0,164,88Zm23.12,60.86a35.3,35.3,0,0,1-16.87-21.14,44,44,0,0,0-84.5,0A35.25,35.25,0,0,1,69,148.82,40,40,0,0,0,88,224a39.48,39.48,0,0,0,15.52-3.13,64.09,64.09,0,0,1,48.87,0,40,40,0,0,0,34.73-72Z"></path></svg>
+        <span class="text-lg sm:text-xl font-semibold tracking-tight truncate">MascotaSegura</span>
+      </div>
       <nav class="hidden md:flex items-center gap-8">
         <a href="crear-placa.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Crear Placa</a>
         <a href="mis-mascotas.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Mis Mascotas</a>
-        <a href="index.html#como-funciona" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Cómo funciona</a>
+        <a href="#como-funciona" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Cómo funciona</a>
       </nav>
       <div class="flex items-center gap-2 sm:gap-4 shrink-0">
-        <button onclick="if(window.openScannerModal) window.openScannerModal(); else window.location.href='mis-mascotas.html';" class="hidden sm:flex px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors items-center gap-2" title="Escanear Placa">
+        <button onclick="if(window.openScannerModal) window.openScannerModal(); else window.location.href='mis-mascotas.html';" class="hidden sm:flex px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none items-center gap-2" title="Escanear Placa">
           <i class="ph-bold ph-qr-code text-xl"></i> Escanear
         </button>
-        <button id="nav-entrar" onclick="window.location.href='entrar.html'"
-          class="hidden sm:block px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors">Entrar</button>
-        <button id="nav-registro" onclick="window.location.href='registro.html'"
-          class="hidden sm:block bg-white text-brand text-sm font-medium px-5 py-2 rounded-full hover:bg-surface transition-colors">Registro</button>
-        <button id="nav-salir"
-          class="hidden sm:block !hidden px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors">Salir</button>
-        <button id="mobile-menu-btn"
-          class="md:hidden p-2 text-white flex items-center justify-center">
+        <button id="nav-entrar" onclick="window.location.href='entrar.html'" class="hidden sm:block px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none">Entrar</button>
+        <button id="nav-registro" onclick="window.location.href='registro.html'" class="hidden sm:block bg-white text-brand text-sm font-medium px-5 py-2 rounded-lg hover:bg-surface transition-colors appearance-none">Registro</button>
+        <button id="nav-salir" class="hidden sm:block !hidden px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none">Salir</button>
+        <button id="mobile-menu-btn" class="md:hidden p-2 text-white flex items-center justify-center appearance-none">
           <i class="ph-bold ph-list text-2xl pointer-events-none"></i>
         </button>
       </div>
     </div>
+    
     <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 z-50 w-full bg-brand px-5 py-6 flex flex-col gap-6 max-h-[calc(100dvh-60px)] overflow-y-auto">
       <a href="crear-placa.html" class="block w-full py-1 text-base font-medium text-zinc-400 hover:text-white transition-colors">Crear Placa</a>
       <a href="mis-mascotas.html" class="block w-full py-1 text-base font-medium text-zinc-400 hover:text-white transition-colors">Mis Mascotas</a>
-      <a href="index.html#como-funciona" class="block w-full py-1 text-base font-medium text-zinc-400 hover:text-white transition-colors">Cómo funciona</a>
-      <button onclick="if(window.openScannerModal) window.openScannerModal(); else window.location.href='mis-mascotas.html';" class="block w-full py-1 text-base font-medium text-zinc-400 hover:text-white transition-colors text-left flex items-center gap-2">
+      <a href="#como-funciona" class="block w-full py-1 text-base font-medium text-zinc-400 hover:text-white transition-colors">Cómo funciona</a>
+      <button onclick="if(window.openScannerModal) window.openScannerModal(); else window.location.href='mis-mascotas.html';" class="block w-full py-1 text-base font-medium text-zinc-400 text-left flex items-center gap-2 hover:text-white transition-colors">
         <i class="ph-bold ph-qr-code text-xl"></i> Escanear Placa
       </button>
-      <button id="mobile-entrar" onclick="window.location.href='entrar.html'"
-        class="block w-full text-base font-medium text-zinc-400 hover:text-white transition-colors text-left py-1 mt-2">Entrar</button>
-      <button id="mobile-registro" onclick="window.location.href='registro.html'"
-        class="sm:hidden bg-white text-brand text-base font-medium px-5 py-3 rounded-full hover:bg-surface transition-colors w-full text-center">Registro</button>
-      <button id="mobile-salir"
-        class="block w-full text-base font-medium text-zinc-400 hover:text-white transition-colors text-left py-1 mt-2 !hidden">Salir</button>
+      <button id="mobile-entrar" onclick="window.location.href='entrar.html'" class="block w-full text-base font-medium text-zinc-400 text-left hover:text-white transition-colors appearance-none py-1 mt-2">Entrar</button>
+      <button id="mobile-registro" onclick="window.location.href='registro.html'" class="sm:hidden bg-white text-brand text-base font-medium px-5 py-3 rounded-lg hover:bg-surface transition-colors appearance-none w-full text-center mt-2">Registro</button>
+      <button id="mobile-salir" class="block w-full text-base font-medium text-zinc-400 text-left hover:text-white transition-colors appearance-none py-1 mt-2 !hidden">Salir</button>
     </div>
   </header>
-  <main class="flex-1 w-full">
-    <section class="w-full bg-surface min-h-[calc(100dvh-64px)] flex items-center justify-center overflow-hidden">
-      <div class="w-full max-w-7xl mx-auto px-6 sm:px-8 md:px-12 lg:px-20 py-12 md:py-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <div class="flex flex-col items-center lg:items-start text-center lg:text-left z-10">
-          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-brand mb-6 leading-[1.1]">
-            La identidad digital que protege a tu mejor amigo.
-          </h1>
-          <p class="text-lg md:text-xl text-zinc-500 mb-10 leading-relaxed max-w-xl">
-            Placas inteligentes con código QR. Si tu mascota se pierde, quien la encuentre podrá contactarte al instante con un solo escaneo, sin necesidad de apps.
-          </p>
-          <div class="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-            <button onclick="window.location.href='registro.html'" class="w-full sm:w-auto bg-brand text-white px-8 py-4 rounded-full text-base font-medium hover:bg-brandHover transition-colors">
-              Crear placa gratis
-            </button>
-            <a href="#como-funciona" class="w-full sm:w-auto bg-white text-brand px-8 py-4 rounded-full text-base font-medium hover:bg-surfaceHover transition-colors text-center inline-block">
-              Ver cómo funciona
-            </a>
-          </div>
-        </div>
-        <div class="w-full relative flex justify-center lg:justify-end">
-          <div class="w-full max-w-md lg:max-w-none aspect-[4/3] lg:aspect-square rounded-[2.5rem] overflow-hidden shadow-none group">
-            <img src="hero-image.png" alt="Dueño y mascota en el parque con su placa inteligente" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
-          </div>
+
+  <main class="flex-1 flex flex-col">
+    
+    <section class="w-full bg-brand text-white flex flex-col items-center justify-center py-24 sm:py-32 px-6 text-center">
+      <div class="max-w-3xl mx-auto flex flex-col items-center gap-6">
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight leading-tight">
+          La forma más inteligente de cuidar a tu mejor amigo
+        </h1>
+        <p class="text-zinc-400 text-base sm:text-lg font-normal leading-relaxed max-w-2xl">
+          Crea un perfil digital para tu mascota y obtén una placa con código QR. Si alguien lo encuentra, podrá acceder a tu información de contacto y a sus datos médicos al instante.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center gap-4 mt-6 w-full sm:w-auto">
+          <a href="crear-placa.html" class="w-full sm:w-auto bg-white text-brand text-base font-medium px-8 py-4 rounded-lg hover:bg-surface transition-colors text-center">
+            Comenzar ahora
+          </a>
+          <a href="#como-funciona" class="w-full sm:w-auto bg-brandHover text-white text-base font-medium px-8 py-4 rounded-lg hover:bg-zinc-800 transition-colors appearance-none text-center">
+            Saber más
+          </a>
         </div>
       </div>
     </section>
-    <section class="w-full bg-white py-24">
-      <div class="w-full max-w-7xl mx-auto px-6 sm:px-8 md:px-12 lg:px-20">
+
+    
+    <section id="como-funciona" class="w-full bg-white py-24 px-6">
+      <div class="max-w-6xl mx-auto">
         <div class="text-center mb-16">
-          <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-brand mb-4">Todo lo que necesitas en un escaneo</h2>
-          <p class="text-zinc-500 max-w-xl mx-auto">Nuestras placas no solo muestran un teléfono, son un perfil completo y seguro en la nube.</p>
+          <h2 class="text-3xl sm:text-4xl font-semibold tracking-tight text-brand mb-4">¿Cómo funciona?</h2>
+          <p class="text-zinc-500 text-base font-normal max-w-xl mx-auto">
+            Tres simples pasos para asegurar la tranquilidad tuya y de tu mascota.
+          </p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-          <div class="flex flex-col items-center text-center gap-4 group">
-            <div class="w-16 h-16 bg-surface rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300">
-              <i class="ph-fill ph-file-text text-3xl text-brand"></i>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16">
+          
+          <div class="flex flex-col items-center text-center gap-4">
+            <div class="w-20 h-20 bg-surface rounded-lg flex items-center justify-center text-brand mb-2">
+              <i class="ph-fill ph-paw-print text-4xl"></i>
             </div>
-            <h3 class="text-xl font-semibold text-brand">Perfil Digital Completo</h3>
+            <h3 class="text-xl font-semibold text-brand">1. Crea su perfil</h3>
             <p class="text-zinc-500 text-sm leading-relaxed">
-              Guarda su foto, nombre, raza, historial médico, alergias e instrucciones de cuidado en un solo lugar.
+              Registra los datos básicos de tu mascota, información médica relevante y tus datos de contacto de manera segura.
             </p>
           </div>
-          <div class="flex flex-col items-center text-center gap-4 group">
-            <div class="w-16 h-16 bg-surface rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300">
-              <i class="ph-fill ph-map-pin text-3xl text-brand"></i>
+
+          
+          <div class="flex flex-col items-center text-center gap-4">
+            <div class="w-20 h-20 bg-surface rounded-lg flex items-center justify-center text-brand mb-2 border border-zinc-200">
+              <i class="ph-fill ph-qr-code text-4xl"></i>
             </div>
-            <h3 class="text-xl font-semibold text-brand">Localización Rápida</h3>
+            <h3 class="text-xl font-semibold text-brand">2. Genera la placa</h3>
             <p class="text-zinc-500 text-sm leading-relaxed">
-              Quien escanee el QR tendrá la opción de enviarte su ubicación exacta por WhatsApp o llamarte con un toque.
+              Obtén un código QR único que puedes imprimir o vincular a una placa física. Es su nueva identificación digital.
             </p>
           </div>
-          <div class="flex flex-col items-center text-center gap-4 group">
-            <div class="w-16 h-16 bg-surface rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300">
-              <i class="ph-fill ph-lock-key text-3xl text-brand"></i>
+
+          
+          <div class="flex flex-col items-center text-center gap-4">
+            <div class="w-20 h-20 bg-surface rounded-lg flex items-center justify-center text-brand mb-2">
+              <i class="ph-fill ph-shield-check text-4xl"></i>
             </div>
-            <h3 class="text-xl font-semibold text-brand">Privacidad Controlada</h3>
+            <h3 class="text-xl font-semibold text-brand">3. Mayor seguridad</h3>
             <p class="text-zinc-500 text-sm leading-relaxed">
-              Tus datos están seguros. Tú decides qué información de contacto mostrar en caso de pérdida.
+              Cualquier persona que escanee el QR podrá ver su perfil y contactarte inmediatamente desde su teléfono.
             </p>
           </div>
         </div>
       </div>
     </section>
-    <section id="como-funciona" class="w-full bg-surface py-24 flex flex-col items-center">
-      <div class="text-center max-w-2xl mx-auto mb-16 px-6">
-        <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-4 text-brand">Cómo funciona</h2>
-        <p class="text-zinc-500 text-base md:text-lg font-normal leading-relaxed">Protege a tu mejor amigo en tres simples pasos. Conecta su nueva placa física con un perfil digital completo de manera instantánea.</p>
+
+    
+    <section class="w-full bg-brand py-24 px-6">
+      <div class="max-w-4xl mx-auto flex flex-col items-center text-center gap-6">
+        <h2 class="text-3xl sm:text-4xl font-semibold tracking-tight text-white">¿Listo para proteger a tu mascota?</h2>
+        <p class="text-zinc-400 text-base font-normal max-w-xl">
+          Únete a MascotaSegura y dales la protección que merecen con un perfil inteligente accesible en cualquier momento.
+        </p>
+        <a href="registro.html" class="mt-4 bg-white text-brand text-base font-medium px-8 py-4 rounded-lg hover:bg-surfaceHover transition-colors">
+          Crear cuenta gratis
+        </a>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 w-full max-w-7xl mx-auto px-6 sm:px-8 md:px-12 lg:px-20">
-        <div class="flex flex-col items-center text-center gap-4 group">
-          <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300">
-            <i class="ph-fill ph-identification-card text-3xl text-brand"></i>
-          </div>
-          <h3 class="text-xl font-semibold text-brand">1. Crea su perfil</h3>
-          <p class="text-zinc-500 text-sm leading-relaxed max-w-sm">
-            Registra sus datos vitales, historial médico y contactos de emergencia.
-          </p>
-        </div>
-        <div class="flex flex-col items-center text-center gap-4 group">
-          <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300">
-            <i class="ph-fill ph-qr-code text-3xl text-brand"></i>
-          </div>
-          <h3 class="text-xl font-semibold text-brand">2. Escanea la placa</h3>
-          <p class="text-zinc-500 text-sm leading-relaxed max-w-sm">
-            Vincula su placa inteligente escaneando el código QR con cualquier celular.
-          </p>
-        </div>
-        <div class="flex flex-col items-center text-center gap-4 group">
-          <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300">
-            <i class="ph-fill ph-shield-check text-3xl text-brand"></i>
-          </div>
-          <h3 class="text-xl font-semibold text-brand">3. Protección 24/7</h3>
-          <p class="text-zinc-500 text-sm leading-relaxed max-w-sm">
-            Quien la encuentre podrá acceder a tus datos para devolverla de inmediato.
-          </p>
-        </div>
-      </div>
-    </section>
-    <section class="w-full bg-brand py-20 text-center px-6">
-      <h2 class="text-3xl font-bold tracking-tight text-white mb-6">No esperes a que sea tarde.</h2>
-      <p class="text-zinc-400 mb-8 max-w-lg mx-auto">Únete a cientos de dueños responsables que ya confían en MascotaSegura para proteger a sus peludos.</p>
-      <button onclick="window.location.href='registro.html'" class="bg-white text-brand px-8 py-4 rounded-full text-base font-medium hover:bg-surfaceHover transition-colors inline-block">
-        Crear mi cuenta ahora
-      </button>
     </section>
   </main>
-  <footer class="w-full bg-white">
-    <div class="w-full max-w-7xl mx-auto px-6 sm:px-8 md:px-12 lg:px-20 py-8 md:py-12 flex flex-col md:flex-row justify-between items-center gap-6">
+
+  <footer class="w-full mt-auto bg-white">
+    <div class="max-w-6xl mx-auto px-6 py-8 md:py-12 flex flex-col md:flex-row justify-between items-center gap-6">
       <div class="flex flex-col items-center md:items-start gap-2">
-        <a href="index.html" class="flex items-center gap-2 group">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 fill-current text-brand group-hover:text-zinc-600 transition-colors" viewBox="0 0 256 256"><path d="M240,108a28,28,0,1,1-28-28A28,28,0,0,1,240,108ZM72,108a28,28,0,1,0-28,28A28,28,0,0,0,72,108ZM92,88A28,28,0,1,0,64,60,28,28,0,0,0,92,88Zm72,0a28,28,0,1,0-28-28A28,28,0,0,0,164,88Zm23.12,60.86a35.3,35.3,0,0,1-16.87-21.14,44,44,0,0,0-84.5,0A35.25,35.25,0,0,1,69,148.82,40,40,0,0,0,88,224a39.48,39.48,0,0,0,15.52-3.13,64.09,64.09,0,0,1,48.87,0,40,40,0,0,0,34.73-72Z"></path></svg>
-          <span class="text-base font-semibold tracking-tight text-brand group-hover:text-zinc-600 transition-colors">MascotaSegura</span>
-        </a>
+        <div class="flex items-center gap-2 cursor-pointer" onclick="window.location.href='index.html'">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 fill-current text-brand" viewBox="0 0 256 256"><path d="M240,108a28,28,0,1,1-28-28A28,28,0,0,1,240,108ZM72,108a28,28,0,1,0-28,28A28,28,0,0,0,72,108ZM92,88A28,28,0,1,0,64,60,28,28,0,0,0,92,88Zm72,0a28,28,0,1,0-28-28A28,28,0,0,0,164,88Zm23.12,60.86a35.3,35.3,0,0,1-16.87-21.14,44,44,0,0,0-84.5,0A35.25,35.25,0,0,1,69,148.82,40,40,0,0,0,88,224a39.48,39.48,0,0,0,15.52-3.13,64.09,64.09,0,0,1,48.87,0,40,40,0,0,0,34.73-72Z"></path></svg>
+          <span class="text-base font-semibold tracking-tight text-brand">MascotaSegura</span>
+        </div>
         <span class="text-xs text-zinc-400 font-normal">&copy; 2026 MascotaSegura. Todos los derechos reservados.</span>
       </div>
     </div>
   </footer>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="script.js"></script>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
 </body>
 </html>
+
 

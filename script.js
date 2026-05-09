@@ -1,4 +1,4 @@
-const SUPABASE_URL = "https://vaztacfioinkkkxmimaw.supabase.co";
+﻿const SUPABASE_URL = "https://vaztacfioinkkkxmimaw.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_WHwWYUn52u_73tvPN-PC4A_fDUTRNVD";
 const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         ctx.drawImage(img, 0, 0, width, height);
                         base64Photo = canvas.toDataURL('image/jpeg', 0.8);
 
-                        uploadArea.innerHTML = `<img src="${base64Photo}" class="w-full h-full object-cover rounded-full">`;
+                        uploadArea.innerHTML = `<img src="${base64Photo}" class="w-full h-full object-cover rounded-lg">`;
 
                         const previewPhotoContainer = document.getElementById('preview-photo-container');
                         const previewPhotoPlaceholder = document.getElementById('preview-photo-placeholder');
@@ -102,20 +102,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const backdrop = document.createElement('div');
         backdrop.className = 'fixed inset-0 bg-brand/80 z-[200] flex items-center justify-center p-4 sm:p-6 opacity-0 transition-opacity duration-200';
         const modal = document.createElement('div');
-        modal.className = 'bg-white w-full max-w-sm sm:max-w-md rounded-[2rem] p-6 sm:p-8 flex flex-col items-center scale-95 transition-transform duration-200 max-h-[90vh] overflow-y-auto relative';
+        modal.className = 'bg-white w-full max-w-sm sm:max-w-md rounded-lg p-6 sm:p-8 flex flex-col items-center scale-95 transition-transform duration-200 max-h-[90vh] overflow-y-auto relative';
         modal.innerHTML = `
-            <div class="w-16 h-16 bg-surface rounded-full flex shrink-0 items-center justify-center mb-4">
-                <i class="ph-fill ${config.icon || 'ph-check-circle'} text-3xl ${config.isError ? 'text-red-500' : 'text-brand'}"></i>
+            <div class="w-16 h-16 bg-surface rounded-lg flex shrink-0 items-center justify-center mb-4">
+                <i class="ph-fill ${config.icon || (config.isError ? 'ph-warning-circle' : 'ph-check-circle')} text-3xl ${config.isError ? 'text-red-500' : 'text-brand'}"></i>
             </div>
             <h3 class="text-xl sm:text-2xl font-semibold text-brand text-center mb-2">${config.title}</h3>
             <p class="text-sm text-zinc-500 text-center mb-6 leading-relaxed px-2">${config.text}</p>
             ${config.customHtml ? `<div class="w-full mb-6 flex justify-center">${config.customHtml}</div>` : ''}
             <div class="w-full flex flex-col gap-2.5">
-                <button class="modal-primary-btn w-full ${config.isError ? 'bg-red-500 hover:bg-red-600' : 'bg-brand hover:bg-brandHover'} text-white font-medium text-sm sm:text-base py-3.5 rounded-full transition-colors">
+                <button class="modal-primary-btn w-full bg-brand hover:bg-brandHover text-white font-medium text-sm sm:text-base py-3.5 rounded-lg transition-colors">
                     ${config.primaryBtnText || 'Entendido'}
                 </button>
                 ${config.secondaryBtnText ? `
-                <button class="modal-secondary-btn w-full bg-transparent text-zinc-500 font-medium text-sm sm:text-base py-3 rounded-full hover:text-brand hover:bg-surface transition-colors">
+                <button class="modal-secondary-btn w-full bg-transparent text-zinc-500 font-medium text-sm sm:text-base py-3 rounded-lg hover:text-brand hover:bg-surface transition-colors">
                     ${config.secondaryBtnText}
                 </button>
                 ` : ''}
@@ -178,10 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     pendingPet.userId = user.id;
                     pendingPet.createdAt = new Date().toISOString();
                     sbClient.from('pets').insert([pendingPet]).then(({ error }) => {
-                        if (error) {
-                            console.error("Error al guardar pendingPet:", error);
-                            return;
-                        }
+                        if (error) { showModal({isError: true, title: 'Error', text: error.message}); return; }
                         sessionStorage.removeItem('pendingPet');
                         showModal({
                             icon: 'ph-qr-code',
@@ -190,10 +187,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             primaryBtnText: 'Ir a Mis Mascotas',
                             primaryBtnAction: () => window.location.href = "mis-mascotas.html"
                         });
-                    }).catch(console.error);
-                } catch (e) {
-                    console.error('Error in pendingPet', e);
-                }
+                    }).catch(() => {});
+                } catch (e) { showModal({isError: true, title: 'Error', text: e.message || 'Ha ocurrido un error inesperado.'}); }
             }
         }
         const navEntrar = document.getElementById('nav-entrar');
@@ -234,12 +229,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Run setupPushNotifications even if not logged in so the prompt appears
     setupPushNotifications(null);
 
     async function setupPushNotifications(uid) {
         if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
         try {
+            if (location.protocol === 'file:') return;
             await navigator.serviceWorker.register('./sw.js');
             const registration = await navigator.serviceWorker.ready;
 
@@ -268,9 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             await sbClient.from('push_subscriptions').insert([{ user_id: uid, subscription: subJson }]);
                         }
                     }
-                } catch (e) {
-                    console.error("Error subscribing:", e);
-                }
+                } catch (e) { showModal({isError: true, title: 'Error', text: e.message || 'Ha ocurrido un error inesperado.'}); }
             };
 
             let subscription = await registration.pushManager.getSubscription();
@@ -296,9 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     await sbClient.from('push_subscriptions').insert([{ user_id: uid, subscription: subJson }]);
                 }
             }
-        } catch (e) {
-            console.error("Error Push:", e);
-        }
+        } catch (e) { showModal({isError: true, title: 'Error', text: e.message || 'Ha ocurrido un error inesperado.'}); }
     }
 
     async function cargarMisMascotas(uid) {
@@ -355,20 +346,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
                 const card = document.createElement('div');
-                card.className = 'w-full bg-white rounded-[2.5rem] p-6 sm:p-8 flex flex-col items-center gap-6 relative';
+                card.className = 'w-full bg-white rounded-lg p-6 sm:p-8 flex flex-col items-center gap-6 relative';
                 card.innerHTML = `
-                    <button class="btn-edit absolute top-6 right-6 w-12 h-12 bg-surface rounded-full flex items-center justify-center text-zinc-400 hover:text-brand hover:bg-surfaceHover transition-colors" aria-label="Editar mascota">
+                    <button class="btn-edit absolute top-6 right-6 w-12 h-12 bg-surface rounded-lg flex items-center justify-center text-zinc-400 hover:text-brand hover:bg-surfaceHover transition-colors" aria-label="Editar mascota">
                         <i class="ph-bold ph-pencil-simple text-xl pointer-events-none" aria-hidden="true"></i>
                     </button>
                     
-                    <div class="pet-photo-container w-24 h-24 bg-surface rounded-full flex items-center justify-center overflow-hidden mt-2">
+                    <div class="pet-photo-container w-24 h-24 bg-surface rounded-lg flex items-center justify-center overflow-hidden mt-2">
                     </div>
                     
                     <div class="flex flex-col items-center mt-2">
                         <h3 class="pet-name-display text-2xl font-semibold text-brand"></h3>
                     </div>
 
-                    <button class="btn-qr w-full bg-brand text-white font-medium text-base py-4 rounded-full hover:bg-brandHover transition-colors flex items-center justify-center gap-2 mt-4">
+                    <button class="btn-qr w-full bg-brand text-white font-medium text-base py-4 rounded-lg hover:bg-brandHover transition-colors flex items-center justify-center gap-2 mt-4">
                         <i class="ph-bold ph-qr-code text-xl" aria-hidden="true"></i> Ver Placa QR
                     </button>
                 `;
@@ -401,7 +392,7 @@ document.addEventListener('DOMContentLoaded', () => {
             icon: 'ph-qr-code',
             title: `Placa de ${petName}`,
             text: 'Este es el código único. Quien lo escanee verá su perfil público para ayudarte a localizarlo.',
-            customHtml: `<div class="bg-surface p-3 sm:p-4 rounded-3xl"><img src="${qrImgUrl}" alt="QR de ${petName}" class="w-40 h-40 sm:w-44 sm:h-44 rounded-xl object-contain mix-blend-multiply"></div>`,
+            customHtml: `<div class="bg-surface p-3 sm:p-4 rounded-lg"><img src="${qrImgUrl}" alt="QR de ${petName}" class="w-40 h-40 sm:w-44 sm:h-44 rounded-lg object-contain mix-blend-multiply"></div>`,
             primaryBtnText: 'Cerrar',
             secondaryBtnText: 'Abrir perfil público',
             secondaryBtnAction: () => {
@@ -424,7 +415,7 @@ document.addEventListener('DOMContentLoaded', () => {
             primaryBtnAction: async () => {
                 const { error } = await sbClient.from('pets').delete().eq('id', petId);
                 if (error) {
-                    console.error("Error eliminando mascota:", error);
+
                     alert("Error al eliminar: " + error.message);
                     return;
                 }
@@ -442,13 +433,13 @@ document.addEventListener('DOMContentLoaded', () => {
             icon: 'ph-scan',
             title: 'Escanear Placa',
             text: 'Apunta la cámara al código QR de la mascota.',
-            customHtml: '<div id="qr-reader" class="w-full h-64 rounded-2xl overflow-hidden bg-black flex items-center justify-center"><i class="ph-bold ph-spinner animate-spin text-3xl text-white"></i></div>',
+            customHtml: '<div id="qr-reader" class="w-full h-64 rounded-lg overflow-hidden bg-black flex items-center justify-center"><i class="ph-bold ph-spinner animate-spin text-3xl text-white"></i></div>',
             primaryBtnText: 'Cancelar Escaneo',
             primaryBtnAction: () => {
                 if (window.html5QrCode) {
                     window.html5QrCode.stop().then(() => {
                         window.html5QrCode.clear();
-                    }).catch(console.error);
+                    }).catch(() => {});
                 }
                 window.html5QrCodeScannerIsActive = false;
             }
@@ -479,7 +470,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                         icon: 'ph-check-circle',
                                         title: 'Placa Detectada',
                                         text: 'Contenido del código escaneado:',
-                                        customHtml: `<div class="bg-surface p-4 rounded-xl w-full break-all text-center font-medium text-brand">` + decodedText + `</div>`,
+                                        customHtml: `<div class="bg-surface p-4 rounded-lg w-full break-all text-center font-medium text-brand">` + decodedText + `</div>`,
                                         primaryBtnText: 'Entendido'
                                     });
                                 }
@@ -517,9 +508,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const { error } = await sbClient.auth.signOut();
             if (error) throw error;
             window.location.href = 'index.html';
-        } catch (error) {
-            console.error('Logout error', error);
-        }
+        } catch (error) { showModal({isError: true, title: 'Error', text: error.message || 'Ha ocurrido un error inesperado.'}); }
     };
     const navSalirBtn = document.getElementById('nav-salir');
     const mobileSalirBtn = document.getElementById('mobile-salir');
@@ -708,10 +697,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (subhead) subhead.innerText = "Actualiza los datos del perfil inteligente de tu mascota.";
 
             sbClient.from('pets').select('*').eq('id', editPetId).single().then(({ data: pet, error }) => {
-                if (error) {
-                    console.error("Error cargando mascota:", error);
-                    return;
-                }
+                if (error) { showModal({isError: true, title: 'Error', text: error.message}); return; }
                 if (pet) {
                     const setValue = (id, val) => { if (document.getElementById(id)) document.getElementById(id).value = val || ''; };
                     setValue('pet-name', pet.name);
@@ -728,7 +714,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         base64Photo = pet.photo;
                         const uploadArea = document.getElementById('upload-area');
                         if (uploadArea) {
-                            uploadArea.innerHTML = `<img src="${base64Photo}" class="w-full h-full object-cover rounded-full">`;
+                            uploadArea.innerHTML = `<img src="${base64Photo}" class="w-full h-full object-cover rounded-lg">`;
                         }
                         const previewPhotoContainer = document.getElementById('preview-photo-container');
                         const previewPhotoPlaceholder = document.getElementById('preview-photo-placeholder');
@@ -844,7 +830,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js').catch(console.error);
+            if (location.protocol !== 'file:') {
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
+            }
         });
     }
 
@@ -861,7 +849,7 @@ async function cargarNotificaciones(uid) {
     async function fetchNotifs() {
         const { data: pets, error } = await sbClient.from('pets').select('*').eq('userId', uid);
         if (error) {
-            console.error("Supabase Database Error: ", error);
+
             if (loading) loading.innerHTML = '<span class="text-red-500 text-sm font-medium text-center">Error de conexión con la base de datos. Verifica tu internet.</span>';
             return;
         }
@@ -904,12 +892,12 @@ async function cargarNotificaciones(uid) {
 
         notifs.forEach(n => {
             const card = document.createElement('div');
-            card.className = 'w-full bg-white p-5 rounded-3xl flex items-center gap-4';
+            card.className = 'w-full bg-white p-5 rounded-lg flex items-center gap-4';
 
             const timeStr = n.time.toLocaleString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
 
             card.innerHTML = `
-                <div class="pet-photo-container w-14 h-14 bg-surface rounded-full flex-shrink-0 flex items-center justify-center overflow-hidden"></div>
+                <div class="pet-photo-container w-14 h-14 bg-surface rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden"></div>
                 <div class="flex-1">
                     <h4 class="text-brand font-semibold text-base mb-0.5">¡Placa escaneada!</h4>
                     <p class="text-sm text-zinc-500 leading-tight">Alguien escaneó la placa de <span class="pet-name-display font-semibold text-brand"></span> el ${timeStr}.</p>
@@ -933,13 +921,13 @@ async function cargarNotificaciones(uid) {
             const mapContainer = card.querySelector('.map-btn-container');
             if (n.lat && n.lng) {
                 const btn = document.createElement('button');
-                btn.className = 'mt-2 text-sm font-medium text-brand bg-surface hover:bg-surfaceHover px-4 py-2 rounded-full transition-colors inline-flex items-center gap-2';
+                btn.className = 'mt-2 text-sm font-medium text-brand bg-surface hover:bg-surfaceHover px-4 py-2 rounded-lg transition-colors inline-flex items-center gap-2';
                 btn.innerHTML = '<i class="ph-bold ph-map-pin" aria-hidden="true"></i> Ver Ubicación GPS';
                 btn.addEventListener('click', () => window.open(`https://www.google.com/maps?q=${n.lat},${n.lng}`, '_blank'));
                 mapContainer.appendChild(btn);
             } else {
                 const span = document.createElement('span');
-                span.className = 'mt-2 inline-block text-xs font-medium text-zinc-400 bg-surface px-3 py-1.5 rounded-full';
+                span.className = 'mt-2 inline-block text-xs font-medium text-zinc-400 bg-surface px-3 py-1.5 rounded-lg';
                 span.textContent = 'Sin GPS exacto';
                 mapContainer.appendChild(span);
             }
@@ -950,3 +938,5 @@ async function cargarNotificaciones(uid) {
     await fetchNotifs();
     sbClient.channel('public:pets:notifs').on('postgres_changes', { event: '*', schema: 'public', table: 'pets', filter: `userId=eq.${uid}` }, () => fetchNotifs()).subscribe();
 }
+
+

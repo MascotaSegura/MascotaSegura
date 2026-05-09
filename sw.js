@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mascotasegura-v7';
+﻿const CACHE_NAME = 'mascotasegura-v7';
 const ASSETS_TO_CACHE = [
   './index.html',
   './entrar.html',
@@ -40,7 +40,6 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(event.request)
       .then((networkResponse) => {
-        // Guardar la nueva respuesta en caché para futuros usos sin conexión
         const responseClone = networkResponse.clone();
         caches.open(CACHE_NAME).then((cache) => {
           if (event.request.method === 'GET') {
@@ -50,7 +49,6 @@ self.addEventListener('fetch', (event) => {
         return networkResponse;
       })
       .catch(() => {
-        // Si la red falla (offline), intentamos servir desde el caché
         return caches.match(event.request).then((cachedResponse) => {
           if (cachedResponse) {
             return cachedResponse;
@@ -91,3 +89,4 @@ self.addEventListener('notificationclick', (event) => {
     })
   );
 });
+

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -6,25 +6,26 @@
   <title>Recuperar Contraseña - MascotaSegura</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
-        fontFamily: {
-          sans: ['Poppins', 'sans-serif'],
-        },
+        fontFamily: { sans: ['Inter', 'sans-serif'] },
         extend: {
           colors: {
-            brand: '#09090B',
-            brandHover: '#27272A',
+            brand: '#000000',
+            brandHover: '#333333',
             surface: '#F4F4F5',
-            surfaceHover: '#E4E4E7'
+            surfaceHover: '#E4E4E7',
+            error: '#EF4444',
+            success: '#22C55E',
+            warning: '#F59E0B',
+            secondary: '#6B7280'
           },
-          spacing: {
-            'safe': 'env(safe-area-inset-bottom)'
-          }
+          spacing: { 'safe': 'env(safe-area-inset-bottom)' },
+          borderRadius: { 'global': '8px' }
         }
       }
     }
@@ -45,11 +46,11 @@
         <a href="mis-mascotas.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Mis Mascotas</a>
       </nav>
       <div class="flex items-center gap-2 sm:gap-4 shrink-0">
-        <button id="nav-entrar" onclick="window.location.href='entrar.html'" class="hidden md:block px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors shadow-none border-0 appearance-none">Entrar</button>
-        <button id="nav-registro" onclick="window.location.href='registro.html'" class="hidden md:block bg-white text-brand text-sm font-medium px-5 py-2 rounded-full hover:bg-surface transition-colors shadow-none border-0 appearance-none">Registro</button>
-        <button id="nav-salir" class="hidden md:block !hidden px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors shadow-none border-0 appearance-none">Salir</button>
+        <button id="nav-entrar" onclick="window.location.href='entrar.html'" class="hidden md:block px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none">Entrar</button>
+        <button id="nav-registro" onclick="window.location.href='registro.html'" class="hidden md:block bg-white text-brand text-sm font-medium px-5 py-2 rounded-lg hover:bg-surface transition-colors appearance-none">Registro</button>
+        <button id="nav-salir" class="hidden md:block !hidden px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none">Salir</button>
         
-        <button id="mobile-menu-btn" class="md:hidden p-2 text-white flex items-center justify-center shadow-none border-0 appearance-none">
+        <button id="mobile-menu-btn" class="md:hidden p-2 text-white flex items-center justify-center appearance-none">
           <i class="ph-bold ph-list text-2xl pointer-events-none"></i>
         </button>
       </div>
@@ -62,9 +63,9 @@
       <button onclick="if(window.openScannerModal) window.openScannerModal(); else window.location.href='mis-mascotas.html';" class="block w-full py-1 text-base font-medium text-zinc-400 hover:text-white transition-colors text-left flex items-center gap-2">
         <i class="ph-bold ph-qr-code text-xl"></i> Escanear Placa
       </button>
-      <button id="mobile-entrar" onclick="window.location.href='entrar.html'" class="block w-full text-base font-medium text-zinc-400 hover:text-white transition-colors text-left shadow-none border-0 appearance-none py-1 mt-2">Entrar</button>
-      <button id="mobile-registro" onclick="window.location.href='registro.html'" class="sm:hidden bg-white text-brand text-base font-medium px-5 py-3 rounded-full hover:bg-surface transition-colors shadow-none border-0 appearance-none w-full text-center mt-2">Registro</button>
-      <button id="mobile-salir" class="block w-full text-base font-medium text-zinc-400 hover:text-white transition-colors text-left shadow-none border-0 appearance-none py-1 mt-2 !hidden">Salir</button>
+      <button id="mobile-entrar" onclick="window.location.href='entrar.html'" class="block w-full text-base font-medium text-zinc-400 hover:text-white transition-colors text-left appearance-none py-1 mt-2">Entrar</button>
+      <button id="mobile-registro" onclick="window.location.href='registro.html'" class="sm:hidden bg-white text-brand text-base font-medium px-5 py-3 rounded-lg hover:bg-surface transition-colors appearance-none w-full text-center mt-2">Registro</button>
+      <button id="mobile-salir" class="block w-full text-base font-medium text-zinc-400 hover:text-white transition-colors text-left appearance-none py-1 mt-2 !hidden">Salir</button>
     </div>
   </header>
   <main class="w-full max-w-md mx-auto px-6 py-16 flex-1 flex flex-col justify-center">
@@ -75,9 +76,9 @@
     <form class="flex flex-col gap-6">
       <div class="flex flex-col gap-2">
         <label for="email" class="text-sm font-medium text-brand">Correo electrónico</label>
-        <input type="email" id="email" placeholder="Ej. hola@correo.com" class="w-full bg-surface px-5 py-3.5 rounded-2xl outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand shadow-none appearance-none border-0" required>
+        <input type="email" id="email" placeholder="Ej. hola@correo.com" class="w-full bg-surface px-5 py-3.5 rounded-lg outline-none focus:ring-2 focus:ring-brand/20 focus:bg-surfaceHover transition-colors text-sm font-normal placeholder-zinc-400 text-brand appearance-none border border-zinc-200" required>
       </div>
-      <button type="submit" id="btn-recuperar" class="mt-4 bg-brand text-white rounded-full py-4 text-base font-medium hover:bg-brandHover transition-colors w-full shadow-none border-0 appearance-none">
+      <button type="submit" id="btn-recuperar" class="mt-4 bg-brand text-white rounded-lg py-4 text-base font-medium hover:bg-brandHover transition-colors w-full appearance-none">
         Enviar enlace
       </button>
       <div class="mt-6 text-center">
@@ -100,4 +101,6 @@
     <script src="script.js"></script>
 </body>
 </html>
+
+
 

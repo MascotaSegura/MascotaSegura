@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -6,25 +6,26 @@
   <title>Notificaciones - MascotaSegura</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
-        fontFamily: {
-          sans: ['Poppins', 'sans-serif'],
-        },
+        fontFamily: { sans: ['Inter', 'sans-serif'] },
         extend: {
           colors: {
-            brand: '#09090B',
-            brandHover: '#27272A',
+            brand: '#000000',
+            brandHover: '#333333',
             surface: '#F4F4F5',
-            surfaceHover: '#E4E4E7'
+            surfaceHover: '#E4E4E7',
+            error: '#EF4444',
+            success: '#22C55E',
+            warning: '#F59E0B',
+            secondary: '#6B7280'
           },
-          spacing: {
-            'safe': 'env(safe-area-inset-bottom)'
-          }
+          spacing: { 'safe': 'env(safe-area-inset-bottom)' },
+          borderRadius: { 'global': '8px' }
         }
       }
     }
@@ -45,17 +46,17 @@
         <a href="mis-mascotas.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Mis Mascotas</a>
         <a href="notificaciones.html" class="relative text-sm font-medium text-white transition-colors pb-1">
           Alertas
-          <span class="absolute bottom-0 left-0 w-full h-[3px] bg-white rounded-full"></span>
+          <span class="absolute bottom-0 left-0 w-full h-[3px] bg-white rounded-lg"></span>
         </a>
       </nav>
 
       <div class="flex items-center gap-4">
-        <button onclick="if(window.openScannerModal) window.openScannerModal(); else window.location.href='mis-mascotas.html';" class="hidden md:flex px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors shadow-none border-0 appearance-none items-center gap-2">
+        <button onclick="if(window.openScannerModal) window.openScannerModal(); else window.location.href='mis-mascotas.html';" class="hidden md:flex px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none items-center gap-2">
           <i class="ph-bold ph-qr-code text-xl"></i> Escanear
         </button>
-        <button id="nav-salir" class="hidden md:block !hidden px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors shadow-none border-0 appearance-none">Salir</button>
+        <button id="nav-salir" class="hidden md:block !hidden px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none">Salir</button>
         
-        <button id="mobile-salir" class="md:hidden text-zinc-400 hover:text-white transition-colors shadow-none border-0 appearance-none">
+        <button id="mobile-salir" class="md:hidden text-zinc-400 hover:text-white transition-colors appearance-none">
           <i class="ph-bold ph-sign-out text-2xl pointer-events-none"></i>
         </button>
       </div>
@@ -73,8 +74,8 @@
       <i class="ph-bold ph-spinner animate-spin text-4xl text-brand mb-4"></i>
       <span class="text-sm font-medium text-zinc-500">Buscando alertas...</span>
     </div>
-    <div id="notifications-empty" class="hidden w-full text-center py-16 md:py-24 bg-white rounded-[2.5rem] flex flex-col items-center justify-center px-6">
-      <div class="w-20 h-20 bg-surface rounded-full flex items-center justify-center mb-6">
+    <div id="notifications-empty" class="hidden w-full text-center py-16 md:py-24 bg-white rounded-lg flex flex-col items-center justify-center px-6">
+      <div class="w-20 h-20 bg-surface rounded-lg flex items-center justify-center mb-6">
         <i class="ph-fill ph-bell-z text-4xl text-zinc-500"></i>
       </div>
       <h3 class="text-xl font-semibold text-brand mb-2">Todo tranquilo</h3>
@@ -84,14 +85,14 @@
       
     </div>
   </main>
-  <nav class="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-zinc-100 z-50 flex justify-around items-center h-16 px-2 pb-safe shadow-none">
+  <nav class="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-zinc-100 z-50 flex justify-around items-center h-16 px-2 pb-safe border border-zinc-200">
     <a href="mis-mascotas.html" class="flex flex-col items-center justify-center w-16 h-full text-zinc-400 hover:text-brand transition-colors">
       <i class="ph-bold ph-paw-print text-2xl mb-1"></i>
       <span class="text-[10px] font-medium tracking-wide">Mascotas</span>
     </a>
     
     <div class="relative -top-5">
-      <button onclick="if(window.openScannerModal) window.openScannerModal(); else window.location.href='mis-mascotas.html';" class="flex items-center justify-center w-14 h-14 bg-brand text-white rounded-full shadow-none border-4 border-white outline-none appearance-none hover:bg-brandHover transition-colors">
+      <button onclick="if(window.openScannerModal) window.openScannerModal(); else window.location.href='mis-mascotas.html';" class="flex items-center justify-center w-14 h-14 bg-brand text-white rounded-lg border border-zinc-200 border-4 border-white outline-none appearance-none hover:bg-brandHover transition-colors">
         <i class="ph-bold ph-qr-code text-2xl pointer-events-none"></i>
       </button>
     </div>
@@ -106,4 +107,6 @@
   
   </body>
 </html>
+
+
 
