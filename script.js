@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (user) {
             if (navEntrar) navEntrar.classList.add('!hidden');
             if (navRegistro) navRegistro.classList.add('!hidden');
-            if (navSalir) navSalir.classList.remove('hidden');
+            if (navSalir) navSalir.classList.remove('!hidden');
             authLinks.forEach(link => link.classList.remove('hidden'));
 
             if (path.includes('entrar') || path.includes('registro') || path.includes('recuperar')) {
@@ -220,15 +220,13 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             if (navEntrar) navEntrar.classList.remove('!hidden', 'hidden');
             if (navRegistro) navRegistro.classList.remove('!hidden', 'hidden');
-            if (navSalir) navSalir.classList.add('hidden');
+            if (navSalir) navSalir.classList.add('!hidden');
             authLinks.forEach(link => link.classList.add('hidden'));
-            if (path.includes('mis-mascotas')) {
+            if (path.includes('mis-mascotas') || path.includes('notificaciones') || path.includes('mi-cuenta')) {
                 window.location.href = 'entrar.html';
             }
         }
     });
-
-    setupPushNotifications(null);
 
     async function setupPushNotifications(uid) {
         if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
@@ -841,6 +839,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const navSalirBtn = document.getElementById('nav-salir');
     const bnSalirBtn = document.getElementById('bn-salir');
+    const btnLogoutAccount = document.getElementById('btn-logout-account');
     
     const handleLogout = async () => {
         await sbClient.auth.signOut();
@@ -848,6 +847,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     if (navSalirBtn) navSalirBtn.addEventListener('click', handleLogout);
     if (bnSalirBtn) bnSalirBtn.addEventListener('click', handleLogout);
+    if (btnLogoutAccount) btnLogoutAccount.addEventListener('click', handleLogout);
     
 });
 

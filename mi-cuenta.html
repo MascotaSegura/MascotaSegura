@@ -51,7 +51,7 @@
       <div class="flex items-center gap-4 shrink-0">
         <button id="nav-entrar" onclick="window.location.href='entrar.html'" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none">Entrar</button>
         <button id="nav-registro" onclick="window.location.href='registro.html'" class="hidden md:block bg-white text-brand text-sm font-medium px-5 py-2 rounded-lg hover:bg-surface transition-colors appearance-none">Registro</button>
-        <button id="nav-salir" class="hidden text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none">Salir</button>
+        <button id="nav-salir" class="hidden md:block !hidden text-sm font-medium text-zinc-400 hover:text-white transition-colors appearance-none">Salir</button>
       </div>
     </div>
   </header>
@@ -65,6 +65,10 @@
       </button>
       <button onclick="switchTab('seguridad')" id="tab-seguridad" class="account-tab w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-white text-zinc-500 hover:text-brand hover:bg-surface font-medium text-sm transition-colors text-left">
         <i class="ph-bold ph-lock-key text-lg"></i> Seguridad
+      </button>
+      <div class="w-full h-px bg-zinc-200 my-2"></div>
+      <button id="btn-logout-account" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-white text-zinc-500 hover:text-brand hover:bg-surface font-medium text-sm transition-colors text-left">
+        <i class="ph-bold ph-sign-out text-lg"></i> Cerrar sesión
       </button>
     </aside>
 
@@ -191,7 +195,7 @@
       document.getElementById('content-' + tabId).classList.remove('hidden');
     }
   </script>
-            <nav class="fixed bottom-0 left-0 w-full md:hidden bg-white border-t border-zinc-200 flex z-40" style="padding-bottom:env(safe-area-inset-bottom)">
+                  <nav class="fixed bottom-0 left-0 w-full md:hidden bg-white border-t border-zinc-200 flex z-40" style="padding-bottom:env(safe-area-inset-bottom)">
     <a href="mis-mascotas.html" id="bn-mascotas" class="flex-1 flex flex-col items-center justify-center py-2 gap-1 text-zinc-400 hover:text-brand transition-colors min-h-[56px] appearance-none">
       <i class="ph ph-paw-print text-xl sm:text-2xl nav-icon"></i>
       <span class="text-[9px] sm:text-[10px] font-medium uppercase tracking-wider">Mascotas</span>
@@ -208,10 +212,6 @@
       <i class="ph ph-user text-xl sm:text-2xl nav-icon"></i>
       <span class="text-[9px] sm:text-[10px] font-medium uppercase tracking-wider">Cuenta</span>
     </a>
-    <button id="bn-salir" class="flex-1 flex flex-col items-center justify-center py-2 gap-1 text-zinc-400 hover:text-brand transition-colors min-h-[56px] appearance-none focus:outline-none">
-      <i class="ph ph-sign-out text-xl sm:text-2xl nav-icon pointer-events-none"></i>
-      <span class="text-[9px] sm:text-[10px] font-medium uppercase tracking-wider pointer-events-none">Salir</span>
-    </button>
   </nav>
   <script>
     (function() {
