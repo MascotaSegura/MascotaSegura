@@ -1,4 +1,4 @@
-﻿const CACHE_NAME = 'mascotasegura-v7';
+const CACHE_NAME = 'mascotasegura-v9';
 const ASSETS_TO_CACHE = [
   './index.html',
   './entrar.html',
@@ -8,6 +8,7 @@ const ASSETS_TO_CACHE = [
   './crear-placa.html',
   './notificaciones.html',
   './perfil.html',
+  './mi-cuenta.html',
   './script.js',
   './paw-print-fill.svg'
 ];
